@@ -2,7 +2,7 @@
 
 ```{r include=FALSE}
 # generate a BibTeX database automatically for some R packages
-knitr::write_bib(c('knitr'), 'packages.bib')
+knitr::write_bib(c('sf', 'chilemapas', 'elevatr', 'terra', 'osmdata', 'rgugik', 'mapsf', 'tmap', 'mapview', 'giscoR'), 'packages.bib', packageURL=FALSE)
 ```
 
 

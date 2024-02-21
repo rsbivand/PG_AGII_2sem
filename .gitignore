@@ -1,0 +1,8 @@
+/.quarto/
+/_book/
+/*_files/
+/_freeze/
+/*.R
+/*.Rhistory
+/*/*_files/
+/Input_output/
