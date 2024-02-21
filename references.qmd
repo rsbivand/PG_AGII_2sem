@@ -1,0 +1,10 @@
+# References {.unnumbered}
+
+```{r include=FALSE}
+# generate a BibTeX database automatically for some R packages
+knitr::write_bib(c('knitr'), 'packages.bib')
+```
+
+
+::: {#refs}
+:::

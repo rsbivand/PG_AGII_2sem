@@ -1,0 +1,46 @@
+project:
+  type: book
+
+book:
+  title: "Spatial Econometrics"
+  subtitle: "Team project using R"
+  author:
+    - name: Roger Bivand
+      orcid: 0000-0003-2392-6140
+      email: Roger.Bivand@nhh.no
+      url: https://www.nhh.no/en/employees/faculty/roger-bivand/
+      affiliations:
+      - name: Norwegian School of Economics
+        city: Bergen
+        country: Norway
+  date: today
+  chapters:
+    - index.qmd
+    - Day_1/01_talk.qmd
+    - Day_1/02_talk.qmd
+    - Day_1/03_talk.qmd
+    - Day_1/04_talk.qmd
+    - Day_2/05_talk.qmd
+    - Day_2/06_talk.qmd
+    - Day_2/07_talk.qmd
+    - Day_2/08_talk.qmd
+    - Day_3/09_talk.qmd
+    - Day_3/10_talk.qmd
+    - Day_3/11_talk.qmd
+    - Day_3/12_talk.qmd
+    - references.qmd
+
+bibliography: [bib/references.bib, packages.bib, bib/book.bib]
+
+execute:
+  freeze: auto  # re-render only when source changes
+
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    html-math-method: katex
+    citations-hover: true
+    footnotes-hover: true
+
+

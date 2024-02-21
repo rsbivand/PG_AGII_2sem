@@ -1,0 +1,384 @@
+# Working with spatial data
+
+```{r pl_io0, echo=FALSE, results="hide"}
+io_dir <- "Input_output"
+if (!dir.exists(io_dir)) io_dir <- paste0("../", io_dir)
+```
+
+```{r echo=FALSE}
+load(file = paste0(io_dir, "/talk2.RData"))
+```
+
+
+## Merging spatial data {#sec-sd-merge}
+
+As was mentioned above in section @sec-sd-basics, spatial vector geometries are most often furnished with identification keys, permitting other data using the same key or index identifiers to be added correctly. In Poland, they have been known as `"TERYT"`, and are fairly stable over time, though border changes can occur, with new key values appearing and old values ceasing to be used, leading to breaks of series. The `rgugik` package contains a data object listing these keys together with unit names, but matching on names can be troublesome. First we will subset this object to the Pomeranian voivodeship:
+
+```{r pl_m0, size="footnotesize"}
+library(rgugik)
+library(sf)
+substring(commune_names$TERYT, 1, 2) -> vpom
+commune_names |> subset(subset = vpom == "22") -> pom0
+```
+
+then retrieve the boundaries of municipalities in Pomerania using `"TERYT"` rather than using the names of municipalities, which are duplicated in other voivodeships:
+
+```{r pl_m1, size="footnotesize", eval=FALSE}
+borders_get(TERYT = pom0$TERYT) -> pom
+```
+```{r pl_m1a, size="footnotesize", echo=FALSE, warning=FALSE}
+pom <- try(base::readRDS("Datasets/sd/pom_sf.rds"), silent=TRUE)
+if (inherits(pom, "try-error")) pom <- base::readRDS("../Datasets/sd/pom_sf.rds")
+```
+
+Merging the `pom` object containing the `"TERYT"` keys and municipality names, with `pom_sf`, including the `"TERYT"` keys and municipality boundaries is easy, as the keys are both character objects - this matters because some keys may start with `0`, zero, and be wrongly read as integers, dropping leading zeros. The key for this voivodeship is `"22"`, so this problem is not encountered here, but often occurs. Should an identifying key with leading zeros be read as integer, it can be restored using `base::formatC` after checking the required string width:
+
+```{r pl_m1b, size="footnotesize"}
+ID <- as.integer("0012345") 
+str(ID)
+formatC(ID, format="d", width=7, flag="0")
+```
+
+Note that the `"TERYT"` key values returned in the `pom_sf` object include an underscore between the six digit territorial code and the trailing digit expressing the type of municipality. 
+
+```{r pl_m2, size="footnotesize"}
+dim(pom)
+pom |> sapply(class) |> str()
+str(pom$TERYT)
+str(pom0)
+```
+
+The underscore needs to be removed before finally checking that they match:
+
+```{r pl_m2a, size="footnotesize"}
+pom$TERYT <- sub("_", "", pom$TERYT)
+any(is.na(match(pom$TERYT, pom0$TERYT)))
+```
+
+Finally, the merging operation may be carried out:
+
+```{r pl_m3, size="footnotesize"}
+pom |> merge(pom0, by = "TERYT") -> pom1 
+pom1
+```
+
+Having methodically made a first merge, we can move forward with three files at the municipality level from Statistics Poland's [local data bank](https://bdl.stat.gov.pl/bdl/start). These were exported as comma (or semicolon) separated value (CSV) files on February 15, 2024 - dates matter, as online data banks update their contents as inaccuracies are detected. Currently, no package provides direct access to this data bank, and for moderate data volumes, registration is required. The first file is semicolon separated, and contains population data by age group and sex (category K3, group G7, subgroup P2577) for the end of the second half-year 2022:
+
+```{r pl_m4, size="footnotesize", eval=FALSE}
+pop22 <- read.csv("Datasets/sd/LUDN_2577_2022.csv", sep=";")
+```
+```{r pl_m4a, size="footnotesize", echo=FALSE, warning=FALSE}
+pop22 <- try(read.csv2("Datasets/sd/LUDN_2577_2022.csv", sep=";"), silent=TRUE)
+if (inherits(pop22, "try-error")) pop22 <- read.csv2("../Datasets/sd/LUDN_2577_2022.csv", sep=";")
+```
+
+As with most such data, the column names need adjustment. On reading, reserved characters in R are replaced by dots, and for further work, shorter column names are helpful. Current R versions support multibyte characters across all platforms, but some files with single-byte characters can be encountered, in which case judicious use of `base::iconv` may be needed. 
+
+```{r pl_m5, size="footnotesize"}
+sapply(pop22, class)
+pop22$Kod <- as.character(pop22$Kod)
+names(pop22)[3:8] <- c("m_u15", "f_u15",
+ "m_15_64", "f_15_59", "m_o65", "k_o60")
+pop22$type <- factor(substring(pop22$Kod, 7, 7),
+ levels = c("1", "2", "3"),
+ labels = c("urban", "rural", "urban_rural"))
+names(pop22)
+```
+
+The key column was read as integer, so needs correcting; otherwise the remaining columns seem to be formatted acceptably. A new column is created as a factor showing the type of municipality, as a factor  In addition, we The `"X"` column contains no data, and is dropped from the merging operation. We could overwrite the cumulating object on merge; here we choose to create a new object at each merge. The key is called `"TERYT"` in `pom_sf` and `"Kod"` in `pop92`, specified with `by.x` and `by.y` arguments:
+
+```{r pl_m6, size="footnotesize"}
+pom1 |> merge(pop22[, -9], by.x = "TERYT",
+ by.y = "Kod") -> pom2
+pom2
+```
+
+Having added the population group counts by sex for the Pomeranian municipalities, we create a new column `"pop"` summing the total population at year end 2022. We then calculate municipality areas, and divide population by area (in square kilometres) to get the population density:
+
+```{r pl_m7, size="footnotesize"}
+pom2 |> st_drop_geometry() |> subset(select = 4:9) |>
+ apply(1, function(x) sum(x)) -> pom2$pop
+pom2 |> st_area() |>
+ units::set_units("km2") -> pom2$area_km2
+pom2 |> st_drop_geometry() |>
+ subset(select = c(pop, area_km2)) |>
+ apply(1, function(x) x[1]/x[2]) -> pom2$density
+ pom2
+```
+
+The next file contains counts of farms from the Agricultural census reporting farm income from the farm (category K34, group G637, subgroup P4139). While this file was exported from the local data bank in the same way as the previous one, it is comma-separated:
+
+```{r pl_m8a, size="footnotesize", eval=FALSE}
+ag20 <- read.csv("Datasets/sd/POWS_4139_2020.csv", sep=",")
+```
+```{r pl_m8b, size="footnotesize", echo=FALSE, warning=FALSE}
+ag20 <- try(read.csv("Datasets/sd/POWS_4139_2020.csv", sep=","), silent=TRUE)
+if (inherits(ag20, "try-error")) ag20 <- read.csv("../Datasets/sd/POWS_4139_2020.csv", sep=",")
+```
+
+Again, column names require simplification, but here there is no spurious `"X"` column - we just drop the municipality name from the merge:
+
+```{r pl_m9, size="footnotesize"}
+ag20$Kod <- as.character(ag20$Kod)
+names(ag20)[3:7] <- c("farm", "non_farm_business",
+ "non_farm_wages", "pension", "other_non_wage")
+pom2 |> merge(ag20[,-2], by.x = "TERYT",
+ by.y = "Kod") -> pom3
+```
+
+
+Finally, and because the agricultural census data are counts of farms, we need counts of inhabited dwellings from the population census 2021 (category K31, group G645, subgroup P4383), especially for urban municipalities; the merging process follows the lines of those above:
+
+```{r pl_m10a, size="footnotesize", eval=FALSE}
+cen21 <- read.csv("Datasets/sd/NARO_4383_2021.csv", sep=";")
+```
+```{r pl_m10b, size="footnotesize", echo=FALSE, warning=FALSE}
+cen21 <- try(read.csv2("Datasets/sd/NARO_4383_2021.csv", sep=";"), silent=TRUE)
+if (inherits(cen21, "try-error")) cen21 <- read.csv2("../Datasets/sd/NARO_4383_2021.csv", sep=";")
+```
+```{r pl_m10c, size="footnotesize"}
+cen21$Kod <- as.character(cen21$Kod)
+names(cen21)[3] <- "dwellings"
+pom3 |> merge(cen21[, -c(2, 4)], by.x = "TERYT",
+ by.y = "Kod") -> pom4
+names(pom4)
+```
+
+In conclusion, for completeness, let us assign aggregation levels to the newly merged values:
+
+```{r pl_m11, size="footnotesize"}
+agrs <- factor(c(rep("identity", 3), rep("aggregate", 6),
+ "identity", rep("aggregate", 9)),
+ levels=c("constant", "aggregate", "identity"))
+names(agrs) <- names(st_drop_geometry(pom4))
+pom4 |> st_set_agr(agrs) -> pom5
+```
+
+
+## Visualising spatial data {#sec-sd-vis}
+
+For many purposes, maps themselves are spatial data. Observations are located in space as points,  lines or polygons, and their placing yields useful contextual information when plotted. Using the `plot` methods on `terra` and `sf`, we can display the elevation raster as a background, and show the municipality boundaries with their ID keys:
+
+```{r chile_vis1a, size="footnotesize"}
+#| label: base_cl
+#| fig-cap: Elevation of Región del Maule, municipalities (base graphics plot methods)
+library(elevatr)
+library(terra)
+maule_sf |>  get_elev_raster(z = 7,
+ clip = "locations", neg_to_na = TRUE) |> 
+ rast() -> maule_elev
+plot(maule_elev, col=rev(hcl.colors(50, "Dark Mint")))
+plot(st_geometry(maule_sf), add=TRUE)
+text(st_coordinates(st_centroid(st_geometry(maule_sf))),
+ label=maule_sf$codigo_comuna)
+```
+
+`mapsf` provides fairly flexible map creation functionality for overlaying layers of map information on a graphics output device, following the same order as above, but permitting the improvement of label positioning. Above, we set the palette to be used for elevation to `"Dark Mint"`, which is the default for `mapsf::mf_raster`:
+
+```{r chile_vis1b, size="footnotesize"}
+#| label: mapsf_cl
+#| fig-cap: Elevation of Región del Maule, municipalities (base graphics mapsf functions)
+library(mapsf)
+mf_raster(maule_elev, leg_pos="bottomleft",
+ leg_title="elevation (m)", leg_horiz=TRUE,
+ leg_size=0.8, leg_val_rnd=0)
+mf_map(st_geometry(maule_sf), add=TRUE, lwd=2,
+ border="grey60", col="transparent")
+mf_label(maule_sf, var="codigo_comuna", overlap=FALSE,
+ halo=2)
+```
+
+`tmap` is about to be upgraded, and is very concise in expressing map construction by adding successive layers to the output graphic with the `+` operator:
+
+```{r chile_vis2a, size="footnotesize"}
+#| label: tmap3_cl
+#| fig-cap: Elevation of Región del Maule, municipalities (trellis graphics tmap functions)
+library(tmap)
+tm_shape(maule_elev) + tm_raster(n=15,
+ palette=rev(hcl.colors(7, "Dark Mint"))) +
+ tm_shape(maule_sf) + tm_borders() +
+ tm_text("codigo_comuna")
+```
+
+Using the simplest approach, we can plot the positions of the take-away outlets registered for Talca city in OpenStreetMap, and see that they are very clustered within the boundary of the municipality:
+
+```{r chile_vis2, size="footnotesize"}
+#| label: takeaways_talca1
+#| fig-cap: Location of take-away outlets in Talca
+plot(st_geometry(talca_sf))
+plot(st_geometry(talca_takeaways), pch=4, col=3,
+ cex=2, lwd=2, add=TRUE)
+```
+
+Since it would be very useful to obtain more locational context, we can use `mapview` to view the take-away outlets on a web map background, so that we can interact with the point locations. The `mapview` methods convert the object to be displayed to `"OGC:WGS84"` if necessary, then to Web Mercator for display:
+
+```{r chile_vis3a, size="footnotesize", eval=!knitr::is_latex_output()}
+#| label: takeaways_talca2
+#| fig-cap: Interactive map of take-away outlets in Talca
+library(mapview)
+mapview(talca_takeaways)
+```
+```{r chile_vis3b, echo=FALSE, results="as.is", eval=knitr::is_latex_output()}
+#| label: takeaways_talca2a
+#| fig-cap: Screen dump of interactive map of take-away outlets in Talca
+img <- try(knitr::include_graphics("Images/sd/talca_takeaways.png"), silent=TRUE)
+if (inherits(img, "try-error")) knitr::include_graphics("../Images/sd/talca_takeaways.png")
+```
+
+Moving to the data set for municipalities in the Polish voivodeship of Pomerania, we can attempt to show the density variable on an interactive map:
+
+```{r pl_vis0a, size="footnotesize", eval=!knitr::is_latex_output()}
+#| label: gd_dens0a
+#| fig-cap: Interactive map of Pomeramia municipalities from rgugik, population density per square kilometre
+library(mapview)
+mapview(pom5, zcol="density")
+```
+```{r pl_vis0b, echo=FALSE, results="as.is", eval=knitr::is_latex_output(), warning=FALSE}
+#| label: gd_dens0b
+#| fig-cap: Screen dump of interactive map of Pomeramia municipalities from rgugik, population density per square kilometre
+img <- try(knitr::include_graphics("Images/sd/gd_dens0.png"), silent=TRUE)
+if (inherits(img, "try-error")) knitr::include_graphics("../Images/sd/gd_dens0.png")
+```
+
+As may be seen in the interactive map, the municipality boundaries do match the Baltic sea coastline quite well, but the jurisdiction of the municipalities extends to some coastal waters in the Gulf of Gdańsk and Zalew Wiślany; we did after all download administrative municipality boundaries using `rgugik`. We need to find another source of boundaries that agree with the coastline, and then need to take the intersection of the two sets od polygons, leaving only areas present in both. `giscoR` provides access to boundaries for European NUTS regions, in geographical coordinates by default. We then need to transform to the Transverse Mercator projection used for the download from `rgugik` before carrying out the intersection:
+
+
+```{r pl_vis0c, size="footnotesize"}
+library(giscoR)
+pom_gisco <- gisco_get_nuts(year="2021", resolution="01",
+ spatialtype="RG", nuts_id="PL63")
+pom_gisco_tm <- st_transform(pom_gisco, "EPSG:2180")
+pom6 <- st_intersection(pom5, pom_gisco_tm)
+```
+
+Since an intersection operation can yield points and lines as well as polygons, we can check the input and output geometries and re-establish their original geometry types; in this case only polygons and multipolygons were output:
+
+```{r pl_vis0c1, size="footnotesize"}
+pom5 |> st_geometry_type() |> table() -> tab5; tab5[tab5>0]
+pom6 |> st_geometry_type() |> table() -> tab6; tab6[tab6>0]
+pom6 |> st_cast("MULTIPOLYGON") -> pom6
+```
+
+
+Since the areas of some municipalities have now changed, we need to re-caluclate both areas and densities:
+
+```{r pl_vis0d, size="footnotesize"}
+pom6 |> st_area() |>
+ units::set_units("km2") -> pom6$area_km2
+pom6 |> st_drop_geometry() |>
+ subset(select = c(pop, area_km2)) |>
+ apply(1, function(x) x[1]/x[2]) -> pom6$density
+```
+
+As can be seen from Figure @gd_dens1a, the graphical representation is now more legible; coastlines and boundaries are typically read as contextual location information.
+
+```{r pl_vis0e, size="footnotesize", eval=!knitr::is_latex_output()}
+#| label: gd_dens1a
+#| fig-cap: Interactive map of Pomeramia municipalities from rgugik, corrected population density per square kilometre
+mapview(pom6, zcol="density")
+```
+```{r pl_vis0f, echo=FALSE, results="as.is", eval=knitr::is_latex_output(), warning=FALSE}
+#| label: gd_dens1b
+#| fig-cap: Screen dump of interactive map of Pomeramia municipalities from rgugik, corrected population density per square kilometre
+img <- try(knitr::include_graphics("Images/sd/gd_dens1.png"), silent=TRUE)
+if (inherits(img, "try-error")) knitr::include_graphics("../Images/sd/gd_dens1.png")
+```
+
+Two minor points before we move on, first that the distribution of the variable which we want to map does matter. The population density of Pomeranian municipalities is far from being symmetric, as this density plot shows:
+
+```{r pl_vis1a, size="footnotesize"}
+#| label: pl_vis1a
+#| fig-cap: Density plot of population density, Census 2021, Pomeranian municipalities
+plot(density(pom6$density))
+```
+
+In this case, in thematic cartography we should create class intervals for display using quantiles or other suitable methods. `mapsf` provides a geometric progression `"geom"` method for creating class intervals for skewed variables:
+
+```{r pl_vis1b, size="footnotesize"}
+#| label: pl_vis1b
+#| fig-cap: Population density, Census 2021, Pomeranian municipalities
+mf_map(pom6, var="density", type="choro", breaks="geom",
+ nbreaks=7)
+```
+
+The choice of breaks style does matter for communicating the important traits of the variable in question in thematic cartography, here as a choropleth map.
+
+The second display problem is associated with showing the kind of classes implied by the data. For a categorical variable and few classes, the classes are taken from the categories, and unlike the examples above using sequential palettes, this uses a qualitative palette:
+
+```{r pl_vis1c, size="footnotesize"}
+#| label: pl_vis1c
+#| fig-cap: Municipality type, Pomeranian municipalities
+mf_map(pom6, var="type", type="typo")
+```
+
+When the variable is crosses a specified mid-point, like regression residuals, a sequential palette is not appropriate, and a diverging palette should be chosen. `tmap::tm_fill` attempts to make reasonable choices in this situation; here the deviance of the proportion of the municipality population less than 16 years old from its mean:
+
+```{r pl_vis2a, size="footnotesize"}
+pom6$young <- 100*(pom6$m_u15 + pom6$f_u15)/pom6$pop
+pom6$young_res <- residuals(lm(young ~ 1, data=pom6))
+```
+
+```{r pl_vis2b, size="footnotesize"}
+#| label: pl_vis2b
+#| fig-cap: Proportion of population under 16 years of age, residuals from the mean, Pomeranian municipalities, 2022
+tm_shape(pom6) + tm_fill("young_res", style="quantile",
+ n=11, midpoint=0, palette="RdBu") + tm_borders()
+```
+
+
+
+## Reading and writing spatial data {#sec-sd-io}
+
+
+For the present, we will only consider the reading and writing of spatial vector data using functions from `sf`: `st_read` and `st_write`. Further, while it is still regretably the case that many organisations still use the  `"ESRI Shapefile"` (actually most often a bundle of at least four files) for sharing data, the GeoPackage format, `"GPKG"`, should be preferred because it represents CRS properly, does not restrict field (variable) names to 10 characters, does use multibyte characters, and does store numerical fields in binary rather than text format. For commonly used formats, the format-specifiic driver is chosen from the file extension:
+
+```{r pl_io1, size="footnotesize", warning=FALSE}
+fn <- paste0(io_dir, "/pom6.gpkg")
+if (file.exists(fn)) tull <- file.remove(fn)
+try(st_write(pom6, fn))
+```
+
+```{r pl_io1a, size="footnotesize", warning=FALSE, echo=FALSE}
+lf <- list.files(io_dir, pattern="pom6.gpkg")
+if (length(lf) > 0L) tull <-file.remove(paste(io_dir, lf, sep="/"))
+```
+
+Unfortunately, our intersection of the GISCO voivodeship outline added a number of variables to the data set, including one called `"FID"` , which is a reserved word for many spatial data formats, meaning "Feature IDentifier", and must be an integer. Now it is a character vector, so we replace it by a compliant integer vector with unique values; we could also have dropped it:
+
+```{r pl_io2, size="footnotesize", warning=FALSE}
+str(pom6$FID)
+pom6$FID <- 1:nrow(pom6)
+st_write(pom6, dsn=fn)
+```
+
+To read, `st_read` will try to identify the format and use the appropriate driver automatically; if the data source containd multiple layers, the first will be read by default:
+
+```{r pl_io3a, size="footnotesize"}
+pom6a <- st_read(dsn=fn)
+```
+
+When we do a simple check to see if output and input are identical - and find that they are not:
+
+```{r pl_io3b, size="footnotesize"}
+isTRUE(all.equal(st_geometry(pom6), st_geometry(pom6a)))
+```
+
+When written to the external format, the order of the columns changes, as the geometry column is moved to the end on reading. This re-orders the columns, which contain the same information as before but the order differs:
+
+```{r pl_io3c, size="footnotesize"}
+names(pom6)
+names(pom6a)
+```
+
+In addition, the `"area_km2"` column loses its units definition, and the `"type"` column becomes a character vector, not a factor. Such differences are trivial and to be expected, but imply that if an object is to shared with collaborators, any shared script should use the object as read from file, especially if column order rather than column names are used in analysis. After reading, we can restore the representation of the columns before starting work:
+
+```{r pl_io3d, size="footnotesize"}
+pom6a$type <- factor(pom6a$type)
+pom6a$area_km2 <- units::set_units(pom6a$area_km2, "km2")
+```
+
+
+```{r echo=FALSE}
+save(list = ls(), file = paste0(io_dir, "/talk3.RData"))
+```
+
