@@ -29,10 +29,8 @@ execute:
 format:
   html:
     theme: cosmo
-    embed-resources: true
     html-math-method: katex
-    citations-hover: true
-    footnotes-hover: true
-
+    minimal: true
+    code-copy: true
 
 
