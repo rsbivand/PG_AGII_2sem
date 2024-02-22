@@ -1,3 +1,32 @@
 # Course description {.unnumbered}
 
+### Planned topics
+
+- Introducing Spatial Econometrics
+- Spatial data
+- Working with spatial data
+- Creating spatial weights objects
+- Spatial Econometrics: Antecedents
+- Economic and social research questions using spatial data
+- Tests of spatial autocorrelation, model specification
+- Spatial autoregressive models: conditional (CAR) and simultaneous (SAR)
+- Estimation of spatial autoregressive models: methods (GMM, ML, Bayesian)
+- No orthogonality between regression and autoregression coefficients
+- Prediction and spatial models
+- Eigenvectors and eigenvalues of graphs of relationships between cross-sectional observations
+
+### Team projects
+
+The teams should aim to prepare notebooks showing reasoning, code, workflow, conclusions, and should include a log of team discussions, and the conclusions should show how the team, with hindsight, might have modified the topics and workflow had more time, data, or other resources been available. 
+
+Teams should try to limit joint team work to the 30 hours available, but team members may choose to make progress individually to tackle technical snags. The team may choose to delegate parts to team members; use of GitHub or similar to share writing of the notebook is encouraged.
+
+- establish communication through moodle for on-demand consultations in or outside the scheduled project hours
+- week 11: draft team project proposals to be decided
+- week 12: feedback on progress with projects
+- week 15: mid-term team project reports
+- week 16: feedback on progress with projects
+- week 17: feedback on progress with projects
+- Monday 6 May, 15:15-18:00 presentation of team projects and wrap-up
+
 
