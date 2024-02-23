@@ -1,0 +1,3 @@
+# Spatial autoregressive models: conditional (CAR) and simultaneous (SAR)
+
+

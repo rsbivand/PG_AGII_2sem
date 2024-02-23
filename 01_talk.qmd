@@ -1,0 +1,228 @@
+# Introducing Spatial Econometrics {#sec-why}
+
+## Why is spatial data special? {#sec-why-special}
+
+The three kinds of spatial data [@cressie:93] are spatial point patterns, 
+geostatistical data observed at sample stations for prediction to unobserved 
+locations, and areal data, also known as lattice data. In the case of spatial 
+point patterns, it is assumed that all points are known, and the point 
+process of interest is that driving the patterning of the points, for 
+example that they are more clustered than if they were randomly distributed 
+over the study area. Geostatistical modelling developed from hydrology and 
+mining (environmental science) to estimate areas or volumes of quantities 
+of interest, where more variability in the variables observed might suggest 
+the need for sample locations to be closer to each other. While spatial 
+econometrics has some links with spatial point patterns [e.g. @arbia01; 
+@marconetal15; @marcon+puech17; @marcon+puech23], and geostatistics 
+[e.g. @dearmon+smith21], areal or lattice spatial data are much more 
+commonly analysed. 
+    \index{spatial point patterns}
+    \index{geostatistics}
+    \index{spatial statisics}
+
+Areal or lattice spatial data may be aggregates within administrative 
+boundaries, such as municipalities, counties or census tracts, or may 
+be points representing observations that do not reasonably match 
+observations on a continuous surface as would have suited a geostatistical 
+approach. In preparing data for modelling, support is often changed when, 
+for example, night-time light intensity observed over raster cells is 
+aggregated to irregular polygons, or read off by dropping points onto the 
+raster cells. By support, we mean the geometry of the initial observation 
+[@pebesma+bivand:23 pp. 49--54], so that when we for example use the 
+centroid of an areal observation in place of its boundaries, we change 
+the meaning of the variables - the population count for the polygon is 
+not the same as the count at the centroid point. 
+    \index{areal data}
+    \index{lattice data}
+    \index{support}
+
+Change of support [@gotway+young:02] remains a largely unresolved, even 
+unseen, problem, such as reading off data from sources with a different 
+support than the modelled variable - like register data address points on 
+other aggregate or estimated variables. Change of support implies 
+acceptance that the transformed data are an estimate with a distribution, 
+and that this uncertainty is often not carried through to the target 
+estimation. This problem affects temporal data, but here the possible 
+implied smoothing incurred when changing temporal units (hours, days, 
+weeks, quarters, years) is better understood. What are the specific 
+challenges involved in analysing areal spatial data?
+    \index{change of support}
+
+Temporal autocorrelation and cross-correlation are quite well understood, 
+an observation of a continuous variable at time point or interval $t$ is 
+likely to be more similar to the value at $t-1$ than when the time lag is 
+greater, unless periodicity is more dominant. Two variables may well co-vary 
+in time; knowing the degree of co-variation and autocorrelation, forecasts 
+can be made readily. For time series, we know that present values depend 
+in some degree on past values, observed at points or intervals of time for 
+which entities of observation have an acknowledged status.
+    \index{temporal autocorrelation}
+
+Understanding of spatial autocorrelation is less simple, partly because it 
+also includes the more fluid association of observed values with 
+observational units. A classic case is the discussion following the 
+presentation of a paper in anthropology by Tylor on marriage and 
+descent laws and customs [@tylor89]. In the discussion - printed with 
+the paper, Galton raises the question of the independence of the reported 
+observations (Galton's Problem is also known as phylogenetic 
+autocorrelation):
+    \index{observational units}
+    \index{spatial autocorrelation}
+    \index{Galton's problem}
+
+> It was extremely desirable for the sake of those who may wish to study 
+the evidence for Dr. Tylor's conclusions, that full information should be 
+given as to the degree in which the customs of the tribes and races which 
+are compared together are independent. It might be, that some of the 
+tribes had derived them from a common source, so that they were duplicate 
+copies of the same original. Certainly, in such an investigation as this, 
+each of the observations ought, in the language of statisticians, to be 
+carefully "weighted." It would give a useful idea of the distribution of 
+the several customs and of their relative prevalence in the world, if a 
+map were so marked by shadings and colour as to present a picture of 
+their geographical ranges. [@tylor89 p. 270]
+    \index{Galton's problem}
+
+The speaker responded:
+
+> The difficulty raised by Mr. Galton that some of the concurrences might 
+result from transmission from a common source, so that a single character 
+might be counted several times from its mere duplicates, is a difficulty 
+ever present in such investigations, as for instance in the Malay region, 
+where groups of islands have enough differentiation in their marriage 
+systems to justify their being classed separately, though traces of common 
+origin are at the same time conspicuous. The only way of meeting this 
+objection is to make separate clsssification depend on well marked 
+differences, and to do this all over the world. [@tylor89 p. 272]
+    \index{Galton's problem}
+
+One view of this exchange is that nearness in space and the fluid assignment 
+of boundaries between observations may affect our view of how many valid 
+observations have been made. Is $n$ $n$ or some reduced number reflecting 
+the common origins of the data reported? The assignment of bourdaries 
+between observations, entitation, is a key concept in the modelling of 
+spatial interaction [@wilson:00; @wilson:02; @wilson:12], where often 
+unobservable micro-level movements are tallied by meso-level containers. 
+As @openshaw+taylor79 showed, the "modifiable areal unit problem" (MAUP), can 
+permit the re-arrangement of component spatial sub-units into higher-level 
+contiguous units that give the desired outcome (also known as gerrymandering, 
+creating voting districts to ensure desired outcomes). 
+
+@yule+kendall:58 distinguish clearly between modifiable units of observation 
+and units that cannot be modified by subdivision or aggregation (temporal 
+units are also modifiable). If units are modifiable, then any results 
+from analysis will be valid only in relation to the units:
+
+> They have no absolute validity independently of those units, but are 
+relative to them. They measure, as it were, not only the variation in 
+the quantities under consideration, but the properties of the unit-mesh 
+which we have imposed on the system in order to measure it. 
+[@yule+kendall:58, p. 312]
+
+An extension of this 
+view is seen where the units of observation chosen do not address important 
+sources of variation in the response; @kendall39 analysed crop productivity 
+in England by crop counties for which data were readily available, but was 
+criticised in discussion for not using soil or climate classifications 
+in their place by Dudley Stamp, who was directing the Land Utilisation 
+Survey of Britain at that time:
+    \index{spatial interaction}
+    \index{entitation}
+    \index{modifiable areal unit problem}
+
+> ... the author had partly anticipated his main criticism - namely, that 
+the foundation of data actually available was at the present time totally 
+inadequate to support the superstructure which he had erected on it. ...  
+it would be difficult to find any division of England more unsuitable for 
+the arrangement of the superstructure than the administrative counties. 
+[@kendall39, p. 52]
+
+The speaker responded:
+
+> It was an inherent defect in this work, as far as it was a practical 
+description of the geography of the country, that it did deal with 
+particular counties and not with farming districts. Such value as might 
+be claimed for the paper lay in the nature of the trial methods rather 
+than in the results themselves, but he did differ from Dr. Stamp on one 
+point. Dr. Stamp, if Mr. Kendall understood him correctly, suggested a 
+division of the country on climatic or pedological lines. Mr. Kendall 
+thought that if one had to select smaller areas within the county for 
+study, one would select them on a farming type basis, not on a 
+geographical basis. Apart from soil and climate the existing organization 
+of the farm had a powerful influence on its nature and on its productivity. 
+[@kendall39, p. 61]
+
+An overlapping view on Galton's Problem is that, assuming that the spatial 
+units of observation are accepted as given, spurious correlation due to 
+position may arise from unobserved spillover between nearby observations; 
+@student:14 touches briefly on agricultural trial plots in describing this 
+aspect of the problem as treatments may leach between neighbouring plots. 
+Student had been concerned in several contexts with the effective degrees 
+of freedom of a collection of observations. Positive spillover, leading 
+to more likeness between neighbours, would clearly reduce the effective 
+count of independent observations. @stephan:34 gives us a powerful picture 
+of the problem:
+    \index{spillover}
+    \index{Galton's problem}
+
+
+> Data of geographic units are tied together, like bunches of grapes, not 
+separate, like balls in an urn. Of course mere contiguity in time and space 
+does not of itself indicate lack of independence between units in a 
+relevant variable or attribute, but in dealing with social data, we know 
+that by virtue of their very social character, persons, groups and their 
+characteristics are interrelated and not independent. [@stephan:34, p. 165]
+
+Tobler expresses his view, perhaps the view that is most often cited in 
+discussing spatial data, in this way:
+    \index{spatial autocorrelation}
+
+> ... the first law of geography: everything is related to everything else, but near things are more related than distant things. [@tobler:70, p. 236]
+
+However, @olsson:70 asks whether the unquestioning application of the ubiquity 
+of spatial autocorrelation, as the only lens through which to view spatial 
+data, is wise: 
+    \index{spatial autocorrelation}
+
+> The existence of such autocorrelations makes it tempting to agree with 
+Tobler (1970, 236 [the original refers to the pagination of a conference 
+paper]) that 'everything is related to everything else, but near things 
+are more related than distant things.' On the other hand, the fact that 
+the autocorrelations seem to hide systematic specification errors suggests 
+that the elevation of this statement to the status of 'the first law of 
+geography' is at best premature. At worst, the statement may represent 
+the spatial variant of the post hoc fallacy, which would mean that 
+coincidence has been mistaken for a causal relation. 
+[@olsson:70, p. 228; cf. @pebesma+bivand:23, p. 210]
+    \index{spatial autocorrelation}
+    \index{mis-specification}
+
+Specification errors of the kind concerning Olsson may be manifold, such as 
+inappropriate entitation, inappropriate functional form, and omitted 
+variables among others. Standard tests for spatial autocorrelation, like 
+tests for temporal autocorrelation, often pick up other causes of 
+mis-specification than the mutual dependence of observations that the 
+tests were created to detect [@schabenberger+gotway:2005; @mcmillen:03]. 
+Inappropriate entitation may involve the spatial scale of the empirical 
+processes of interest, where the units of observation may be too large to 
+pick up the phenomena being observed, or the footprint of the observed 
+phenomenon may be split up among many units of observation (Galton's Problem). 
+The interaction of scale, heterogeneity - based on scale, functional form, 
+and/or missing covariates - and spatial autocorrelation has been a major 
+topic of debate in numerical ecology for many years [@drayetal12].
+    \index{spatial autocorrelation}
+    \index{mis-specification}
+    \index{entitation}
+    \index{functional form}
+    \index{Galton's problem}
+    \index{spatial scale}
+    \index{spatial heterogeneity}
+
+At this point it might be tempting to step back, sensing that spatial
+data is special, not so much specially promising, but more specially
+challenging [@ripley:88]. However, if the data to hand or the data to be
+collected are spatially located, it is sensible to accept the challenges
+that analysis of such data may entail. The next section will depict
+how spatial econometrics was created in the form in which we now know
+it, to address som of the challenges and to benefit from some of the
+opportunities presented.

@@ -1,0 +1,3 @@
+# Estimation of spatial autoregressive models: methods (GMM, ML, Bayesian)
+
+

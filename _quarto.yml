@@ -16,9 +16,18 @@ book:
   date: today
   chapters:
     - index.qmd
-    - day_1.qmd
-    - day_2.qmd
-    - day_3.qmd
+    - 01_talk.qmd
+    - 02_talk.qmd
+    - 03_talk.qmd
+    - 04_talk.qmd
+    - 05_talk.qmd
+    - 06_talk.qmd
+    - 07_talk.qmd
+    - 08_talk.qmd
+    - 09_talk.qmd
+    - 10_talk.qmd
+    - 11_talk.qmd
+    - 12_talk.qmd
     - references.qmd
 
 bibliography: [bib/references.bib, packages.bib, bib/book.bib]
