@@ -1,3 +1,198 @@
 # Tests of spatial autocorrelation, model specification
 
+```{r pl_io0, echo=FALSE, results="hide"}
+io_dir <- "Input_output"
+if (!dir.exists(io_dir)) io_dir <- paste0("../", io_dir)
+```
+```{r echo=FALSE}
+load(file = paste0(io_dir, "/talk4.RData"))
+```
+
+## Univariate tests of spatial autocorrelation
+
+```{r usa1, size="footnotesize"}
+library(spdep)
+lw <- nb2listw(unb, style="W")
+moran.test(eng324$realNetPre, listw=lw, randomisation=TRUE, alternative="two.sided")
+```
+
+Moran's $I$ is given as [@cliff+ord:81, page 17]:
+
+$$
+I = \frac{n \sum_{(2)} w_{ij} z_i z_j}{S_0 \sum_{i=1}^{n} z_i^2}
+$$
+
+where $x_i, i=1, \ldots, n$ are $n$ observations on the numeric variable of interest, $z_i = x_i - \bar{x}$, $\bar{x} = \sum_{i=1}^{n} x_i / n$, $\sum_{(2)} = \stackrel{\sum_{i=1}^{n} \sum_{j=1}^{n}}{i \neq j}$, $w_{ij}$ are the spatial weights, and $S_0 = \sum_{(2)} w_{ij}$. A comparison of implementations of measures of spatial autocorrelation shows that a wide range of measures is available in R in a number of packages, chiefly in the `spdep` package, and that differences from other implementations can be attributed to design decisions [@bivand+wong:18]. The `spdep` package also includes the only implementations of exact and Saddlepoint approximations to global Moran's I [@tiefelsdorf:02; @bivandetal:09]. 
+
+Global measures of spatial autocorrelation using spatial weights objects based on graphs of neighbours are, as we have seen, rather blunt tools, which for interpretation depend critically on a reasoned mean model of the variable in question. If the mean model is just the intercept, the global measures will respond to all kinds of mis-specification, not only spatial autocorrelation [@schabenberger+gotway:2005; @mcmillen:03]. 
+
+## Tests of residual spatial autocorrelation
+
+When the model is the null model, containing only the intercept, the univariate test `moran.test` on the residuals with `randomisation=FALSE` and the test on residuals `lm.morantest` are the same:
+
+```{r rsa1, size="footnotesize"}
+lm_null <- lm(realNetPre ~ 1, data=eng324)
+moran.test(residuals(lm_null), listw=lw,
+ randomisation=FALSE, alternative="two.sided")
+```
+```{r rsa2, size="footnotesize"}
+lm.morantest(lm_null, listw=lw, alternative="two.sided")
+```
+
+If we move to a model with independent variables, we will see that the inferences are not the same:
+
+```{r rsa3, size="footnotesize"}
+form <- log(realNetPre) ~ log(units) + house +
+ log(dens) + Metrop + log(realWgPre)
+lm_obj <- lm(form, data=eng324)
+moran.test(residuals(lm_obj), listw=lw,
+ randomisation=FALSE, alternative="two.sided")
+```
+```{r rsa4, size="footnotesize"}
+lm.morantest(lm_obj, listw=lw, alternative="two.sided")
+```
+
+This is because `lm.morantest` takes into account the structure of the regression model, as do `lm.morantest.sad` and `lm.morantest.exact`:
+
+```{r rsa5, size="footnotesize"}
+lm.morantest.sad(lm_obj, listw=lw, alternative="two.sided")
+```
+```{r rsa6, size="footnotesize"}
+lm.morantest.exact(lm_obj, listw=lw, alternative="two.sided")
+```
+
+In all these cases, the measured value of Moran's $I$ is the same, but the inferences differ somewhat.
+
+
+## Model specification
+
+A recent review of spatial regression in a spatial econometrics setting is given by Kelejian and Piras [-@kelejian+piras:17]; note that their usage is to call the spatial coefficient of the lagged response $\lambda$ and that of the lagged residuals $\rho$, the reverse of other usage  [@anselin:88; @lesage+pace:09]; here we use $\rho_{\mathrm{Lag}}$ for the spatial coefficient in the spatial lag model, and $\rho_{\mathrm{Err}}$ for the spatial error model. One interesting finding is that relatively dense spatial weights matrices may downweight model estimates, suggesting that sparser weights are preferable [@smith:09]. Another useful finding is that the presence of residual spatial autocorrelation need not bias the estimates of variance of regression coefficients, provided that the covariates themselves do not exhibit spatial autocorrelation [@smith+lee12]. 
+
+In trying to model these spatial processes, we may choose to model the spatial autocorrelation in the residual with a spatial error model (SEM). 
+
+$$
+{\mathbf y} = {\mathbf X}{\mathbf \beta} + {\mathbf u},
+\qquad {\mathbf u} = \rho_{\mathrm{Err}} {\mathbf W} {\mathbf u} + {\mathbf \varepsilon},
+$$
+
+where ${\mathbf y}$ is an $(N \times 1)$ vector of observations on a response variable taken  at each of $N$ locations, ${\mathbf X}$ is an $(N \times k)$ matrix of covariates, ${\mathbf \beta}$ is a $(k \times 1)$ vector of parameters, ${\mathbf u}$ is an $(N \times 1)$ spatially autocorrelated disturbance vector, ${\mathbf \varepsilon}$ is an $(N \times 1)$ vector of independent and identically distributed disturbances and $\rho_{\mathrm{Err}}$ is a scalar spatial parameter.
+
+If the processes in the covariates and the response match, we should find little difference between the coefficients of a least squares and a SEM, but very often they diverge, suggesting that a Hausman test for this condition should be employed [@pace+lesage:08]. This may be related to earlier discussions of a spatial equivalent to the unit root and cointegration where spatial processes match [@fingleton:99].
+
+A model with a spatial process in the response only is termed a spatial lag model (SLM, often SAR - spatial autoregressive) [@lesage+pace:09]. 
+
+$$
+{\mathbf y} = \rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y} + {\mathbf X}{\mathbf \beta} + {\mathbf \varepsilon},
+$$
+where $\rho_{\mathrm{Lag}}$ is a scalar spatial parameter.
+
+Work reviewed by Mur and Angulo [-@mur+angulo:06] on the Durbin model; the Durbin model adds the spatially lagged covariates to the covariates included in the spatial lag model, giving a spatial Durbin model (SDM) with different processes in the response and covariates: 
+
+$$
+{\mathbf y} = \rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y} + {\mathbf X}{\mathbf \beta} + {\mathbf W}{\mathbf X}{\mathbf \gamma} + {\mathbf \varepsilon},
+$$
+
+where ${\mathbf \gamma}$ is a $(k' \times 1)$ vector of parameters. $k'$ defines the subset of the intercept and covariates, often $k' = k-1$ when using row standardised spatial weights and omitting the spatially lagged intercept.
+
+This permits the spatial processes to be viewed and tested for as a Common Factor [@burridge:81; @bivand:84]. The inclusion of spatially lagged covariates lets us check whether the same spatial process is manifest in the response and the covariates (SEM), whether they are different processes, or whether no process is detected. The Common Factor is present when ${\mathbf \gamma} = - \rho_{\mathrm{Lag}} {\mathbf \beta}$:
+
+$$
+{\mathbf y} = \rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y} + {\mathbf X}{\mathbf \beta} - \rho_{\mathrm{Lag}} {\mathbf W}{\mathbf X} {\mathbf \beta} + {\mathbf \varepsilon},
+\qquad ({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}){\mathbf y} = ({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}) {\mathbf X}{\mathbf \beta} + {\mathbf \varepsilon},
+$$
+where ${\mathbf I}$ is the $N \times N$ identity matrix, and ${\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}$ is the Common Factor:
+
+$$
+\qquad {\mathbf y} = {\mathbf X}{\mathbf \beta} + ({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1} {\mathbf \varepsilon},
+\qquad {\mathbf y} = {\mathbf X}{\mathbf \beta} + {\mathbf u},
+\qquad {\mathbf u} = \rho_{\mathrm{Err}} {\mathbf W} {\mathbf u} + {\mathbf \varepsilon},
+$$
+
+If we extend this family with processes in the covariates and the residual, we get  a spatial error Durbin model (SDEM). If it is chosen to admit a spatial process in the residuals in addition to a spatial process in the response, again two models are formed, a general nested model (GNM) nesting all the others, and a model without spatially lagged covariates (SAC, also known as SARAR - Spatial AutoRegressive-AutoRegressive model). If neither the residuals nor the residual are modelled with spatial processes, spatially lagged covariates may be added to a linear model, as a spatially lagged X model (SLX) [@elhorst:10; @bivand:12; @lesage:14; @halleck-vega+elhorst:15]. 
+
+We can write the general nested model (GNM) as:
+
+$$
+{\mathbf y} = \rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y} + {\mathbf X}{\mathbf \beta} + {\mathbf W}{\mathbf X}{\mathbf \gamma} + {\mathbf u},
+\qquad {\mathbf u} = \rho_{\mathrm{Err}} {\mathbf W} {\mathbf u} + {\mathbf \varepsilon},
+$$
+
+This may be constrained to the double spatial coefficient model SAC/SARAR by setting ${\mathbf \gamma} = 0$, to the spatial Durbin (SDM) by setting $\rho_{\mathrm{Err}} = 0$, and to the error Durbin model (SDEM) by setting $\rho_{\mathrm{Lag}} = 0$. Imposing more conditions gives the spatial lag model (SLM) with ${\mathbf \gamma} = 0$ and $\rho_{\mathrm{Err}} = 0$, the spatial error model (SEM) with ${\mathbf \gamma} = 0$ and $\rho_{\mathrm{Lag}} = 0$, and the spatially lagged X model (SLX) with $\rho_{\mathrm{Lag}} = 0$ and $\rho_{\mathrm{Err}} = 0$.
+
+The specification problem is then to choose between (from most complex to simplest): GNM (three sets of spatial parameters: $\rho_{\mathrm{Lag}}$, $\rho_{\mathrm{Err}}$, ${\mathbf \gamma}$), SAC, SDM or SDEM (two sets of spatial parameters among the three), SEM, SLM, SLX (one set of spatial parameters among the three) or ordinary least squares (no spatial parameters) - assuming that the dependent variable is Gaussian. Effectively the same specification choice is present with limited dependent variables.
+
+
+## Rao's score (Lagrange multiplier) tests
+
+When working over 25 years ago on @bivand+szymanski:00, the only Rao's score (Lagrange multiplier) tests available were those newly proposed by @anselinetal:96. The underlying concern is to test whether the spatial parameter of interest could be taken as zero, without estimating the parameter. One works from the information matrix of the spatial model; in the case of the first tests, a mixed regressive-spatial autoregressive model with a spatial autoregressive disturbance (SAC) was considered, as this had also been used for residual autocorrelation in an SLM model. Five tests are proposed, a test for missing $\rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y}$, `"RSlag"` and pointing to SLM, another for missing $\rho_{\mathrm{Err}} {\mathbf W} {\mathbf u}$, `"RSerr"` pointing to SEM, two tests matching the first two tests but adjusted for the presence of the other (`"adjRSlag"`, `"adjRSerr"`), and a `"SARMA"` test combining both alternatives, equal to `"RSlag"` plus `"adjRSerr"` and `"RSerr"` plus `"adjRSlag"`. 
+
+```{r rao1, size="footnotesize"}
+summary(lm.RStests(lm_obj, listw=lw, test="all"))
+```
+
+Here, for the independent variables initially included in the model to account for the logarithm of real net expenditure on garbage collection in each district, the logarithm of the number of pick-up points (`units`), the proportion of dwellings among the pick-up points (`house`), the logarithm of pick-up point density (`dens`), a categorical variable `Metrop` with levels: `"district"`, `"london"`, `"metrop"`, and the logarithm of the real regional wage rate for regions. In this case, the tests point to a SEM model rather than an SLM model or falling back to OLS.
+
+@koley+bera:22 propose a similar set of tests to distinguish between either an SLM or an SLX model based on an SDM model, falling back to ordinary least squares if neither alternative is chosen. Because the interpretation of spatially lagged categorical variables is unclear, we drop `Metrop` from the tests
+
+```{r rao2, size="footnotesize"}
+summary(SD.RStests(lm_obj, listw=lw, test="SDM",
+ Durbin=update(form, ~ . - Metrop)))
+```
+
+In this case, an SLX model appears to be indicated rather than SDM, SLM or OLS. However, we also need to look at SDEM as the tests against SAC indicated SEM rather than SLM. @koley:24 proposes approriate tests:
+
+```{r rao3, size="footnotesize"}
+summary(SD.RStests(lm_obj, listw=lw, test="SDEM",
+ Durbin=update(form, ~ . - Metrop)))
+```
+
+which indicate SEM rather than SDEM. Clearly, the underlying difficulty is that the GNM is poorly identified, and as @koley:24 finds:
+
+> ... identification conditions have not been established for the GNS model in the spatial literature that also suffers from an identification problem. In fact, to the best of our knowledge, the non-identification of the GNS model has not yet been analytically studied in the literature [@koley:24, p. 3].
+
+However, it has been found that the `lm.RStests` tests can be used on a fitted SLX model using the `lmSLX` function in `spatialreg` [@koley:24, p.18], again omitting `Metrop` from the ${\mathbf W}{\mathbf X}$ term in addition to omitting the intercept:
+
+```{r rao4, size="footnotesize", message=FALSE}
+library(spatialreg)
+SLX_obj <- lmSLX(form, data=eng324, listw=lw,
+ Durbin=update(form, ~ . - Metrop))
+summary(lm.RStests(SLX_obj, listw=lw, test="all"))
+```
+
+In @bivand+szymanski:00, it was found that the inclusion of the categorical variable `Majority`, with levels: `"coalition"`, `"conservative"` and `"labour"`, as anecdotal reports indicated that neighbouring districts with the same political party in control shared more information than otherwise, so the yardstick used would be weighted towards the same political party:
+
+```{r rao_maj1, size="footnotesize"}
+form_maj <- update(form, . ~. + Majority)
+lm_obj_maj <- lm(form_maj, data=eng324)
+summary(lm.RStests(lm_obj_maj, listw=lw, test="all"))
+```
+
+The tests here indicate some support for the inclusion of $\rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y}$. On turning to the new tests for SDM compared to SLM or SLX:
+
+```{r rao_maj2, size="footnotesize"}
+summary(SD.RStests(lm_obj_maj, listw=lw, test="SDM"),
+ Durbin=update(form, ~ . - Metrop - Majority))
+```
+
+There is as yet very little experience of interpreting the outcomes, but here an SDM seems to be indicated; we turn to the next set of tests:
+
+```{r rao_maj3, size="footnotesize"}
+summary(SD.RStests(lm_obj_maj, listw=lw, test="SDEM"),
+ Durbin=update(form, ~ . - Metrop - Majority))
+```
+
+but the SDEM versus SLX or SEM also looks feasible. Testing the fitted SLX model appears to point to the SDM model rather than the SDEM model:
+
+```{r rao_maj4, size="footnotesize", message=FALSE}
+library(spatialreg)
+SLX_obj_maj <- lmSLX(form_maj, data=eng324, listw=lw,
+ Durbin=update(form, ~ . - Metrop - Majority))
+summary(lm.RStests(SLX_obj_maj, listw=lw, test="all"))
+```
+
+
+```{r echo=FALSE}
+save(eng324, unb, orignb, file = paste0(io_dir, "/talk7.RData"))
+```
+
 

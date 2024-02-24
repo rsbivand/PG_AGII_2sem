@@ -1,3 +1,11 @@
 # Spatial autoregressive models: conditional (CAR) and simultaneous (SAR)
 
 
+```{r pl_io0, echo=FALSE, results="hide"}
+io_dir <- "Input_output"
+if (!dir.exists(io_dir)) io_dir <- paste0("../", io_dir)
+```
+```{r echo=FALSE}
+load(file = paste0(io_dir, "/talk7.RData"))
+```
+

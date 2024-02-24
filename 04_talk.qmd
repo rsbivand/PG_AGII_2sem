@@ -9,6 +9,7 @@ if (!dir.exists(io_dir)) io_dir <- paste0("../", io_dir)
 load(file = paste0(io_dir, "/talk3.RData"))
 ```
 
+## Using `spdep` to create neighbour and weights objects
 
 Chapter 14 of @pebesma+bivand:23 provides a fairly up-to-date account of how one may construct `"nb"` neighbour objects, and from these `"listw"` weights objects. In the following chapters, these objects will be used extensively in modelling, and will often be referred to as spatial weights matrices. While their description in terms of linear algebra as matrices is reasonable, their representation as dense $n$ by $n$ matrices is much less reasonable, as in most cases, only a very few elements of such a matrix are non-zero. This means that sparse representations are certainly preferable in terms of storage and efficiency, and repeated multiplication by zero is simply wasteful. `"nb"` neighbour objects, and `"listw"` weights objects are sparse representations, where the `"nb"` object records which objects $j$ are neighbours of $i$ for each $i$, and `"listw"` objects add in the weights assigned to each such 
 $i$-$j$ relationship. 
@@ -105,4 +106,72 @@ pom_queen_lw$weights |> sapply(sum) |> unique()
 ```
 
 In some modelling settings, the `"B"` binary zero-one style is preferred, and there are a number of alternative ways of specifying weights. Finally, if the neighbour object contains no-neighbour entities, the `zero.policy` argument to `nb2listw` may be used to indicate that zero weights are acceptable - the obvious alternatives are to exclude such entities, or to add neighbour links so that all entities have neigbours.
+
+## English garbage data set and weights construction
+
+From the seventh lecture, we shall be using a data set from @bivand+szymanski:97 and @bivand+szymanski:00, extending results in @szymanski+wilkins:93, @szymanski:96 and @bello+szymanski:96. The question posed in the research reported in these articles is whether the costs of garbage collection in English local authority districts (which had a statutory obligation to collect garbage) were reduced when compulsory competitive tendering was introduced. Not all districts introduced compulsory competitive tendering at the same time, and some had not begun when data collection ceased. Of 366 districts, only 324 had completed at this point, and the data used relate to these districts. Since compulsory competitive tendering was implemented in different years, the data set reports real district net expenditure on garbage collection for the year before the implementation of compulsory competitive tendering (pre-CCT), and the year after (post-CCT). 
+
+As mentioned in @bivand+szymanski:00, the observations are agents, their boundaries do not change during the study period, and as entities they meet reasonable behavioural expectations. @revelli:03, @brueckner:03, @revelli:06, @revelli+tovmo:07 and others engage with a literature including @caseetal:93 and @besley+case:95 concerning strategic interactions, of which yardstick competition may play a part. In @bivand+szymanski:97, the identification of residual spatial autocorrelation in the results given by@bello+szymanski:96 was used to develop a spatial yardstick competition framework, in which districts without compulsory competitive tendering were more likely to be influenced by the behaviour of their proximate neighbours than by general market conditions.
+
+The data used in @bivand+szymanski:00 have been matched with simplified boundaries for English districts, and may be read in the usual way:
+
+```{r gar_read0, size="footnotesize"}
+library(sf)
+eng324 <- st_read("Datasets/cross section/garbage/eng324s.gpkg")
+```
+
+Showing which districts implemented compulsory competitive tendering and whether they awarded the contract to an outside bidder or to thir direct service organisation also shows the gaps, that is districts that had not implemented the policy by the end of data collection:
+
+```{r gar_vis0, size="footnotesize"}
+#| label: gar_vis0
+#| fig-cap: Direct service organisation chosen, compulsory competitive tendering, English districts
+library(mapview)
+mapview(eng324, zcol="f_dso")
+```
+
+Naturally, the gaps lead to difficulties in creating a viable neighbour object:
+
+```{r gar_sw0, size="footnotesize"}
+library(spdep)
+(pnb <- poly2nb(eng324, queen=TRUE, row.names=eng324$NAME))
+```
+
+Three disticts have no neighbours, and there are 6 disjoint subgraphs. We can use $k$-nearest neighbours with small $k$ to patch in the missing links, and make them symmetric:
+
+```{r gar_sw1, size="footnotesize"}
+crds <- st_centroid(st_geometry(eng324))
+k2 <- knn2nb(knearneigh(crds, k=2), row.names=eng324$NAME)
+(unb <- make.sym.nb(union.nb(pnb, k2)))
+```
+
+```{r gar_sw2, size="footnotesize"}
+#| label: gar_sw2
+#| fig-cap: Contiguity neighbours and added k-nearest neighbours, 324 Englist districts
+pnb_sf <- nb2lines(pnb, coords=crds)
+k2_sf <- nb2lines(setdiff.nb(intersect.nb(pnb, k2), k2),
+ coords=crds)
+mapview(eng324, alpha.regions=0.15) +
+ mapview(pnb_sf, color="blue3") +
+ mapview(k2_sf, color="red4")
+```
+
+We can also read the original neighbour object modified by hand for @bivand+szymanski:97:
+
+```{r gar_sw3, size="footnotesize"}
+(orignb <- read.gal("Datasets/cross section/garbage/eng324_orig.gal"))
+attr(orignb, "region.id") <- attr(unb, "region.id")
+```
+```{r gar_sw4, size="footnotesize"}
+#| label: gar_sw4
+#| fig-cap: Original simple graph, 324 English districts
+orignb_sf <- nb2lines(orignb, coords=crds)
+mapview(eng324, alpha.regions=0.15) +
+ mapview(orignb_sf, color="green4")
+```
+
+Now we have a basis for work later on involving a data set used in published articles some time ago, but still relevant, as the entities are well-founded, and we have a micro-economic model for spillovers between entities.
+
+```{r echo=FALSE}
+save(eng324, unb, orignb, file = paste0(io_dir, "/talk4.RData"))
+```
 

@@ -35,11 +35,13 @@ bibliography: [bib/references.bib, packages.bib, bib/book.bib]
 execute:
   freeze: auto  # re-render only when source changes
 
+highlight-style: pygments
+
 format:
   html:
     theme: cosmo
     html-math-method: katex
     minimal: true
     code-copy: true
-
+    code-overflow: wrap
 
