@@ -9,3 +9,439 @@ if (!dir.exists(io_dir)) io_dir <- paste0("../", io_dir)
 load(file = paste0(io_dir, "/talk7.RData"))
 ```
 
+## CAR and SAR
+
+(from: @pebesma+bivand:23, pp. 233-234)
+
+There is a large literature in disease mapping using conditional autoregressive (CAR) and intrinsic CAR (ICAR) models in spatially structured random effects. These extend to multilevel models, in which the spatially structured random effects may apply at different levels of the model [@bivandetal:17]. In order to try out some of the variants, we need to remove the no-neighbour observations from the tract level, and from the model output zone aggregated level, in two steps as reducing the tract level induces a no-neighbour outcome at the model output zone level. Many of the model estimating functions take `family` arguments, and fit generalised linear mixed effects models with per-observation spatial random effects structured using a Markov random field representation of relationships between neighbours. In the multilevel case, the random effects may be modelled at the group level, which is the case presented in the following examples.
+
+We follow @vgr_clubuc3m:19 in summarising @R:Pinheiro+Bates:2000 and @mcculloch+searle:2001 to describe the mixed-effects model representation of spatial regression models. In a Gaussian linear mixed model setting, a random effect $u$ is added to the model, with response $Y$, fixed covariates $X$, their coefficients $\beta$ and error term $\varepsilon_i \sim N(0, \sigma^2), i=1,\dots, n$:
+
+$$
+Y = X \beta + Z u + \varepsilon
+$$
+
+$Z$ is a fixed design matrix for the random effects. If there are $n$ random effects, it will be an $n \times n$ identity matrix if instead the observations are aggregated into $m$ groups, so with $m < n$ random effects, it will be an $n \times m$ matrix showing which group each observation belongs to. The random effects are modelled as a multivariate Normal distribution $u \sim N(0, \sigma^2_u \Sigma)$, and $\sigma^2_u \Sigma$ is the square variance-covariance matrix of the random effects.
+
+A division has grown up, possibly unhelpfully, between scientific fields using CAR models [@besag:74], and simultaneous autoregressive models (SAR) [@ord:75; @hepple:76]. Although CAR and SAR models are closely related, these fields have found it difficult to share experience of applying similar models, often despite referring to key work summarising the models [@ripley:81; @ripley:88; @cressie:93]. Ripley gives the SAR variance as [@ripley:81, page 89], here shown as the inverse $\Sigma^{-1}$ (also known as the precision matrix):
+
+$$
+\Sigma^{-1} = [(I - \rho W)'(I - \rho W)]
+$$
+
+where $\rho$ is a spatial autocorrelation parameter and $W$ is a non-singular spatial weights matrix that represents spatial dependence. The CAR variance is:
+
+$$
+\Sigma^{-1} = (I - \rho W)
+$$
+
+where $W$ is a symmetric and strictly positive definite spatial weights matrix. In the case of the intrinsic CAR model, avoiding the estimation of a spatial autocorrelation parameter, we have:
+
+$$
+\Sigma^{-1} = M = \mathrm{diag}(n_i) - W
+$$
+
+where $W$ is a symmetric and strictly positive definite spatial weights matrix as before and $n_i$ are the row sums of $W$. The Besag-York-Mollié model includes intrinsic CAR spatially structured random effects and unstructured random effects. The Leroux model combines matrix components for unstructured and spatially structured random effects, where the spatially structured random effects are taken as following an intrinsic CAR specification:
+
+$$
+\Sigma^{-1} = [(1 - \rho) I_n + \rho M]
+$$
+
+References to the definitions of these models may be found in @gómez2020bayesian, and estimation issues affecting the Besag-York-Mollié and Leroux models are reviewed by @JSSv063c01.
+
+More recent books expounding the theoretical bases for modelling with areal data simply point out the similarities between SAR and CAR models in relevant chapters [@gaetan+guyon:10; @vanlieshout:19]; the interested reader is invited to consult these sources for background information.
+
+## Some CAR examples with English garbage data
+
+In spatial econometrics, CAR is not used, nor are binary spatial weights; they both are, however, extensively used in spatial epidemiology (disease mapping). The CAR model accounts for spatial autocorrelation in the residuals of a linear model by modelling that residual dependency in various ways. `spatialreg` provides `spautolm` using Maximum Likelihood (ML) including a `"CAR"` family member, but does not have a direct method for extracting the spatially structured random effect (SSRE) from the fitted model:
+
+```{r car1, size="footnotesize", message=FALSE}
+library(spdep)
+lwB <- nb2listw(unb, style="B")
+library(spatialreg)
+car1 <- spautolm(form_pre, data=eng324, listw=lwB, family="CAR")
+summary(car1, Nagelkerke=TRUE)
+```
+
+@cressie:93 gives the spatial component of the fit as $\rho_{\mathrm{Err}} {\mathbf W} ({\mathbf y} - {\mathbf X}{\mathbf \beta})$ (p. 564, eq. 7.6.31):
+
+```{r car1_ranef, size="footnotesize"}
+eng324$ranef_ml <- car1$fit$signal_stochastic
+```
+
+Hierarchical GLM `hglm` [@alam-ronnegard-shen:2015] can be used for fitting a proper CAR model as a `rand.family` argument passing in the binary spatial weights coerced into a symmetric sparse matrix:
+
+```{r car2, size="footnotesize", message=FALSE, warning=FALSE}
+library(hglm)
+W <- as(lwB, "CsparseMatrix")
+car2 <- hglm(fixed=form_pre, random= ~ 1|ID, data=eng324, family = gaussian(), rand.family=CAR(D=W))
+car2
+```
+
+The fitting algorithm does not converge, so no estimate of the spatial autoregressive parameter is returned; a warning is given that one observation is highly unusual:
+
+```{r car2a, size="footnotesize", message=FALSE, warning=FALSE}
+as.character(eng324$NAME[65])
+```
+
+As almost nobody lives there, the proportion of houses in pick-up points is only 0.21, far below the median of 0.93; other variables are less extreme. No provision is made for dropping the outlier, so we will keep it; the SSRE is provided:
+
+```{r car2_ranef, size="footnotesize"}
+eng324$ranef_hglm <- c(unname(car2$ranef))
+```
+
+Finally, an intrinsic CAR (here termed Markov Random Field, MRF) can be fitted with `mgcv` using `gam` with an `"mrf"` smooth, and a spatial neighbour object with names set on the object components to match the variable defining the random effects:
+
+```{r car3, size="footnotesize"}
+library(mgcv)
+names(unb) <- attr(unb, "region.id")
+eng324$NAME <- factor(eng324$NAME)
+car3 <- gam(update(form_pre, . ~ . + s(NAME, bs="mrf", xt=list(nb=unb))), data=eng324)
+summary(car3)
+```
+
+SSRE are not returned directly, but can be extracted from predictions for the data used to fit the model, taking only the smooth term:
+
+```{r car3_ranef, size="footnotesize"}
+eng324$ranef_mrf <- unname(predict(car3, type="terms")[, "s(NAME)"])
+```
+
+We can tabulate the fixed effects coefficients, and see that these fitting approaches yield similar but not identical values:
+
+```{r car4, size="footnotesize"}
+cbind(ML=coef(car1), HGLM=c(car2$fixef, NA), MRF=c(coef(car3)[1:7], NA))
+```
+
+We can also look at correlations between the three approximations to SSRE:
+
+```{r car4a, size="footnotesize"}
+cor(st_drop_geometry(eng324)[, c("ranef_ml", "ranef_hglm", "ranef_mrf")])
+```
+
+It is characteristic of work in disease mapping that the SSRE are mapped, and the maps are interpreted to learn whether the data collection could have been improved. It is not usual that work in spatial econometrics includes maps, and this difference has been noted critically by spatial statisticians. Here are comparative maps of the three output sets of SSRE:
+
+```{r ranef_vis0, size="footnotesize"}
+#| label: ranef_vis0
+#| fig-cap: Maps of spatially structured random effects, conditional autoregressive models
+library(tmap)
+tm_shape(eng324) + tm_fill(c("ranef_ml", "ranef_hglm", "ranef_mrf"), title="random effect", n=9, midpoint=0, style="fisher") + tm_borders() + tm_facets(free.scales=FALSE) + tm_layout(panel.labels=c("ML", "HGLM", "MRF"))
+```
+
+
+## Simultaneous autoregressive models
+
+There are many varieties of model fitting methods for CAR models, fewer for SAR. We can begin by using `spautolm` using Maximum Likelihood (ML) again, choosing SAR rather than CAR, but initially retaining the binary spatial weights:
+
+```{r sar1B, size="footnotesize", message=FALSE}
+sar1B <- spautolm(form_pre, data=eng324, listw=lwB, family="SAR")
+summary(sar1B, Nagelkerke=TRUE)
+```
+
+As row-standardised weights are much more common in spatial econometrics, let us switch (back) to them. First we see that the domain of the spatial coefficient depends on the spatial weights, and is the inverse of the range of the eigenvalues of the spatial weights matrix; this applies irrespective of the estimation method:
+
+```{r sar0, size="footnotesize", message=FALSE}
+1/range(eigenw(lwB))
+lw <- nb2listw(unb, style="W")
+e <- eigenw(lw)
+1/range(e)
+```
+
+The value of the single spatial parameter is found by line search (univariate optimisation). In `spautolm`, the objective function includes the use of numerical inversion of the ${\mathbf X}'{\mathbf A}{\mathbf X}$ matrix, where in the CAR case, ${\mathbf A} = {\mathbf I} - \rho{\mathbf W}$, but in the SAR case, it is ${\mathbf A} = ({\mathbf I} - \rho{\mathbf W})'({\mathbf I} - \rho{\mathbf W})$, using plug-in functions. Using `spautolm`, we get:
+
+```{r sar1, size="footnotesize", message=FALSE}
+sar1 <- spautolm(form_pre, data=eng324, listw=lw, family="SAR", control=list(pre_eig=e))
+summary(sar1, Nagelkerke=TRUE)
+```
+
+`spautolm` outputs the standard error of the spatial coefficient based on the numerical Hessian to estimate the information matrix of the model. `errorsarlm` was written before `spautolm`, and yields very similar values, using for moderate $n$ as in this case asymptotic standard errors:
+
+```{r SEM_pre, size="footnotesize", message=FALSE}
+SEM_pre <- errorsarlm(form_pre, data=eng324, listw=lw, control=list(pre_eig=e))
+summary(SEM_pre, Nagelkerke=TRUE)
+```
+
+It avoids some loss of numerical precision in calculation of the objective function, so the coefficients are equal after moderate rounding:
+
+```{r SEM1_pre, size="footnotesize", message=FALSE}
+all.equal(coef(SEM_pre)[c(2:8, 1)], coef(sar1), tol=2e-07)
+```
+
+In addition, output from `errorsarlm` offers the Hausman test [@pace+lesage:08]; the SEM  and OLS regression coefficients should be close to each other and significant divergence indicates model mis-specification; it seems difficult here to accept the null hypothesis of no difference:
+
+```{r SEM2_pre, size="footnotesize"}
+Hausman.test(SEM_pre)
+```
+
+## Spatial econometrics models: pre-CCT examples
+
+We have already fitted the SEM model using ML to the basic pre-CCT formula, partly based on our initial results, indicating that SEM was to be preferred to SLM, but without considering the inclusion of ${\mathbf W}{\mathbf X}$.
+
+Use of Rao's score tests only involve the fitting of least squares models, both OLS and SLX, but it is also possible to work back from the most complex model GNM, recalling its identification issues (using ML):
+
+```{r GNM1_pre, size="footnotesize"}
+GNM_pre <- sacsarlm(form_pre, data=eng324, listw=lw, Durbin=update(form_pre, ~ . - Metrop), control=list(pre_eig1=e, pre_eig2=e))
+SAC_pre <- sacsarlm(form_pre, data=eng324, listw=lw, control=list(pre_eig1=e, pre_eig2=e))
+```
+
+However, since GNM includes $\rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y}$, presenting the conventional table of coefficient estimates is not appropriate, so we'll stay with likelihood ratio tests, which depend on the models being compared being nested, and returning log-likelihood values:
+
+$$
+\mathrm{LR} = -2 ({\mathcal l}(\theta_0) - {\mathcal l}(\theta_1))
+$$
+
+where ${\mathcal l}(\theta_0)$ is the log-likelihood of the nested model, and ${\mathcal l}(\theta_1)$ of the encompassing model, and where the number of degrees of freedom for $\chi^2$ is the difference in the estimated parameter counts.
+
+```{r LR1_pre, size="footnotesize", warning=FALSE}
+library(lmtest)
+lrtest(GNM_pre, SAC_pre)
+```
+
+This test indicates that including ${\mathbf W}{\mathbf X}$ to the SAC model to give an GNM model only yields a minor improvement in fit. Moving on, we fit the remaining models:
+
+```{r SDEM1_pre, size="footnotesize"}
+SDEM_pre <- errorsarlm(form_pre, data=eng324, listw=lw, Durbin=update(form_pre, ~ . - Metrop), control=list(pre_eig=e))
+```
+```{r SDEM2_pre, size="footnotesize"}
+Hausman.test(SDEM_pre)
+```
+
+The Hausman test is now borderline, so the coefficients of the SDEM may be taken as close to those of the SLX model. Moving on:
+
+```{r SDM1_pre, size="footnotesize"}
+SDM_pre <- lagsarlm(form_pre, data=eng324, listw=lw, Durbin=update(form_pre, ~ . - Metrop), control=list(pre_eig=e))
+```
+
+```{r SDM1_pre_LM, size="footnotesize"}
+c(LM_test=signif(SDM_pre$LMtest), p.value=format.pval((1 - pchisq(SDM_pre$LMtest, 1))))
+```
+
+The Rao's score (Lagrange Multiplier) test for residual spatial autocorrelation in the SDM model shows that the model is mis-specified.
+
+```{r SLM1_pre, size="footnotesize"}
+SLM_pre <- lagsarlm(form_pre, data=eng324, listw=lw, control=list(pre_eig=e))
+```
+
+```{r SLM1_pre_LM, size="footnotesize"}
+c(LM_test=signif(SLM_pre$LMtest), p.value=format.pval((1 - pchisq(SLM_pre$LMtest, 1))))
+```
+
+The LM test for residual spatial autocorrelation in the SLM model indicates that something in the ${\mathbf W}{\mathbf X}$ is adding spatial autocorrelation to the residuals.
+
+```{r SLX1_pre, size="footnotesize"}
+SLX_pre <- lmSLX(form_pre, data=eng324, listw=lw, Durbin=update(form_pre, ~ . - Metrop))
+```
+
+```{r OLS1_pre, size="footnotesize"}
+OLS_pre <- lm(form_pre, data=eng324)
+```
+
+we now have eight fitted pre-CCT models, and can calculate the likelihood ratio tests between nested models. GNM nests all models, SAC nests SEM, SLM and OLS, SDEM nests SEM, SLX and OLS, SDM nests SLM, SLX and OLS, and SEM, SLX and SLM nest OLS:
+
+```{r LR2_pre, size="footnotesize", warning=FALSE}
+mlist_pre <- list(GNM=GNM_pre, SAC=SAC_pre, SDEM=SDEM_pre, SDM=SDM_pre, SLX=SLX_pre, SEM=SEM_pre, SLM=SLM_pre, OLS=OLS_pre)
+m <- length(mlist_pre)
+LR_pre <- matrix(NA, ncol=m, nrow=m)
+colnames(LR_pre) <- rownames(LR_pre) <- names(mlist_pre)
+for (j in 2:m) LR_pre[1, j] <- lrtest(mlist_pre[[1]],
+    mlist_pre[[j]])[[2, "Pr(>Chisq)"]]
+for (j in 6:8) LR_pre[2, j] <- lrtest(mlist_pre[[2]],
+    mlist_pre[[j]])[[2, "Pr(>Chisq)"]]
+for (j in c(5, 6, 8)) LR_pre[3, j] <- lrtest(mlist_pre[[3]],
+    mlist_pre[[j]])[[2, "Pr(>Chisq)"]]
+for (j in c(5, 7, 8)) LR_pre[4, j] <- lrtest(mlist_pre[[4]],
+    mlist_pre[[j]])[[2, "Pr(>Chisq)"]]
+for (i in 5:7) LR_pre[i, 8] <- lrtest(mlist_pre[[i]],
+    mlist_pre[[8]])[[2, "Pr(>Chisq)"]]
+```
+
+```{r LR3_pre, size="footnotesize", out.width="75%"}
+#| label: LR3_pre
+#| fig-cap: Heat map of likelihood ratio p-values, pre_CCT models
+library(plot.matrix)
+library(viridis)
+opar <- par(mar=c(3.1, 3.1, 3.1, 7.1), cex.axis=0.8)
+plot(LR_pre, breaks=c(0, 10^-(8:0)), col=viridis, las=1)
+par(opar)
+```
+
+The figure shows that the only comparisons indicating minor improvement in fit by making the model more complex are from SEM to SDEM or SAC; it is not clear that adding the ${\mathbf W}{\mathbf X}$ helps. In addition, the likelihood ratio does not penalise for the increased number of fitted paramters, unlike AIC and BIC, which penalise in increasing degree. The Akaike information criterion (AIC) is, where $k$ is the parameter count:
+
+$$
+\mathrm{AIC} = 2 k - 2 {\mathcal l}(\theta)
+$$
+
+```{r AIC_pre, size="footnotesize"}
+sort(sapply(mlist_pre, AIC))
+```
+
+The BIC scores put all of the models including ${\mathbf W}{\mathbf X}$ behind those without, pointing to SEM, followed by SAC and SLM. The Bayesian information criterion (BIC) is, for n, the observation count:
+
+$$
+\mathrm{BIC} = k \ln(n) - 2 {\mathcal l}(\theta)
+$$
+
+
+```{r BIC_pre, size="footnotesize"}
+sort(sapply(mlist_pre, BIC))
+```
+
+## Spatial econometrics models: pre-CCT examples including political control
+
+```{r SEM_pre_maj, size="footnotesize", message=FALSE}
+SEM_pre_maj <- errorsarlm(form_pre_maj, data=eng324, listw=lw, control=list(pre_eig=e))
+```
+
+```{r SEM2_pre_maj, size="footnotesize"}
+Hausman.test(SEM_pre_maj)
+```
+
+```{r GNM1_pre_maj, size="footnotesize"}
+GNM_pre_maj <- sacsarlm(form_pre_maj, data=eng324, listw=lw, Durbin=update(form_pre_maj, ~ . - Metrop - Majority), control=list(pre_eig1=e, pre_eig2=e))
+SAC_pre_maj <- sacsarlm(form_pre_maj, data=eng324, listw=lw, control=list(pre_eig1=e, pre_eig2=e))
+```
+```{r SDEM1_pre_maj, size="footnotesize"}
+SDEM_pre_maj <- errorsarlm(form_pre_maj, data=eng324, listw=lw, Durbin=update(form_pre_maj, ~ . - Metrop - Majority), control=list(pre_eig=e))
+```
+```{r SDEM2_pre_maj, size="footnotesize"}
+Hausman.test(SDEM_pre_maj)
+```
+
+```{r SDM1_pre_maj, size="footnotesize"}
+SDM_pre_maj <- lagsarlm(form_pre_maj, data=eng324, listw=lw, Durbin=update(form_pre_maj, ~ . - Metrop - Majority), control=list(pre_eig=e))
+```
+```{r SDM1_pre_maj_LM, size="footnotesize"}
+c(LM_test=signif(SDM_pre_maj$LMtest), p.value=format.pval((1 - pchisq(SDM_pre_maj$LMtest, 1))))
+```
+
+```{r SLM1_pre_maj, size="footnotesize"}
+SLM_pre_maj <- lagsarlm(form_pre_maj, data=eng324, listw=lw, control=list(pre_eig=e))
+```
+```{r SLM1_pre_maj_LM, size="footnotesize"}
+c(LM_test=signif(SLM_pre_maj$LMtest), p.value=format.pval((1 - pchisq(SLM_pre_maj$LMtest, 1))))
+```
+
+```{r SLX1_pre_maj, size="footnotesize"}
+SLX_pre_maj <- lmSLX(form_pre_maj, data=eng324, listw=lw, Durbin=update(form_pre_maj, ~ . - Metrop - Majority))
+```
+
+```{r OLS1_pre_maj, size="footnotesize"}
+OLS_pre_maj <- lm(form_pre_maj, data=eng324)
+```
+```{r LR2_pre_maj, size="footnotesize", warning=FALSE}
+mlist_pre_maj <- list(GNM=GNM_pre_maj, SAC=SAC_pre_maj, SDEM=SDEM_pre_maj, SDM=SDM_pre_maj, SLX=SLX_pre_maj, SEM=SEM_pre_maj, SLM=SLM_pre_maj, OLS=OLS_pre_maj)
+m <- length(mlist_pre_maj)
+LR_pre_maj <- matrix(NA, ncol=m, nrow=m)
+colnames(LR_pre_maj) <- rownames(LR_pre_maj) <- names(mlist_pre_maj)
+for (j in 2:m) LR_pre_maj[1, j] <- lrtest(mlist_pre_maj[[1]],
+    mlist_pre_maj[[j]])[[2, "Pr(>Chisq)"]]
+for (j in 6:8) LR_pre_maj[2, j] <- lrtest(mlist_pre_maj[[2]],
+    mlist_pre_maj[[j]])[[2, "Pr(>Chisq)"]]
+for (j in c(5, 6, 8)) LR_pre_maj[3, j] <- lrtest(mlist_pre_maj[[3]],
+    mlist_pre_maj[[j]])[[2, "Pr(>Chisq)"]]
+for (j in c(5, 7, 8)) LR_pre_maj[4, j] <- lrtest(mlist_pre_maj[[4]],
+    mlist_pre_maj[[j]])[[2, "Pr(>Chisq)"]]
+for (i in 5:7) LR_pre_maj[i, 8] <- lrtest(mlist_pre_maj[[i]],
+    mlist_pre_maj[[8]])[[2, "Pr(>Chisq)"]]
+```
+
+```{r LR3_pre_maj, size="footnotesize", out.width="75%"}
+#| label: LR3_pre_maj
+#| fig-cap: Heat map of likelihood ratio p-values, pre_CCT models including politiacl control
+opar <- par(mar=c(3.1, 3.1, 3.1, 7.1), cex.axis=0.8)
+plot(LR_pre_maj, breaks=c(0, 10^-(8:0)), col=viridis, las=1)
+par(opar)
+```
+
+
+
+```{r AIC_pre_maj, size="footnotesize"}
+sort(sapply(mlist_pre_maj, AIC))
+```
+
+
+```{r BIC_pre_maj, size="footnotesize"}
+sort(sapply(mlist_pre_maj, BIC))
+```
+
+
+
+## Spatial econometrics models: post-CCT examples including political control
+
+```{r SEM_post_maj, size="footnotesize", message=FALSE}
+SEM_post_maj <- errorsarlm(form_post_maj, data=eng324, listw=lw, control=list(pre_eig=e))
+```
+
+```{r SEM2_post_maj, size="footnotesize"}
+Hausman.test(SEM_post_maj)
+```
+
+```{r GNM1_post_maj, size="footnotesize"}
+GNM_post_maj <- sacsarlm(form_post_maj, data=eng324, listw=lw, Durbin=update(form_post_maj, ~ . - Metrop - Majority), control=list(pre_eig1=e, pre_eig2=e))
+SAC_post_maj <- sacsarlm(form_post_maj, data=eng324, listw=lw, control=list(pre_eig1=e, pre_eig2=e))
+```
+```{r SDEM1_post_maj, size="footnotesize"}
+SDEM_post_maj <- errorsarlm(form_post_maj, data=eng324, listw=lw, Durbin=update(form_post_maj, ~ . - Metrop - Majority), control=list(pre_eig=e))
+```
+```{r SDEM2_post_maj, size="footnotesize"}
+Hausman.test(SDEM_post_maj)
+```
+
+```{r SDM1_post_maj, size="footnotesize"}
+SDM_post_maj <- lagsarlm(form_post_maj, data=eng324, listw=lw, Durbin=update(form_post_maj, ~ . - Metrop - Majority), control=list(pre_eig=e))
+```
+```{r SDM1_post_maj_LM, size="footnotesize"}
+c(LM_test=signif(SDM_post_maj$LMtest), p.value=format.pval((1 - pchisq(SDM_post_maj$LMtest, 1))))
+```
+
+```{r SLM1_post_maj, size="footnotesize"}
+SLM_post_maj <- lagsarlm(form_post_maj, data=eng324, listw=lw, control=list(pre_eig=e))
+```
+```{r SLM1_post_maj_LM, size="footnotesize"}
+c(LM_test=signif(SLM_post_maj$LMtest), p.value=format.pval((1 - pchisq(SLM_post_maj$LMtest, 1))))
+```
+
+```{r SLX1_post_maj, size="footnotesize"}
+SLX_post_maj <- lmSLX(form_post_maj, data=eng324, listw=lw, Durbin=update(form_post_maj, ~ . - Metrop - Majority))
+```
+
+```{r OLS1_post_maj, size="footnotesize"}
+OLS_post_maj <- lm(form_post_maj, data=eng324)
+```
+```{r LR2_post_maj, size="footnotesize", warning=FALSE}
+mlist_post_maj <- list(GNM=GNM_post_maj, SAC=SAC_post_maj, SDEM=SDEM_post_maj, SDM=SDM_post_maj, SLX=SLX_post_maj, SEM=SEM_post_maj, SLM=SLM_post_maj, OLS=OLS_post_maj)
+m <- length(mlist_post_maj)
+LR_post_maj <- matrix(NA, ncol=m, nrow=m)
+colnames(LR_post_maj) <- rownames(LR_post_maj) <- names(mlist_post_maj)
+for (j in 2:m) LR_post_maj[1, j] <- lrtest(mlist_post_maj[[1]],
+    mlist_post_maj[[j]])[[2, "Pr(>Chisq)"]]
+for (j in 6:8) LR_post_maj[2, j] <- lrtest(mlist_post_maj[[2]],
+    mlist_post_maj[[j]])[[2, "Pr(>Chisq)"]]
+for (j in c(5, 6, 8)) LR_post_maj[3, j] <- lrtest(mlist_post_maj[[3]],
+    mlist_post_maj[[j]])[[2, "Pr(>Chisq)"]]
+for (j in c(5, 7, 8)) LR_post_maj[4, j] <- lrtest(mlist_post_maj[[4]],
+    mlist_post_maj[[j]])[[2, "Pr(>Chisq)"]]
+for (i in 5:7) LR_post_maj[i, 8] <- lrtest(mlist_post_maj[[i]],
+    mlist_post_maj[[8]])[[2, "Pr(>Chisq)"]]
+```
+
+```{r LR3_post_maj, size="footnotesize", out.width="75%"}
+#| label: LR3_post_maj
+#| fig-cap: Heat map of likelihood ratio p-values, post_CCT models including political control
+opar <- par(mar=c(3.1, 3.1, 3.1, 7.1), cex.axis=0.8)
+plot(LR_post_maj, breaks=c(0, 10^-(8:0)), col=viridis, las=1)
+par(opar)
+```
+
+
+
+```{r AIC_post_maj, size="footnotesize"}
+sort(sapply(mlist_post_maj, AIC))
+```
+
+
+```{r BIC_post_maj, size="footnotesize"}
+sort(sapply(mlist_post_maj, BIC))
+```
+
+So we might reasonably choose to proceed with SLM including political control, but will have to wait to present coefficient estimates, or rather the marginal effects, because SLM includes $\rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y}$.
+

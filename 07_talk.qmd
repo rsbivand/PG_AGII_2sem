@@ -42,23 +42,23 @@ lm.morantest(lm_null, listw=lw, alternative="two.sided")
 If we move to a model with independent variables, we will see that the inferences are not the same:
 
 ```{r rsa3, size="footnotesize"}
-form <- log(realNetPre) ~ log(units) + house +
+form_pre <- log(realNetPre) ~ log(units) + house +
  log(dens) + Metrop + log(realWgPre)
-lm_obj <- lm(form, data=eng324)
-moran.test(residuals(lm_obj), listw=lw,
+lm_obj_pre <- lm(form_pre, data=eng324)
+moran.test(residuals(lm_obj_pre), listw=lw,
  randomisation=FALSE, alternative="two.sided")
 ```
 ```{r rsa4, size="footnotesize"}
-lm.morantest(lm_obj, listw=lw, alternative="two.sided")
+lm.morantest(lm_obj_pre, listw=lw, alternative="two.sided")
 ```
 
 This is because `lm.morantest` takes into account the structure of the regression model, as do `lm.morantest.sad` and `lm.morantest.exact`:
 
 ```{r rsa5, size="footnotesize"}
-lm.morantest.sad(lm_obj, listw=lw, alternative="two.sided")
+lm.morantest.sad(lm_obj_pre, listw=lw, alternative="two.sided")
 ```
 ```{r rsa6, size="footnotesize"}
-lm.morantest.exact(lm_obj, listw=lw, alternative="two.sided")
+lm.morantest.exact(lm_obj_pre, listw=lw, alternative="two.sided")
 ```
 
 In all these cases, the measured value of Moran's $I$ is the same, but the inferences differ somewhat.
@@ -127,7 +127,7 @@ The specification problem is then to choose between (from most complex to simple
 When working over 25 years ago on @bivand+szymanski:00, the only Rao's score (Lagrange multiplier) tests available were those newly proposed by @anselinetal:96. The underlying concern is to test whether the spatial parameter of interest could be taken as zero, without estimating the parameter. One works from the information matrix of the spatial model; in the case of the first tests, a mixed regressive-spatial autoregressive model with a spatial autoregressive disturbance (SAC) was considered, as this had also been used for residual autocorrelation in an SLM model. Five tests are proposed, a test for missing $\rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y}$, `"RSlag"` and pointing to SLM, another for missing $\rho_{\mathrm{Err}} {\mathbf W} {\mathbf u}$, `"RSerr"` pointing to SEM, two tests matching the first two tests but adjusted for the presence of the other (`"adjRSlag"`, `"adjRSerr"`), and a `"SARMA"` test combining both alternatives, equal to `"RSlag"` plus `"adjRSerr"` and `"RSerr"` plus `"adjRSlag"`. 
 
 ```{r rao1, size="footnotesize"}
-summary(lm.RStests(lm_obj, listw=lw, test="all"))
+summary(lm.RStests(lm_obj_pre, listw=lw, test="all"))
 ```
 
 Here, for the independent variables initially included in the model to account for the logarithm of real net expenditure on garbage collection in each district, the logarithm of the number of pick-up points (`units`), the proportion of dwellings among the pick-up points (`house`), the logarithm of pick-up point density (`dens`), a categorical variable `Metrop` with levels: `"district"`, `"london"`, `"metrop"`, and the logarithm of the real regional wage rate for regions. In this case, the tests point to a SEM model rather than an SLM model or falling back to OLS.
@@ -135,15 +135,15 @@ Here, for the independent variables initially included in the model to account f
 @koley+bera:22 propose a similar set of tests to distinguish between either an SLM or an SLX model based on an SDM model, falling back to ordinary least squares if neither alternative is chosen. Because the interpretation of spatially lagged categorical variables is unclear, we drop `Metrop` from the tests
 
 ```{r rao2, size="footnotesize"}
-summary(SD.RStests(lm_obj, listw=lw, test="SDM",
- Durbin=update(form, ~ . - Metrop)))
+summary(SD.RStests(lm_obj_pre, listw=lw, test="SDM",
+ Durbin=update(form_pre, ~ . - Metrop)))
 ```
 
 In this case, an SLX model appears to be indicated rather than SDM, SLM or OLS. However, we also need to look at SDEM as the tests against SAC indicated SEM rather than SLM. @koley:24 proposes approriate tests:
 
 ```{r rao3, size="footnotesize"}
-summary(SD.RStests(lm_obj, listw=lw, test="SDEM",
- Durbin=update(form, ~ . - Metrop)))
+summary(SD.RStests(lm_obj_pre, listw=lw, test="SDEM",
+ Durbin=update(form_pre, ~ . - Metrop)))
 ```
 
 which indicate SEM rather than SDEM. Clearly, the underlying difficulty is that the GNM is poorly identified, and as @koley:24 finds:
@@ -154,45 +154,100 @@ However, it has been found that the `lm.RStests` tests can be used on a fitted S
 
 ```{r rao4, size="footnotesize", message=FALSE}
 library(spatialreg)
-SLX_obj <- lmSLX(form, data=eng324, listw=lw,
- Durbin=update(form, ~ . - Metrop))
+SLX_obj <- lmSLX(form_pre, data=eng324, listw=lw,
+ Durbin=update(form_pre, ~ . - Metrop))
 summary(lm.RStests(SLX_obj, listw=lw, test="all"))
 ```
 
 In @bivand+szymanski:00, it was found that the inclusion of the categorical variable `Majority`, with levels: `"coalition"`, `"conservative"` and `"labour"`, as anecdotal reports indicated that neighbouring districts with the same political party in control shared more information than otherwise, so the yardstick used would be weighted towards the same political party:
 
 ```{r rao_maj1, size="footnotesize"}
-form_maj <- update(form, . ~. + Majority)
-lm_obj_maj <- lm(form_maj, data=eng324)
-summary(lm.RStests(lm_obj_maj, listw=lw, test="all"))
+form_pre_maj <- update(form_pre, . ~. + Majority)
+lm_obj_pre_maj <- lm(form_pre_maj, data=eng324)
+summary(lm.RStests(lm_obj_pre_maj, listw=lw, test="all"))
 ```
 
 The tests here indicate some support for the inclusion of $\rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y}$. On turning to the new tests for SDM compared to SLM or SLX:
 
 ```{r rao_maj2, size="footnotesize"}
-summary(SD.RStests(lm_obj_maj, listw=lw, test="SDM"),
- Durbin=update(form, ~ . - Metrop - Majority))
+summary(SD.RStests(lm_obj_pre_maj, listw=lw, test="SDM"),
+ Durbin=update(form_pre_maj, ~ . - Metrop - Majority))
 ```
 
 There is as yet very little experience of interpreting the outcomes, but here an SDM seems to be indicated; we turn to the next set of tests:
 
 ```{r rao_maj3, size="footnotesize"}
-summary(SD.RStests(lm_obj_maj, listw=lw, test="SDEM"),
- Durbin=update(form, ~ . - Metrop - Majority))
+summary(SD.RStests(lm_obj_pre_maj, listw=lw, test="SDEM"),
+ Durbin=update(form_pre_maj, ~ . - Metrop - Majority))
 ```
 
 but the SDEM versus SLX or SEM also looks feasible. Testing the fitted SLX model appears to point to the SDM model rather than the SDEM model:
 
 ```{r rao_maj4, size="footnotesize", message=FALSE}
 library(spatialreg)
-SLX_obj_maj <- lmSLX(form_maj, data=eng324, listw=lw,
- Durbin=update(form, ~ . - Metrop - Majority))
-summary(lm.RStests(SLX_obj_maj, listw=lw, test="all"))
+SLX_obj_pre_maj <- lmSLX(form_pre_maj, data=eng324, listw=lw,
+ Durbin=update(form_pre_maj, ~ . - Metrop - Majority))
+summary(lm.RStests(SLX_obj_pre_maj, listw=lw, test="all"))
+```
+
+Of course, we should repeat these exercises for the post-CCT net expenditures:
+
+```{r mod_forms0, size="footnotesize"}
+form_post <- update(form_pre, log(realNetPst) ~ . - log(realWgPre) + log(realWgPst))
+form_post_maj <- update(form_post, . ~ . + Majority)
+```
+
+
+```{r rao1p, size="footnotesize"}
+lm_obj_post <- lm(form_post, data=eng324)
+summary(lm.RStests(lm_obj_post, listw=lw, test="all"))
+```
+
+```{r rao2p, size="footnotesize"}
+summary(SD.RStests(lm_obj_post, listw=lw, test="SDM",
+ Durbin=update(form_post, ~ . - Metrop)))
+```
+
+
+```{r rao3p, size="footnotesize"}
+summary(SD.RStests(lm_obj_post, listw=lw, test="SDEM",
+ Durbin=update(form_post, ~ . - Metrop)))
+```
+
+```{r rao4p, size="footnotesize", message=FALSE}
+library(spatialreg)
+SLX_post_obj <- lmSLX(form_post, data=eng324, listw=lw,
+ Durbin=update(form_post, ~ . - Metrop))
+summary(lm.RStests(SLX_post_obj, listw=lw, test="all"))
+```
+```{r rao_majp1, size="footnotesize"}
+lm_obj_post_maj <- lm(form_post_maj, data=eng324)
+summary(lm.RStests(lm_obj_post_maj, listw=lw, test="all"))
+```
+
+
+```{r rao_majp2, size="footnotesize"}
+summary(SD.RStests(lm_obj_post_maj, listw=lw, test="SDM"),
+ Durbin=update(form_post_maj, ~ . - Metrop - Majority))
+```
+
+
+```{r rao_majp3, size="footnotesize"}
+summary(SD.RStests(lm_obj_post_maj, listw=lw, test="SDEM"),
+ Durbin=update(form_post_maj, ~ . - Metrop - Majority))
+```
+
+
+```{r rao_majp4, size="footnotesize", message=FALSE}
+library(spatialreg)
+SLX_obj_post_maj <- lmSLX(form_post_maj, data=eng324, listw=lw,
+ Durbin=update(form_post_maj, ~ . - Metrop - Majority))
+summary(lm.RStests(SLX_obj_post_maj, listw=lw, test="all"))
 ```
 
 
 ```{r echo=FALSE}
-save(eng324, unb, orignb, file = paste0(io_dir, "/talk7.RData"))
+save(eng324, unb, orignb, form_pre, form_pre_maj, form_post, form_post_maj, file = paste0(io_dir, "/talk7.RData"))
 ```
 
 
