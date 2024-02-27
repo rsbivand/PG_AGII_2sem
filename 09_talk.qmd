@@ -1,3 +1,89 @@
-# Estimation of spatial autoregressive models: methods (GMM, ML, Bayesian)
+# Estimation of spatial autoregressive models: methods (ML, Bayesian, GMM)
 
 
+```{r pl_io0, echo=FALSE, results="hide"}
+io_dir <- "Input_output"
+if (!dir.exists(io_dir)) io_dir <- paste0("../", io_dir)
+```
+```{r echo=FALSE}
+load(file = paste0(io_dir, "/talk7.RData"))
+```
+
+Spatial autoregressive models used in spatial econometrics may be estimated in a number of ways. We have already used maximum likelihood estimation, so will start there, moving on to Bayesian estimation, and completing with the generalised method of moments (GMM) estimation. Much of this section is based on @bivand+piras:15.
+
+```{r est1, size="footnotesize", message=FALSE}
+library(spdep)
+lw <- nb2listw(unb, style="W")
+library(spatialreg)
+e <- eigenw(lw)
+```
+
+## Maximum likelihood estimation
+
+(from @bivandetal:21)
+
+The log-likelihood function for the spatial error model (SEM) is:
+
+$$
+\ell(\beta, \rho_{\mathrm{Err}}, \sigma^2) = - \frac{N}{2} \ln 2 \pi - \frac{N}{2} \ln \sigma^2 + \ln |{\mathbf I} - \rho_{\mathrm{Err}} {\mathbf W}| - \frac{1}{2 \sigma^2} \big[({\mathbf y} - {\mathbf X}\beta)^\top ({\mathbf I} - \rho_{\mathrm{Err}} {\mathbf W})^\top({\mathbf I} - \rho_{\mathrm{Err}} {\mathbf W}) ({\mathbf y} - {\mathbf X}\beta)\big].
+$$
+
+$\beta$ may be concentrated out of the sum of squared errors term, for example as:
+
+$$
+\ell(\rho_{\mathrm{Err}}, \sigma^2) = - \frac{N}{2} \ln 2 \pi - \frac{N}{2} \ln \sigma^2 + \ln |{\mathbf I} - \rho_{\mathrm{Err}} {\mathbf W}| - \frac{1}{2 \sigma^2} \big[{\mathbf y}^\top({\mathbf I} - \rho_{\mathrm{Err}} \mathbf W})^\top ({\mathbf I} - {\mathbf Q}_{\rho_{\mathrm{Err}}}{\mathbf Q}_{\rho_{\mathrm{Err}}}^\top) ({\mathbf I} - \rho_{\mathrm{Err}} {\mathbf W}){\mathbf y}\big]
+$$
+
+where ${\mathbf Q}_{\rho_{\mathrm{Err}}}$ is obtained by decomposing $({\mathbf X} - \rho_{\mathrm{Err}} {\mathbf W}{\mathbf X}) = {\mathbf Q}_{\rho_{\mathrm{Err}}}{\mathbf R}_{\rho_{\mathrm{Err}}}$.
+
+The first published versions of the eigenvalue method for finding the Jacobian [@ord:75, p. 121] is:
+
+$$
+\ln(|{\mathbf I} - \lambda {\mathbf W}|) = \sum_{i=1}^{N} \ln(1 - \lambda\zeta_i)
+$$
+
+where $\zeta_i$ are the eigenvalues of ${\mathbf W}.$
+
+One specific problem addressed by Ord [-@ord:75, p. 125] is that of the eigenvalues of the asymmetric row-standardised matrix ${\mathbf W}$ with underlying symmetric neighbour relations $c_{ij} = c_{ji}$. If we write ${\mathbf w} = {\mathbf C}{\mathbf 1}$, where ${\mathbf 1}$ is a vector of ones, we can get: ${\mathbf W} = {\mathbf C}{\mathbf D}$, where ${\mathbf D} = {\mathrm {diag}}(1/{\mathbf w})$; by similarity, the eigenvalues of ${\mathbf W}$ are equal to those of: ${\mathbf D}^{\frac{1}{2}}{\mathbf C}{\mathbf D}^\frac{1}{2}}$. From the very beginning in `spdep`, sparse Cholesky alternatives were available for cases in which finding the eigenvalues of a large weights matrix would be impracticable, see [@bivandetal:13] for further details.
+
+```{r est2, size="footnotesize", message=FALSE}
+SEM_pre_maj <- errorsarlm(form_pre_maj, data=eng324, listw=lw, control=list(pre_eig=e), quiet=FALSE)
+```
+
+The values used in calculating the likelihood function can be tracked as line search moves towards the optimum, where for many of the final iterations, the value of the spatial coefficient, here reported as `lambda`, moves little.
+
+The log-likelihood function for the spatial lag model is:
+
+$$
+\ell(\beta, \rho_{\mathrm{Lag}}, \sigma^2) = - \frac{N}{2} \ln 2 \pi - \frac{N}{2} \ln \sigma^2 + \ln |{\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}| - \frac{1}{2 \sigma^2} \big[(({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}){\mathbf y} - {\mathbf X}\beta)^\top(({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}){\mathbf y} - {\mathbf X}\beta)\big]
+$$
+
+and by extension the same framework is used for the spatial Durbin model when $[{\mathbf X} ({\mathbf W}{\mathbf X})]$ are grouped together. The sum-of-squared errors (SSE) term in the square brackets is found using auxilliary regressions ${\mathbf e} = {\mathbf y}-({\mathbf X}^\top{\mathbf X}){\mathbf X}{\mathbf y}$ and ${\mathbf u} = {\mathbf W}{\mathbf y}-({\mathbf X}^\top{\mathbf X}){\mathbf X}{\mathbf W}{\mathbf y}$, and $SSE = {\mathbf e}^\top{\mathbf e} - 2 \rho_{\mathrm{Lag}} {\mathbf u}^\top{\mathbf e} + \rho_{\mathrm{Lag}}^2 {\mathbf u}^\top{\mathbf u}$. The cross-products of ${\mathbf u}$ and ${\mathbf e}$ can conveniently be calculated before line search begins.
+
+@bivand:12
+
+Models with two parameters require that $\rho_{\mathrm{Lag}}$ and $\rho_{\mathrm{Err}}$ be found by constrained numerical optimization in two dimensions by searching for the maximum on the surface of the log likelihood function, which is like that of the spatial error model with additional terms in ${\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}$:
+
+$$
+\ell(\rho_{\mathrm{Lag}}, \rho_{\mathrm{Err}}, \sigma^2) = - \frac{N}{2} \ln 2 \pi - \frac{N}{2} \ln \sigma^2 + \ln |{\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}| + \ln |{\mathbf I} - \rho_{\mathrm{Err}} {\mathbf W}| - \frac{1}{2 \sigma^2} \big[{\mathbf y}^\top({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^\top({\mathbf I} - \rho_{\mathrm{Err}} {\mathbf W})^\top({\mathbf I} - {\mathbf Q}_{\rho_{\mathrm{Err}}}{\mathbf Q}_{\rho_{\mathrm{Err}}}^\top) ({\mathbf I} - \rho_{\mathrm{Err}} {\mathbf W})({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}){\mathbf y}\big]
+$$
+
+where ${\mathbf Q}_{\rho_{\mathrm{Err}}}$ is obtained by decomposing $({\mathbf X} - \rho_{\mathrm{Err}} {\mathbf W}{\mathbf X}) = {\mathbf Q}_{\rho_{\mathrm{Err}}} {\mathbf R}_{\rho_{\mathrm{Err}}}$.
+
+```{r est2, size="footnotesize", message=FALSE}
+SAC_pre_maj <- sacsarlm(form_pre_maj, data=eng324, listw=lw, control=list(pre_eig1=e, pre_eig2=e), llprof=40)
+c(SAC_pre_maj$rho, SAC_pre_maj$lambda)
+c(SAC_pre_maj$rho/SAC_pre_maj$rho.se, SAC_pre_maj$lambda/SAC_pre_maj$lambda.se)
+```
+
+
+```{r est3, size="footnotesize", message=FALSE}
+m <- -matrix(SAC_pre_maj$llprof$ll, 40, 40)
+contour(SAC_pre_maj$llprof$xseq, SAC_pre_maj$llprof$yseq, m, levels=quantile(c(m), seq(0,1,0.1)), xlab="rho", ylab="lambda", add=TRUE)
+abline(h=SAC_pre_maj$rho, v=SAC_pre_maj$lambda, lwd=3)
+```
+
+## Bayesian estimation
+
+
+## Generalised method of moments estimation

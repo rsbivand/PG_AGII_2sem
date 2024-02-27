@@ -26,7 +26,7 @@ $Z$ is a fixed design matrix for the random effects. If there are $n$ random eff
 A division has grown up, possibly unhelpfully, between scientific fields using CAR models [@besag:74], and simultaneous autoregressive models (SAR) [@ord:75; @hepple:76]. Although CAR and SAR models are closely related, these fields have found it difficult to share experience of applying similar models, often despite referring to key work summarising the models [@ripley:81; @ripley:88; @cressie:93]. Ripley gives the SAR variance as [@ripley:81, page 89], here shown as the inverse $\Sigma^{-1}$ (also known as the precision matrix):
 
 $$
-\Sigma^{-1} = [(I - \rho W)'(I - \rho W)]
+\Sigma^{-1} = [(I - \rho W)^\top(I - \rho W)]
 $$
 
 where $\rho$ is a spatial autocorrelation parameter and $W$ is a non-singular spatial weights matrix that represents spatial dependence. The CAR variance is:
@@ -146,7 +146,7 @@ e <- eigenw(lw)
 1/range(e)
 ```
 
-The value of the single spatial parameter is found by line search (univariate optimisation). In `spautolm`, the objective function includes the use of numerical inversion of the ${\mathbf X}'{\mathbf A}{\mathbf X}$ matrix, where in the CAR case, ${\mathbf A} = {\mathbf I} - \rho{\mathbf W}$, but in the SAR case, it is ${\mathbf A} = ({\mathbf I} - \rho{\mathbf W})'({\mathbf I} - \rho{\mathbf W})$, using plug-in functions. Using `spautolm`, we get:
+The value of the single spatial parameter is found by line search (univariate optimisation). In `spautolm`, the objective function includes the use of numerical inversion of the ${\mathbf X}^\top{\mathbf A}{\mathbf X}$ matrix, where in the CAR case, ${\mathbf A} = {\mathbf I} - \rho{\mathbf W}$, but in the SAR case, it is ${\mathbf A} = ({\mathbf I} - \rho{\mathbf W})^\top({\mathbf I} - \rho{\mathbf W})$, using plug-in functions. Using `spautolm`, we get:
 
 ```{r sar1, size="footnotesize", message=FALSE}
 sar1 <- spautolm(form_pre, data=eng324, listw=lw, family="SAR", control=list(pre_eig=e))
@@ -186,10 +186,10 @@ SAC_pre <- sacsarlm(form_pre, data=eng324, listw=lw, control=list(pre_eig1=e, pr
 However, since GNM includes $\rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y}$, presenting the conventional table of coefficient estimates is not appropriate, so we'll stay with likelihood ratio tests, which depend on the models being compared being nested, and returning log-likelihood values:
 
 $$
-\mathrm{LR} = -2 ({\mathcal l}(\theta_0) - {\mathcal l}(\theta_1))
+\mathrm{LR} = -2 (\ell(\theta_0) - \ell(\theta_1))
 $$
 
-where ${\mathcal l}(\theta_0)$ is the log-likelihood of the nested model, and ${\mathcal l}(\theta_1)$ of the encompassing model, and where the number of degrees of freedom for $\chi^2$ is the difference in the estimated parameter counts.
+where $\ell(\theta_0)$ is the log-likelihood of the nested model, and $\ell(\theta_1)$ of the encompassing model, and where the number of degrees of freedom for $\chi^2$ is the difference in the estimated parameter counts.
 
 ```{r LR1_pre, size="footnotesize", warning=FALSE}
 library(lmtest)
@@ -215,7 +215,7 @@ SDM_pre <- lagsarlm(form_pre, data=eng324, listw=lw, Durbin=update(form_pre, ~ .
 c(LM_test=signif(SDM_pre$LMtest), p.value=format.pval((1 - pchisq(SDM_pre$LMtest, 1))))
 ```
 
-The Rao's score (Lagrange Multiplier) test for residual spatial autocorrelation in the SDM model shows that the model is mis-specified.
+The Rao's score (Lagrange Multiplier) test [@anselin:88a] for residual spatial autocorrelation in the SDM model shows that the model is mis-specified.
 
 ```{r SLM1_pre, size="footnotesize"}
 SLM_pre <- lagsarlm(form_pre, data=eng324, listw=lw, control=list(pre_eig=e))
@@ -267,7 +267,7 @@ par(opar)
 The figure shows that the only comparisons indicating minor improvement in fit by making the model more complex are from SEM to SDEM or SAC; it is not clear that adding the ${\mathbf W}{\mathbf X}$ helps. In addition, the likelihood ratio does not penalise for the increased number of fitted paramters, unlike AIC and BIC, which penalise in increasing degree. The Akaike information criterion (AIC) is, where $k$ is the parameter count:
 
 $$
-\mathrm{AIC} = 2 k - 2 {\mathcal l}(\theta)
+\mathrm{AIC} = 2 k - 2 \ell(\theta)
 $$
 
 ```{r AIC_pre, size="footnotesize"}
@@ -277,7 +277,7 @@ sort(sapply(mlist_pre, AIC))
 The BIC scores put all of the models including ${\mathbf W}{\mathbf X}$ behind those without, pointing to SEM, followed by SAC and SLM. The Bayesian information criterion (BIC) is, for n, the observation count:
 
 $$
-\mathrm{BIC} = k \ln(n) - 2 {\mathcal l}(\theta)
+\mathrm{BIC} = k \ln(n) - 2 \ell(\theta)
 $$
 
 
