@@ -31,7 +31,7 @@ $$
 $\beta$ may be concentrated out of the sum of squared errors term, for example as:
 
 $$
-\ell(\rho_{\mathrm{Err}}, \sigma^2) = - \frac{N}{2} \ln 2 \pi - \frac{N}{2} \ln \sigma^2 + \ln |{\mathbf I} - \rho_{\mathrm{Err}} {\mathbf W}| - \frac{1}{2 \sigma^2} \big[{\mathbf y}^\top({\mathbf I} - \rho_{\mathrm{Err}} \mathbf W})^\top ({\mathbf I} - {\mathbf Q}_{\rho_{\mathrm{Err}}}{\mathbf Q}_{\rho_{\mathrm{Err}}}^\top) ({\mathbf I} - \rho_{\mathrm{Err}} {\mathbf W}){\mathbf y}\big]
+\ell(\rho_{\mathrm{Err}}, \sigma^2) = - \frac{N}{2} \ln 2 \pi - \frac{N}{2} \ln \sigma^2 + \ln |{\mathbf I} - \rho_{\mathrm{Err}} {\mathbf W}| - \frac{1}{2 \sigma^2} \big[{\mathbf y}^\top({\mathbf I} - \rho_{\mathrm{Err}} {\mathbf W})^\top ({\mathbf I} - {\mathbf Q}_{\rho_{\mathrm{Err}}}{\mathbf Q}_{\rho_{\mathrm{Err}}}^\top) ({\mathbf I} - \rho_{\mathrm{Err}} {\mathbf W}){\mathbf y}\big]
 $$
 
 where ${\mathbf Q}_{\rho_{\mathrm{Err}}}$ is obtained by decomposing $({\mathbf X} - \rho_{\mathrm{Err}} {\mathbf W}{\mathbf X}) = {\mathbf Q}_{\rho_{\mathrm{Err}}}{\mathbf R}_{\rho_{\mathrm{Err}}}$.
@@ -44,7 +44,7 @@ $$
 
 where $\zeta_i$ are the eigenvalues of ${\mathbf W}.$
 
-One specific problem addressed by Ord [-@ord:75, p. 125] is that of the eigenvalues of the asymmetric row-standardised matrix ${\mathbf W}$ with underlying symmetric neighbour relations $c_{ij} = c_{ji}$. If we write ${\mathbf w} = {\mathbf C}{\mathbf 1}$, where ${\mathbf 1}$ is a vector of ones, we can get: ${\mathbf W} = {\mathbf C}{\mathbf D}$, where ${\mathbf D} = {\mathrm {diag}}(1/{\mathbf w})$; by similarity, the eigenvalues of ${\mathbf W}$ are equal to those of: ${\mathbf D}^{\frac{1}{2}}{\mathbf C}{\mathbf D}^\frac{1}{2}}$. From the very beginning in `spdep`, sparse Cholesky alternatives were available for cases in which finding the eigenvalues of a large weights matrix would be impracticable, see [@bivandetal:13] for further details.
+One specific problem addressed by Ord [-@ord:75, p. 125] is that of the eigenvalues of the asymmetric row-standardised matrix ${\mathbf W}$ with underlying symmetric neighbour relations $c_{ij} = c_{ji}$. If we write ${\mathbf w} = {\mathbf C}{\mathbf 1}$, where ${\mathbf 1}$ is a vector of ones, we can get: ${\mathbf W} = {\mathbf C}{\mathbf D}$, where ${\mathbf D} = {\mathrm {diag}}(1/{\mathbf w})$; by similarity, the eigenvalues of ${\mathbf W}$ are equal to those of: ${\mathbf D}^{\frac{1}{2}}{\mathbf C}{\mathbf D}^\frac{1}{2}$. From the very beginning in `spdep`, sparse Cholesky alternatives were available for cases in which finding the eigenvalues of a large weights matrix would be impracticable, see [@bivandetal:13] for further details.
 
 ```{r est2, size="footnotesize", message=FALSE}
 SEM_pre_maj <- errorsarlm(form_pre_maj, data=eng324, listw=lw, control=list(pre_eig=e), quiet=FALSE)
@@ -58,9 +58,7 @@ $$
 \ell(\beta, \rho_{\mathrm{Lag}}, \sigma^2) = - \frac{N}{2} \ln 2 \pi - \frac{N}{2} \ln \sigma^2 + \ln |{\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}| - \frac{1}{2 \sigma^2} \big[(({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}){\mathbf y} - {\mathbf X}\beta)^\top(({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}){\mathbf y} - {\mathbf X}\beta)\big]
 $$
 
-and by extension the same framework is used for the spatial Durbin model when $[{\mathbf X} ({\mathbf W}{\mathbf X})]$ are grouped together. The sum-of-squared errors (SSE) term in the square brackets is found using auxilliary regressions ${\mathbf e} = {\mathbf y}-({\mathbf X}^\top{\mathbf X}){\mathbf X}{\mathbf y}$ and ${\mathbf u} = {\mathbf W}{\mathbf y}-({\mathbf X}^\top{\mathbf X}){\mathbf X}{\mathbf W}{\mathbf y}$, and $SSE = {\mathbf e}^\top{\mathbf e} - 2 \rho_{\mathrm{Lag}} {\mathbf u}^\top{\mathbf e} + \rho_{\mathrm{Lag}}^2 {\mathbf u}^\top{\mathbf u}$. The cross-products of ${\mathbf u}$ and ${\mathbf e}$ can conveniently be calculated before line search begins.
-
-@bivand:12
+and by extension the same framework is used for the spatial Durbin model when $[{\mathbf X} ({\mathbf W}{\mathbf X})]$ are grouped together. The sum-of-squared errors (SSE) term in the square brackets is found using auxilliary regressions ${\mathbf e} = {\mathbf y}-({\mathbf X}^\top{\mathbf X}){\mathbf X}{\mathbf y}$ and ${\mathbf u} = {\mathbf W}{\mathbf y}-({\mathbf X}^\top{\mathbf X}){\mathbf X}{\mathbf W}{\mathbf y}$, and $SSE = {\mathbf e}^\top{\mathbf e} - 2 \rho_{\mathrm{Lag}} {\mathbf u}^\top{\mathbf e} + \rho_{\mathrm{Lag}}^2 {\mathbf u}^\top{\mathbf u}$. The cross-products of ${\mathbf u}$ and ${\mathbf e}$ can conveniently be calculated before line search begins; @bivand:12 gives more details.
 
 Models with two parameters require that $\rho_{\mathrm{Lag}}$ and $\rho_{\mathrm{Err}}$ be found by constrained numerical optimization in two dimensions by searching for the maximum on the surface of the log likelihood function, which is like that of the spatial error model with additional terms in ${\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}$:
 
@@ -70,20 +68,69 @@ $$
 
 where ${\mathbf Q}_{\rho_{\mathrm{Err}}}$ is obtained by decomposing $({\mathbf X} - \rho_{\mathrm{Err}} {\mathbf W}{\mathbf X}) = {\mathbf Q}_{\rho_{\mathrm{Err}}} {\mathbf R}_{\rho_{\mathrm{Err}}}$.
 
-```{r est2, size="footnotesize", message=FALSE}
+The `nlminb` optimiser is currently used by default, but as the figure shows, it jumps around quite a lot on the flat ridge of the surface of the log-likelihood, here displayed after additional calculation over a 40 by 40 grid. Note that this work has been computed on a x86_64/amd64 processor, which uses 80-bit extended precision. We are already seeing cases of arm64 processors with 64-bit precision affecting optimisation outcomes, (Apple Silicon, expected elsewhere). Much AI/GPU technology uses reduced precision, unfortunately.
+
+```{r est3, size="footnotesize", message=FALSE}
 SAC_pre_maj <- sacsarlm(form_pre_maj, data=eng324, listw=lw, control=list(pre_eig1=e, pre_eig2=e), llprof=40)
+SAC_track <- capture.output(sac <- sacsarlm(form_pre_maj, data=eng324, listw=lw, control=list(pre_eig1=e, pre_eig2=e), quiet=FALSE))
 c(SAC_pre_maj$rho, SAC_pre_maj$lambda)
 c(SAC_pre_maj$rho/SAC_pre_maj$rho.se, SAC_pre_maj$lambda/SAC_pre_maj$lambda.se)
 ```
 
+The estimated spatial parameters, and their z-values show that the null hypothesis of no difference from zero may well be acceptable for both, with $\rho_{\mathrm{Lag}}$ more likely to be in play than $\rho_{\mathrm{Err}}$; this matches the observation that the LM test for residual spatial autocorrelation from the SLM model did not reject the null hypothesis of no residual spatial autocorrelation. Here $\rho_{\mathrm{Err}}$ and $\rho_{\mathrm{Lag}}$ are competing for any remaining spatial signal in the data.
 
-```{r est3, size="footnotesize", message=FALSE}
+```{r est4, size="footnotesize", message=FALSE}
+#| label: est4
+#| fig-cap: SAC pre-CCT with political control model log likelihood surface and optimiser path to optimum
 m <- -matrix(SAC_pre_maj$llprof$ll, 40, 40)
-contour(SAC_pre_maj$llprof$xseq, SAC_pre_maj$llprof$yseq, m, levels=quantile(c(m), seq(0,1,0.1)), xlab="rho", ylab="lambda", add=TRUE)
-abline(h=SAC_pre_maj$rho, v=SAC_pre_maj$lambda, lwd=3)
+con <- textConnection(SAC_track)
+sac_track <- read.table(con, skip=14)
+close(con)
+contour(SAC_pre_maj$llprof$xseq, SAC_pre_maj$llprof$yseq, m, levels=quantile(c(m), seq(0,1,0.1)), xlab="rho", ylab="lambda", col="blue4")
+abline(h=SAC_pre_maj$rho, v=SAC_pre_maj$lambda, lwd=3, col="grey")
+lines(sac_track$V2, sac_track$V4, col="brown3")
 ```
 
 ## Bayesian estimation
 
+There is no time now to go into depth about Bayesian estimation, for now it is sufficient to know that instead of fitting models using maximum likelihood by optimising the log-likelihood function, the likelihood function and the underlying distributional assumptions are sampled from in this case in a Markov chain Monte Carlo framework.
+
+```{r bayes1, size="footnotesize", eval=FALSE}
+set.seed(12345)
+SAC_bayes <- spBreg_sac(form_pre_maj, data=eng324, listw=lw, control=list(ndraw=20000L, nomit=2000L))
+```
+```{r bayes1a, size="footnotesize", echo=FALSE}
+SAC_bayes <- readRDS("Input_output/SAC_bayes.rds")
+```
+
+Here we are fitting a SAC model with 20,000 samples drawn, and report the outcomes for $\rho_{\mathrm{Lag}}$, $\rho_{\mathrm{Err}}$ and $\sigma^2$ (for ML, $\sigma^2$ was `r format(SAC_pre_maj$s2, digits=4)`):
+
+```{r bayes2, size="footnotesize"}
+summary(SAC_bayes[, c("rho", "lambda", "sige")])
+```
+
+The MCMC estimation methods in `spatialreg` report in `mcmc` objects defined in `coda`, and tests for convergence provided in that package can also be used. The figure shows that sampling for the spatial coefficients is somewhat uneven, which is perhaps unsurprising since they carry little information:
+
+```{r bayes3, size="footnotesize"}
+#| label: bayes3
+#| fig-cap: Sampling traces and density plots for spatial coefficients and $\sigma^2$, SAC model with political control, MCMC, 20,000 draws
+opar <- par(mfrow=c(2, 1)) 
+plot(SAC_bayes[, c("rho", "lambda", "sige")], smooth=TRUE)
+par(opar)
+```
+
 
 ## Generalised method of moments estimation
+
+There are implementations of some GMM estimation methods in `spatialreg`, but those in `sphet` are actively maintained and better adapted to recent research results [@piras:10]. The workhorse `spreg` model fitting function can be used with several different models, including `"sarar"` also known as SAC:
+
+```{r gmm1, size="footnotesize"}
+library(sphet)
+SAC_gmm <- spreg(form_pre_maj, data=eng324, listw=lw, model="sarar")
+c(coef(SAC_gmm)[c("lambda", "rho"),], s2=as.numeric(SAC_gmm$s2))
+```
+
+Note that here `lambda` is $\rho_{\mathrm{Lag}}$, and `rho` is $\rho_{\mathrm{Err}}$, reversing the meaning of the terms elsewhere. Once again the `nlminb` optimiser is used, as in a number of steps $\rho_{\mathrm{Lag}}$ is estimated by spatial two-stage least squares using ${\mathbf W}{\mathbf X}$ and ${\mathbf W}{\mathbf W}{\mathbf X}$ as instruments, and then optimising $\rho_{\mathrm{Err}}$ and $\sigma^2$ in the method of moments steps. GMM does not use the log determinant of the Jacobian term in the model specification, and this was one of the reasons for the development of such methods. 
+
+More details on GMM estimation may be found in @bivandetal:21 and articles cited therein, and @kelejian+piras:17.
+
