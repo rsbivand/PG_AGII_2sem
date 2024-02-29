@@ -1,3 +1,305 @@
 # No orthogonality between regression and autoregression coefficients
 
+## Marginal effects in spatial econometrics
 
+```{r pl_io0, echo=FALSE, results="hide"}
+io_dir <- "Input_output"
+if (!dir.exists(io_dir)) io_dir <- paste0("../", io_dir)
+```
+```{r echo=FALSE}
+load(file = paste0(io_dir, "/talk7.RData"))
+```
+
+Recall that we aim to consider: 
+
+> if we change x, what do we expect to happen to y.
+
+It has emerged over time, however, that the spatial dependence in the parameter $\rho_{\mathrm{Lag}}$ feeds back. This feedback comes from the fact that the reduced form model is ${\mathbf y} = ({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1}{\mathbf X}{\mathbf \beta} + ({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1}{\mathbf \varepsilon}$. is the $n \times n$ identity matrix, and $({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1}$ is known to be dense. Expressed in terms of changes in $x$ impacting $y$, the feedback runs through the global spillover $({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1}$. These difficulties are discussed as emanating effects [@kelejianetal:06], also known as impacts [@lesage+fischer:08; @lesage+pace:09], simultaneous spatial reaction function/reduced form [@anselin+lozano-gracia:08] and equilibrium effects [@ward+gleditsch:08].
+
+This feedback comes from the fact that, while the elements of the Hessian matrix  for the ML spatial error model linking $\rho_{\mathrm{Err}}$ and $\beta$ are zero ($\partial^2 \ell / (\partial \beta \partial \rho_{\mathrm{Err}}) = {\mathbf 0}$), in the spatial lag model (and by extension in the spatial Durbin model): $\partial^2 \ell / (\partial \beta \partial \rho_{\mathrm{Lag}}) \neq {\mathbf 0}$. In the spatial error model, for exogenous variable $r$, $\partial y_i / \partial x_{ir} = \beta_r$ and $\partial y_i / \partial x_{jr} = 0$ for $i \neq j$. In the spatial lag model, $\partial y_i / \partial x_{jr} = (({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1} {\mathbf I} \beta_r)_{ij}$, where ${\mathbf I}$ is the $n \times n$ identity matrix. The awkward $S_r({\mathbf W}) = (({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1} {\mathbf I} \beta_r)$ matrix term needed to calculate impact measures for the lag model, and $S_r({\mathbf W}) = (({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1} ({\mathbf I} \beta_r - {\mathbf W} \gamma_r))$ for the spatial Durbin model, may be approximated using traces of powers of the spatial weights matrix as well as analytically.
+
+The average direct impacts are represented by the sum of the diagonal elements of the matrix divided by $n$ for each exogenous variable. The average total impacts are the  sum of all matrix elements divided by $n$ for each  exogenous variable. The average indirect impacts are the differences between the direct and total impact vectors. 
+
+The development in LeSage and Pace (2009, pp. 114--115) for the SLM model and $q$ traces is as follows:
+
+$$
+{\mathbf T} = [1, 0, n^{-1}tr({\mathbf W}^2), n^{-1}tr({\mathbf W}^3), \ldots, n^{-1}tr({\mathbf W}^q)]
+$$
+
+$$
+{\mathbf g} = [1, \rho, \rho^2, \rho^3, \ldots, \rho^q]; {\mathbf G}_{ii} = g_i, i = 1, \ldots, q+1
+$$
+
+$$
+{\mathbf P} = [\beta_1, \beta_2, \ldots, \beta_p]^T
+$$
+
+where the intercept $\beta_0$ is dropped, and with ${\mathbf a}$ a $p$-vector of ones:
+
+$$
+{\mathrm {Direct}} = {\mathbf P} {\mathbf T} {\mathbf G} {\mathbf a}
+$$
+
+$$
+{\mathrm {Total}} = {\mathbf \beta} {\mathbf g} {\mathbf a}
+$$
+
+## Trace-style impacts
+
+`trW` in `spatialreg` can be used to generate ${\mathbf T}$ above:
+
+```{r imp1, size="footnotesize", message=FALSE}
+library(spdep)
+lw <- nb2listw(unb, style="W")
+library(spatialreg)
+e <- eigenw(lw)
+W <- as(lw, "CsparseMatrix")
+trMat <- trW(W, type="mult")
+```
+```{r SLM1_pre_ml1, size="footnotesize"}
+SLM_pre_maj <- lagsarlm(form_pre_maj, data=eng324, listw=lw, control=list(pre_eig=e))
+```
+
+The samples are drawn from the fitted model using the coefficients, spatial lag coefficient $\rho_{\mathrm{Lag}}$ and possibly other components as the mean values, and the variance-covariance matrix of coefficients, applying `mvrnorm` from `MASS` once for `R` draws, yielding inputs for the trace method, which is applied to each draw to give `R` sample direct, indirect and total impacts:
+
+```{r SLM1_pre_ml2, size="footnotesize"}
+set.seed(12345)
+R <- 2000
+(imp_SLM_pre_maj_tr <- impacts(SLM_pre_maj, tr=trMat, R=R))
+```
+
+Repeating for post-CCT, we have `R` pre-CCT samples of $\rho_{\mathrm{Lag}}$, and `R` post-CCT samples, plus the same counts of sample impacts for the variables distinguished in @bivand+szymanski:00 as of importance both pre-CCT and post-CCT.
+
+```{r SLM1_post_ml1, size="footnotesize"}
+SLM_post_maj <- lagsarlm(form_post_maj, data=eng324, listw=lw, control=list(pre_eig=e))
+```
+```{r SLM1_post_ml2, size="footnotesize"}
+set.seed(12345)
+(imp_SLM_post_maj_tr <- impacts(SLM_post_maj, tr=trMat, R=R))
+```
+
+As a graphical display may be easier to begin with, we'll use `tinyplot` and assemble the samples of $\rho_{\mathrm{Lag}}$, and the total impact samples for the variables: logarithm of pick-up point counts, proportion of dwellings among pick-up points, logarithm of density of pick-up points per unit area, logarithm of real wages, and the categorical variable Labour majority control (compared with base value of no overall control).
+
+```{r imp_pre_post_tr, size="footnotesize"}
+pre_samp <- attr(imp_SLM_pre_maj_tr, "samples")
+post_samp <- attr(imp_SLM_post_maj_tr, "samples")
+pre_tot <- imp_SLM_pre_maj_tr$sres$total[, c(1:3, 6, 8)]
+post_tot <- imp_SLM_post_maj_tr$sres$total[, c(1:3, 6, 8)]
+tot <- as.data.frame(rbind(pre_tot, post_tot))
+names(tot)[4] <- "log.realWg."
+df <- data.frame(tot, rho=c(pre_samp$samples[,2], post_samp$samples[,2]), CCT=factor(c(rep("pre", times=R), rep("post", times=R)), levels=c("pre", "post")))
+```
+
+We expect see the total impacts of the logarithm of density of pick-up points per unit area and those of the logarithm of real wages sharpen (move further from zero) as CCT leads to increased efficiency. An increase in efficiency might also be associated with moves toward zero of the other three variables. In @bivand+szymanski:00, we also asserted that $\rho_{\mathrm{Lag}}$ would move towards zero as yardstick competition was replaced by competitive tendering.
+
+```{r imp_pre_post_tr_fig0, size="footnotesize", eval=FALSE}
+library(tinyplot)
+library(grid)
+x11()
+tinyplot(~ rho | CCT, data=df, type="density", fill="by", palette="dark2", main="rho")
+gridGraphics::grid.echo()
+g1 <- grid.grab()
+dev.off()
+x11()
+tinyplot(~ log.units. | CCT, data=df, type="density", fill="by", palette="dark2", main="log(units)")
+gridGraphics::grid.echo()
+g2 <- grid.grab()
+dev.off()
+x11()
+tinyplot(~ house | CCT, data=df, type="density", fill="by", palette="dark2", main="house")
+gridGraphics::grid.echo()
+g3 <- grid.grab()
+dev.off()
+x11()
+tinyplot(~ log.dens. | CCT, data=df, type="density", fill="by", palette="dark2", main="log(dens)")
+gridGraphics::grid.echo()
+g4 <- grid.grab()
+dev.off()
+x11()
+tinyplot(~ log.realWg. | CCT, data=df, type="density", fill="by", palette="dark2", main="log(realWg)")
+gridGraphics::grid.echo()
+g5 <- grid.grab()
+dev.off()
+x11()
+tinyplot(~ MajorityLAB | CCT, data=df, type="density", fill="by", palette="dark2", main="MajorityLAB")
+gridGraphics::grid.echo()
+g6 <- grid.grab()
+dev.off()
+```
+```{r imp_pre_post_tr_fig1, size="footnotesize", eval=FALSE}
+png("Images/10_imp_pre_post_tr_fig0.png", width=760, height=1200, pointsize=10)
+grid.newpage()
+gridExtra::grid.arrange(g1, g2, g3, g4, g5, g6, nrow=3, ncol=2)
+dev.off()
+```
+```{r imp_pre_post_tr_fig2, echo=FALSE, out.width="100%"}
+#| label: imp_pre_post_tr_fig2
+#| fig-cap: Shifts in spatial coefficient value and chosen variable total impacts from pre-CCT to post-CCT, SLM models, 324 English districts
+knitr::include_graphics("Images/10_imp_pre_post_tr_fig0.png")
+```
+
+We can also use `tinytable` to show the estimates of $\rho_{\mathrm{Lag}}$ and total imacts for the selected variables with their standard errors (for the impacts, standard errors estimated from the samples):
+
+```{r imp_pre_post_tr_tab, size="footnotesize", results="as.is"}
+#| label: imp_pre_post_tr_tab
+#| tab-cap: Spatial coefficient value and chosen variable total impacts and trace-based standard errors, pre-CCT and post-CCT, ML SLM models, 324 English districts
+library(tinytable)
+sum_imp_SLM_pre_maj_tr <- summary(imp_SLM_pre_maj_tr, short=TRUE, zstats=TRUE)
+sum_imp_SLM_post_maj_tr <- summary(imp_SLM_post_maj_tr, short=TRUE, zstats=TRUE)
+tf <- data.frame(variable=c(attr(imp_SLM_pre_maj_tr, "bnames")[c(1:3, 6, 8)], "rho"),
+  pre=c(sum_imp_SLM_pre_maj_tr$res$total[c(1:3, 6, 8)], SLM_pre_maj$rho),
+  pre_se=c(sum_imp_SLM_pre_maj_tr$semat[c(1:3, 6, 8), 3], SLM_pre_maj$rho.se),
+  post=c(sum_imp_SLM_post_maj_tr$res$total[c(1:3, 6, 8)], SLM_post_maj$rho),
+  post_se=c(sum_imp_SLM_post_maj_tr$semat[c(1:3, 6, 8), 3], SLM_post_maj$rho.se))
+tf$variable[4] <- "log(realWg)"
+tt(tf, digits=4)
+```
+
+
+## Bayesian marginal effects
+
+Because MCMC in any case draws samples, the use of fitted coefficients and their covariance matrix for posterior sampling to carry out inference on the models is unnecessary, and the same trace method can be used as with other estimation methods for constructing the sample impacts. Here we thin the samples to reduce the time needed for plotting the density plots:
+
+```{r bayes_pre, size="footnotesize", eval=FALSE}
+set.seed(12345)
+SLM_pre_maj_bayes <- spBreg_lag(form_pre_maj, data=eng324, listw=lw, control=list(ndraw=22000L, nomit=2000L, thin=10L))
+```
+```{r bayes_prea, size="footnotesize", echo=FALSE}
+SLM_pre_maj_bayes <- readRDS("Input_output/SLM_pre_maj_bayes.rds")
+```
+```{r bayes_post, size="footnotesize", eval=FALSE}
+set.seed(12345)
+SLM_post_maj_bayes <- spBreg_lag(form_post_maj, data=eng324, listw=lw, control=list(ndraw=22000L, nomit=2000L, thin=10L))
+```
+```{r bayes_posta, size="footnotesize", echo=FALSE}
+SLM_post_maj_bayes <- readRDS("Input_output/SLM_post_maj_bayes.rds")
+```
+
+As can be seen, no `R` is needed to give the number of samples to draw, because they are already at hand. If we wished to modify the priors of the Bayesian models, we could also explore the consequences for the impacts - here uninformative priors have been used, yielding results very like those of maximum likelihood:
+
+```{r bayes_pre_post1, size="footnotesize"}
+sum_imp_pre <- summary(impacts(SLM_pre_maj_bayes, tr=trMat))
+sum_imp_post <- summary(impacts(SLM_post_maj_bayes, tr=trMat))
+```
+
+```{r imp_pre_post_tr_bayes, size="footnotesize"}
+pre_tot <- sum_imp_pre$sres$total[, c(1:3, 6, 8)]
+post_tot <- sum_imp_post$sres$total[, c(1:3, 6, 8)]
+R <- nrow(pre_tot)
+tot <- as.data.frame(rbind(pre_tot, post_tot))
+names(tot)[4] <- "log.realWg."
+bdf <- data.frame(tot, rho=c(c(SLM_pre_maj_bayes[, "rho"]), c(SLM_post_maj_bayes[, "rho"])), CCT=factor(c(rep("pre", times=R), rep("post", times=R)), levels=c("pre", "post")))
+```
+
+```{r bayes_pre_post_tr_fig0, size="footnotesize", eval=FALSE}
+library(tinyplot)
+x11()
+tinyplot(~ rho | CCT, data=bdf, type="density", fill="by", palette="dark2", main="rho")
+gridGraphics::grid.echo()
+g1 <- grid.grab()
+dev.off()
+x11()
+tinyplot(~ log.units. | CCT, data=bdf, type="density", fill="by", palette="dark2", main="log(units)")
+gridGraphics::grid.echo()
+g2 <- grid.grab()
+dev.off()
+x11()
+tinyplot(~ house | CCT, data=bdf, type="density", fill="by", palette="dark2", main="house")
+gridGraphics::grid.echo()
+g3 <- grid.grab()
+dev.off()
+x11()
+tinyplot(~ log.dens. | CCT, data=bdf, type="density", fill="by", palette="dark2", main="log(dens)")
+gridGraphics::grid.echo()
+g4 <- grid.grab()
+dev.off()
+x11()
+tinyplot(~ log.realWg. | CCT, data=bdf, type="density", fill="by", palette="dark2", main="log(realWg)")
+gridGraphics::grid.echo()
+g5 <- grid.grab()
+dev.off()
+x11()
+tinyplot(~ MajorityLAB | CCT, data=bdf, type="density", fill="by", palette="dark2", main="MajorityLAB")
+gridGraphics::grid.echo()
+g6 <- grid.grab()
+dev.off()
+```
+
+```{r bayes_pre_post_tr_fig1, size="footnotesize", eval=FALSE}
+png("Images/10_bayes_pre_post_tr_fig0.png", width=760, height=1200, pointsize=10)
+grid.newpage()
+gridExtra::grid.arrange(g1, g2, g3, g4, g5, g6, nrow=3, ncol=2)
+dev.off()
+```
+```{r bayes_pre_post_tr_fig2, size="footnotesize", echo=FALSE, out.width="100%"}
+#| label: bayes_pre_post_tr_fig2
+#| fig-cap: Shifts in spatial coefficient value and chosen variable total impacts from pre-CCT to post-CCT, SLM models, 324 English districts
+knitr::include_graphics("Images/10_bayes_pre_post_tr_fig0.png")
+```
+
+We could also replicate the outcomes in tabular form.
+
+## GMM marginal effects
+
+@piras+postiglione:22 propose the use of eigenvalues of the spatial weights matrix to calculate the direct, indirect and total impacts, rather than the use of traces, which are necessarily approximate as the power series is truncated. However, an argument for GMM was that it avoided the computation of eigenvalues of the spatial weights matrix, which cease to be numerically stable at large $n$ using standard or extended precision ($n$ up to 10,000 is fine). For larger $n$, the trace method remains viable. 
+
+The eigenvalue method can of course also be used to calculate impacts from samples for inferential purposes, but so far only the impacts themselves are available for models fitted by maximum likelihood:
+
+```{r imp_pre_post_ev_tab, size="footnotesize", results="as.is"}
+#| label: imp_pre_post_ev_tab
+#| tab-cap: Spatial coefficient value and variable total impacts, pre-CCT and post-CCT, ML SLM models, 324 English districts
+tfe0 <- data.frame(variable=c(names(coef(SLM_pre_maj))[3:10], "rho"), pre=c(impacts(SLM_pre_maj, evalues=e)$total, SLM_pre_maj$rho), post=c(impacts(SLM_post_maj, evalues=e)$total, SLM_post_maj$rho))
+tfe0$variable[6] <- "log(realWg)"
+tt(tfe0, digits=4) 
+```
+
+Let us fit the SLM pre-CCT and post-CCT models with GMM:
+
+```{r gmm_pre_post_maj, size="footnotesize"}
+library(sphet)
+spreg_pre_maj <- spreg(form_pre_maj, data=eng324, listw=lw, model="lag")
+spreg_post_maj <- spreg(form_post_maj, data=eng324, listw=lw, model="lag")
+```
+
+and continue to calculate the impacts and their standard errors using the Kelejian and Piras formula:
+
+```{r imp_gmm_pre_post_maj, size="footnotesize"}
+imp_spreg_pre_maj <- impacts(spreg_pre_maj, evalues=e, KPformula=TRUE, prt=FALSE)
+imp_spreg_post_maj <- impacts(spreg_post_maj, evalues=e, KPformula=TRUE, prt=FALSE)
+```
+
+
+
+```{r imp_gmm_pre_post_maj_tab, size="footnotesize", results="as.is"}
+#| label: imp_gmm_pre_post_maj_tab
+#| tab-cap: Spatial coefficient value and chosen variable total impacts and eigenvalue-based standard errors, pre-CCT and post-CCT, GMM SLM models, 324 English districts
+etf <- data.frame(variable=c(rownames(imp_spreg_pre_maj[[1]])[c(1:3, 6, 8)], "rho"),
+ pre=c(imp_spreg_pre_maj[[1]][c(1:3, 6, 8), 3], c(coef(spreg_pre_maj)[10])),
+ pre_se=c(imp_spreg_pre_maj[[2]][c(1:3, 6, 8), 3], sqrt(diag(spreg_pre_maj$var))[10]),
+ post=c(imp_spreg_post_maj[[1]][c(1:3, 6, 8), 3], c(coef(spreg_post_maj)[10])),
+ post_se=c(imp_spreg_post_maj[[2]][c(1:3, 6, 8), 3], sqrt(diag(spreg_post_maj$var))[10]))
+etf$variable[4] <- "log(realWg)"
+tt(etf, digits=4)
+```
+
+Although we could generate "density" plots using the standard errors, a more parsimonious approach might be a pair of coefficient plots:
+
+```{r imp_gmm_pre_post_maj_fig, size="footnotesize", out.width="80%"}
+#| label: imp_gmm_pre_post_maj_figimp_pre_post_tr_fig
+#| fig-cap: Spatial coefficient value and chosen variable total impacts and eigenvalue-based standard errors, pre-CCT and post-CCT, GMM SLM models, 324 English districts
+library(tinyplot)
+level <- 0.95
+a <- (1 - level)/2
+a <- c(a, 1 - a)
+fac <- qt(a, 324)
+edf_pre <- c(imp_spreg_pre_maj[[1]][c(1:3, 6, 8), 3], c(coef(spreg_pre_maj)[10])) + c(imp_spreg_pre_maj[[2]][c(1:3, 6, 8), 3], sqrt(diag(spreg_pre_maj$var))[10]) %o% fac
+edf_pre <- data.frame(estimate=c(imp_spreg_pre_maj[[1]][c(1:3, 6, 8), 3], c(coef(spreg_pre_maj)[10])), ci_low=edf_pre[,1], ci_high=edf_pre[,2], vars=rownames(edf_pre))
+edf_pre$vars[4] <- "log(realWg)"
+edf_post <- c(imp_spreg_post_maj[[1]][c(1:3, 6, 8), 3], c(coef(spreg_post_maj)[10])) + c(imp_spreg_post_maj[[2]][c(1:3, 6, 8), 3], sqrt(diag(spreg_post_maj$var))[10]) %o% fac
+edf_post <- data.frame(estimate=c(imp_spreg_post_maj[[1]][c(1:3, 6, 8), 3], c(coef(spreg_post_maj)[10])), ci_low=edf_post[,1], ci_high=edf_post[,2], vars=rownames(edf_post))
+edf_post$vars[4] <- "log(realWg)"
+opar <- par(mfrow=c(1,2), mar=c(7, 4, 4, 2)+0.1)
+with(edf_pre, tinyplot(x=vars, y=estimate, ymin=ci_low, ymax=ci_high, type="pointrange", col="blue4", pch=16, cex=2, main="pre-CCT", ylim=c(-2.9686, 1.3786), grid=TRUE, las=3))
+with(edf_post, tinyplot(x=vars, y=estimate, ymin=ci_low, ymax=ci_high, type="pointrange", col="red4", pch=16, cex=2, main="post-CCT", ylim=c(-2.9686, 1.3786), grid=TRUE, las=3))
+par(opar)
+```
