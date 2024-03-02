@@ -1,19 +1,13 @@
-# Course description {.unnumbered}
+---
+title: "Spatial Econometrics: Team project using R"
+author: "Roger Bivand"
+date: "March - May, 2024"
+output: 
+  html_document:
+theme: united
+---
 
-### Planned topics
-
-- Introducing Spatial Econometrics
-- Spatial data
-- Working with spatial data
-- Creating spatial weights objects
-- Spatial Econometrics: Antecedents
-- Economic and social research questions using spatial data
-- Tests of spatial autocorrelation, model specification
-- Spatial autoregressive models: conditional (CAR) and simultaneous (SAR)
-- Estimation of spatial autoregressive models: methods (GMM, ML, Bayesian)
-- No orthogonality between regression and autoregression coefficients
-- Prediction and spatial models
-- Eigenvectors and eigenvalues of graphs of relationships between cross-sectional observations
+### [Lecture script](https://github.com/rsbivand/PG_AGII_2sem/_book/index.html), other materials in eNauczanie
 
 ### Team projects
 
@@ -31,7 +25,7 @@ Teams should try to limit joint team work to the 30 hours available, but team me
 
 ### Online resources
 
-- @pebesma+bivand:23 is also available at: (https://r-spatial.org/book)
+- Pebesma and Bivand (2023) - Spatial Data Science -  is also available at: (https://r-spatial.org/book)
 - More on constructing spatial neighbour objects: (https://r-spatial.github.io/spdep/articles/nb_sf.html)
 - Spatial weights as graphs: (https://r-spatial.github.io/spatialreg/articles/nb_igraph.html)
 - EMOS talk 19 April 2023: (https://rsbivand.github.io/emos_talk_2304/), (https://www.youtube.com/watch?v=spYPyHxa7v8)
@@ -41,5 +35,4 @@ Teams should try to limit joint team work to the 30 hours available, but team me
 - ECS530 PhD course 2019 (with recorded talks): (https://rsbivand.github.io/ECS530_h19/), (https://www.youtube.com/watch?v=KkIbg50Pa0I&list=PLXUoTpMa_9s10NVk4dBQljNOaOXAOhcE0)
 - 2019 BAN 421 Masters course Data structures: (https://rsbivand.github.io/ban421_h19/)
 
-Spatial Econometrics: Team project using R © 2024 by Roger Bivand is licensed under [CC BY-NC-ND 4.0](http://creativecommons.org/licenses/by-nc-nd/4.0/)
 
