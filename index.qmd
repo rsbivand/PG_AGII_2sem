@@ -31,16 +31,16 @@ Teams should try to limit joint team work to the 30 hours available, but team me
 
 ### Online resources
 
-- @pebesma+bivand:23 is also available at: (https://r-spatial.org/book)
-- More on constructing spatial neighbour objects: (https://r-spatial.github.io/spdep/articles/nb_sf.html)
-- Spatial weights as graphs: (https://r-spatial.github.io/spatialreg/articles/nb_igraph.html)
-- EMOS talk 19 April 2023: (https://rsbivand.github.io/emos_talk_2304/), (https://www.youtube.com/watch?v=spYPyHxa7v8)
-- UAM short courses: (https://rsbivand.github.io/UAM21_I/), (https://rsbivand.github.io/UAM21_II/)
-- WhyR 2020 keynote: (https://www.youtube.com/watch?v=mEAyQ8bv1zU)
-- 2020 BAN 422 Masters course Visualization: (https://rsbivand.github.io/BAN422_V20/)
-- ECS530 PhD course 2019 (with recorded talks): (https://rsbivand.github.io/ECS530_h19/), (https://www.youtube.com/watch?v=KkIbg50Pa0I&list=PLXUoTpMa_9s10NVk4dBQljNOaOXAOhcE0)
-- 2019 BAN 421 Masters course Data structures: (https://rsbivand.github.io/ban421_h19/)
+- @pebesma+bivand:23 is also available at: [https://r-spatial.org/book](https://r-spatial.org/book)
+- More on constructing spatial neighbour objects: [https://r-spatial.github.io/spdep/articles/nb_sf.html](https://r-spatial.github.io/spdep/articles/nb_sf.html)
+- Spatial weights as graphs: [https://r-spatial.github.io/spatialreg/articles/nb_igraph.html](https://r-spatial.github.io/spatialreg/articles/nb_igraph.html)
+- EMOS talk 19 April 2023: [https://rsbivand.github.io/emos_talk_2304/](https://rsbivand.github.io/emos_talk_2304/), [https://www.youtube.com/watch?v=spYPyHxa7v8](https://www.youtube.com/watch?v=spYPyHxa7v8)
+- UAM short courses: [https://rsbivand.github.io/UAM21_I/](https://rsbivand.github.io/UAM21_I/), [https://rsbivand.github.io/UAM21_II/](https://rsbivand.github.io/UAM21_II/)
+- WhyR 2020 keynote: [https://www.youtube.com/watch?v=mEAyQ8bv1zU](https://www.youtube.com/watch?v=mEAyQ8bv1zU)
+- 2020 BAN 422 Masters course Visualization: [https://rsbivand.github.io/BAN422_V20/](https://rsbivand.github.io/BAN422_V20/)
+- ECS530 PhD course 2019 (with recorded talks): [https://rsbivand.github.io/ECS530_h19/](https://rsbivand.github.io/ECS530_h19/), [https://www.youtube.com/watch?v=KkIbg50Pa0I&list=PLXUoTpMa_9s10NVk4dBQljNOaOXAOhcE0](https://www.youtube.com/watch?v=KkIbg50Pa0I&list=PLXUoTpMa_9s10NVk4dBQljNOaOXAOhcE0)
+- 2019 BAN 421 Masters course Data structures: [https://rsbivand.github.io/ban421_h19/](https://rsbivand.github.io/ban421_h19/)
 
-Spatial Econometrics: Team project using R © 2024 by Roger Bivand is licensed under [CC BY-NC-ND 4.0](http://creativecommons.org/licenses/by-nc-nd/4.0/)
+Spatial Econometrics: Team project using R © 2024 by Roger Bivand is licensed under [CC Attribution-NonCommercial-NoDerivatives 4.0 International BY-NC-ND 4.0](http://creativecommons.org/licenses/by-nc-nd/4.0/)
 
-Spatial Econometrics: Team project using R © 2024 by Roger Bivand is licensed under Attribution-NonCommercial-NoDerivatives 4.0 International. To view a copy of this license, visit (http://creativecommons.org/licenses/by-nc-nd/4.0/)
+
