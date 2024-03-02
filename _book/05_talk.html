@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.550">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Spatial Econometrics - 5&nbsp; Antecedents</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./06_talk.html" rel="next">
+<link href="./04_talk.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05_talk.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Antecedents</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Spatial Econometrics</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course description</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducing Spatial Econometrics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Working with spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Creating spatial weights objects</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_talk.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Antecedents</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Economic and social research questions using spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Tests of spatial autocorrelation, model specification</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Spatial autoregressive models: conditional (CAR) and simultaneous (SAR)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Estimation of spatial autoregressive models: methods (ML, Bayesian, GMM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">No orthogonality between regression and autoregression coefficients</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Prediction and spatial models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Eigenvectors and eigenvalues of graphs of relationships between cross-sectional observations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-why-antecedents" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Antecedents</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Spatial econometrics may be seen in a number of different ways, as misguided, as an inward-looking endeavour for the specially interested, but these views are rarely placed in their context. In this section, we will sketch the antecedents of spatial econometrics, both providing views on the research context when it came into being, and on changes in econometrics over time. Grasping spatial econometrics today without insight into its antecedents is unnecessarily difficult, so taking time to explore how ideas came into being and developed is well-spent. </p>
+<p>In the same way that <span class="citation" data-cites="fujitaetal:99">Fujita, Krugman, and Venables (<a href="references.html#ref-fujitaetal:99" role="doc-biblioref">1999</a>)</span> begin their study of the spatial economy by looking at the antecedents of their subject, it is helpful to place spatial econometrics in its temporal and academic context. This context is sufficiently different from the contemporary setting that it may be hard to grasp the background for many of the features of spatial econometrics that came into being during its earlier years. Indeed, the ranges of topics that were studied in economics in the 1960’s and 1970’s differ markedly from those in focus today. If we can sketch the context within which spatial econometrics was created, and its methods developed, we should be able to illuminate choices made then which influence our understanding and application of spatial econometric methods. </p>
+<p>Critics of the practice of spatial econometrics, such as <span class="citation" data-cites="gibbons+overman:12">Gibbons and Overman (<a href="references.html#ref-gibbons+overman:12" role="doc-biblioref">2012</a>)</span>, appear to overlook these antecedents, and consequently judge the potential of the field on a partial, perhaps anachronistic, understanding, viewing phenomena with a history in ahistorical way. Since we are attempting to provide an introduction to applied spatial econometrics, we need to throw light on the original motivations and concerns of the first scholars engaged in the field. <span class="citation" data-cites="anselin:10">Anselin (<a href="references.html#ref-anselin:10" role="doc-biblioref">2010b</a>)</span> indicates clearly and repeatedly <span class="citation" data-cites="anselin:88 anselin:06 anselin:10a">(<a href="references.html#ref-anselin:88" role="doc-biblioref">Anselin 1988</a>, <a href="references.html#ref-anselin:06" role="doc-biblioref">2006</a>, <a href="references.html#ref-anselin:10a" role="doc-biblioref">2010a</a>)</span> that we should acknowledge <em>Spatial Econometrics</em> by <span class="citation" data-cites="paelinck+klaassen:79">Paelinck and Klaassen (<a href="references.html#ref-paelinck+klaassen:79" role="doc-biblioref">1979</a>)</span> of the Netherlands Economic Institute as our starting point, and so celebrated thirty years of spatial econometrics in 2009. This firm confirmation of the importance of Jean Paelinck’s contributions as scholar and community-builder is fully justified. We should then turn to the motivations given in <span class="citation" data-cites="paelinck+klaassen:79">Paelinck and Klaassen (<a href="references.html#ref-paelinck+klaassen:79" role="doc-biblioref">1979</a>)</span> to indicate which contextual factors were of importance at that time, and the breadth of the academic communities with which they were in contact. </p>
+<p>In a recent short commentary, <span class="citation" data-cites="paelinck:13">Paelinck (<a href="references.html#ref-paelinck:13" role="doc-biblioref">2013, 11</a>)</span> recalled his conviction, expressed in 1967, that</p>
+<blockquote class="blockquote">
+<p>early econometric exercises … relating only variables posessing the same regional index … were inadequate to represent the correct spatial workings of the economy, which would then be reflected in the policy outcomes.</p>
+</blockquote>
+<p>A year before, <span class="citation" data-cites="paelinck:12">Paelinck (<a href="references.html#ref-paelinck:12" role="doc-biblioref">2012, 36</a>)</span> pointed to salient isomorphisms linking spatial regression models, simultaneous equation models and input-output models; these were known of and discussed in the early formative period of spatial econometrics. We will return in subsequent chapters to the ways in which spatial regression models may be specified, but for now, a simple presentation of these isomorphisms as perceived in the early period is sufficient: </p>
+<p><span class="math display">\begin{equation*}
+{\mathbf y} = {\mathbf A}{\mathbf y} + {\mathbf X}{\mathbf b} + {\mathbf \varepsilon}\end{equation*}</span></p>
+<p> is a spatial regression model where <span class="math inline">{\mathbf A}</span> is a matrix expressing the mutual first order spatial dependencies between regions — the similarity of this form and the Koyck distributed lag model is striking <span class="citation" data-cites="koyck:54 klein:58 griliches:67">(<a href="references.html#ref-koyck:54" role="doc-biblioref">Koyck 1954</a>; <a href="references.html#ref-klein:58" role="doc-biblioref">Klein 1958</a>; <a href="references.html#ref-griliches:67" role="doc-biblioref">Griliches 1967</a>)</span>; </p>
+<p><span class="math display">\begin{equation*}
+{\mathbf A}{\mathbf y} + {\mathbf X}{\mathbf b} = {\mathbf \varepsilon}
+\end{equation*}</span></p>
+<p> is a simultaneous equation model where <span class="math inline">{\mathbf A}</span> is a matrix expressing the dependencies between the equations; and: </p>
+<p><span class="math display">\begin{equation*}
+{\mathbf y} = {\mathbf A}{\mathbf y} + {\mathbf f}
+\end{equation*}</span> is an input-output model where <span class="math inline">{\mathbf A}</span> is a matrix of sectoral input-output coefficients, and <span class="math inline">{\mathbf f}</span> is final demand. </p>
+<p>Input-output models, simultaneous equation models, and the importance of policy outcomes were all known intimately at the Netherlands Economic Institute at this time, and elsewhere among applied economists. The isomporhisms flowed from the known to the unknown, from the stuff of contemporary research and policy advice to doubts about the calibration of aspatial models, and on to what became termed spatial econometrics. If we compare these topics with those described for Regional Science by <span class="citation" data-cites="boyce:04">Boyce (<a href="references.html#ref-boyce:04" role="doc-biblioref">2004</a>)</span>, we can see the outlines of research priorities at the time: including urban and regional models for planning, regional and interregional input-output models, transport and location models. During the 1960s and 1970s, many of these models were enhanced, matching needs for policy advice, to cover environmental questions, adding natural resources as inputs and pollution to outputs. Paelinck’s co-author in a key paper in spatial econometrics <span class="citation" data-cites="hordijk+paelinck:76">(<a href="references.html#ref-hordijk+paelinck:76" role="doc-biblioref">Hordijk and Paelinck 1976</a>)</span>, went on to work in environmental management and research. </p>
+<p>Reading <span class="citation" data-cites="paelinck+klaassen:79">Paelinck and Klaassen (<a href="references.html#ref-paelinck+klaassen:79" role="doc-biblioref">1979, viii</a>)</span>, we see that the programme of research into the space economy undertaken at the Netherlands Economic Institute led first to the publication of <span class="citation" data-cites="paelinck+nijkamp:75">Paelinck and Nijkamp (<a href="references.html#ref-paelinck+nijkamp:75" role="doc-biblioref">1975</a>)</span>, and then to <span class="citation" data-cites="klaassenetal:79">Klaassen, Paelinck, and Wagenaar (<a href="references.html#ref-klaassenetal:79" role="doc-biblioref">1979</a>)</span>, published in the same year as <em>Spatial Econometrics</em>. All three books were published in the same series and appear to reflect the core concerns of economists at the Institute doing research on regionalised national macro-economic models. The direct link to Jan Tinbergen is evident in the account of the context of economic research in the Netherlands given by <span class="citation" data-cites="theil:64">Theil (<a href="references.html#ref-theil:64" role="doc-biblioref">1964, 49</a>)</span>. If we take Paelinck at his word, he and his colleagues were aware that an aspatial regionalisation of national accounts, of input-output models, or transport models, might prejudice policy advice and outcomes through inadequate and inappropriate calibration. </p>
+<p><span class="citation" data-cites="klaassenetal:79">Klaassen, Paelinck, and Wagenaar (<a href="references.html#ref-klaassenetal:79" role="doc-biblioref">1979</a>)</span> is mainly concerned with model construction, while about a third of <span class="citation" data-cites="paelinck+nijkamp:75">Paelinck and Nijkamp (<a href="references.html#ref-paelinck+nijkamp:75" role="doc-biblioref">1975</a>)</span> is devoted to input-output analysis. Both books show sustained concern for aggregate economic measurement, especially of national accounts data, intersectoral transactions, and many other topics. Considerable attention is also paid to the data collection units, be they sectors or regions. The need to attempt to define regions that match the underlying economic realities was recognised clearly, and a key part of <span class="citation" data-cites="paelinck+nijkamp:75">Paelinck and Nijkamp (<a href="references.html#ref-paelinck+nijkamp:75" role="doc-biblioref">1975</a>)</span> is devoted to regionalisation, and the distinction between functional regions and homogenous regional classifications is made. In the motivation for spatial econometric models given in <span class="citation" data-cites="paelinck+klaassen:79">Paelinck and Klaassen (<a href="references.html#ref-paelinck+klaassen:79" role="doc-biblioref">1979, 2–3</a>)</span>, consumption and investment in a region are modelled as depending on income both in the region itself and in its contiguous neighbours, termed a “spatial income-generating model.” It became important to be able to calibrate planning models of this kind to provide indications of the possible outcomes of alternative policy choices, hence the need for spatial econometrics. </p>
+<p>Economic planning was widespread in Europe at the time, and was also central in the development of Regional Science, in particular input-output models; as <span class="citation" data-cites="boyce:04">Boyce (<a href="references.html#ref-boyce:04" role="doc-biblioref">2004</a>)</span> recounts, Walter Isard worked closely with Wassily Leontief. Operational and planning motivations for applied economics were unquestioned, as economists in the post-war period saw their role, beyond educating young economists, as providing rational foundations for economic policy. It is worth noting that Jean Paelinck participated actively in the Association de Science Régionale De Langue Française, becoming president in 1973–1976. The first president of the association was François Perroux, who had founded it with Walter Isard in 1961 <span class="citation" data-cites="baillyetal:12">(<a href="references.html#ref-baillyetal:12" role="doc-biblioref">Bailly, Derycke, and Torre 2012</a>)</span>. </p>
+<p>Until the 1980s, it was not at all unusual to publish original results in other languages than English. French spatial economic research, for example <span class="citation" data-cites="ponsard:83">Ponsard (<a href="references.html#ref-ponsard:83" role="doc-biblioref">1983</a>)</span>, while making little impact in Anglophone countries, was widely used in teaching and research elsewhere <span class="citation" data-cites="billot+thisse:92">(<a href="references.html#ref-billot+thisse:92" role="doc-biblioref">Billot and Thisse 1992</a>)</span>. They contrast, though, the “word wizardry of François Perroux with the rigour of Claude Ponsard” <span class="citation" data-cites="billot+thisse:92">Billot and Thisse (<a href="references.html#ref-billot+thisse:92" role="doc-biblioref">1992, 194</a>)</span>, echoing the views expressed by <span class="citation" data-cites="dreze:64">Drèze (<a href="references.html#ref-dreze:64" role="doc-biblioref">1964, 3–4</a>)</span> with regard to the work of Perroux. Even if we accept that “word wizardry” deserves more rigour and recasting in normative and empirically testable forms, it is also part of the context within which spatial econometrics came into being. A reading of <span class="citation" data-cites="perroux:50">Perroux (<a href="references.html#ref-perroux:50" role="doc-biblioref">1950</a>, a lecture given at Harvard University)</span> is worthwhile, because it not only gives the reader a vignette of the context in the post-war period, but also provides a discussion of economic space, as opposed to “banal, unreflected space, mere position”, that has largely disappeared from our considerations. </p>
+<p>The title of the journal: <em>Regional and Urban Economics, Operational Methods</em>, founded by Jean Paelinck in 1971, and which was renamed as <em>Regional Science and Urban Economics</em> in 1975. <span class="citation" data-cites="boyce:04">Boyce (<a href="references.html#ref-boyce:04" role="doc-biblioref">2004, 43</a>)</span>, points to the perceived importance of “operational methods”, a version of the term “operational theory and method” used in the title of <span class="citation" data-cites="paelinck+nijkamp:75">Paelinck and Nijkamp (<a href="references.html#ref-paelinck+nijkamp:75" role="doc-biblioref">1975</a>)</span>. Spatial econometrics does not seem to have come into being as a set of estimation techniques as such, as perhaps we might think today, but rather as an approach addressing open research questions both in space economy and in the enhancement of interregional models to be used in offering policy advice. </p>
+<p>Were motivations of this kind common during the 1960s and early 1970s? Not only was the spread of Regional Science extensive and firmly established <span class="citation" data-cites="boyce:04">(<a href="references.html#ref-boyce:04" role="doc-biblioref">Boyce 2004</a>)</span>, but public bodies were concerned to regionalise economic measurement and policy advice <span class="citation" data-cites="graham+romans:71">(see, for example <a href="references.html#ref-graham+romans:71" role="doc-biblioref">Graham and Romans 1971</a>)</span>. In Britain, <em>Environment and Planning</em> was started in 1969 with Alan Wilson as founding editor and published by Pion; he was assistant director at the Centre for Environmental Studies at this time before moving to the University of Leeds. In a recently published lecture series, <span class="citation" data-cites="wilson:12">Wilson (<a href="references.html#ref-wilson:12" role="doc-biblioref">2012, 35–36</a>)</span> cites <span class="citation" data-cites="paelinck+nijkamp:75">Paelinck and Nijkamp (<a href="references.html#ref-paelinck+nijkamp:75" role="doc-biblioref">1975</a>)</span> as giving principles for contributions from economics to urban and regional analysis <span class="citation" data-cites="wilson:00">(see also <a href="references.html#ref-wilson:00" role="doc-biblioref">Wilson 2000, 34</a>)</span>. The papers presented at annual Regional Science meetings were published in a series by Pion; the first number in the series included contributions by <span class="citation" data-cites="granger:69">Granger (<a href="references.html#ref-granger:69" role="doc-biblioref">1969</a>)</span> and <span class="citation" data-cites="cliff+ord:69">Cliff and Ord (<a href="references.html#ref-cliff+ord:69" role="doc-biblioref">1969</a>)</span>. </p>
+<p>In a contribution to a panel session at the 2006 annual meeting of the American Association of Geographers (co-panelists Luc Anselin and Daniel Griffith), Keith Ord pointed to the continued relevance of Granger’s remarks at the meeting almost fourty years earlier <span class="citation" data-cites="ord:10">(<a href="references.html#ref-ord:10" role="doc-biblioref">J. Keith Ord 2010, 168–69</a>)</span>; we will return to these concerns below. As noted by <span class="citation" data-cites="bivand:08">Bivand (<a href="references.html#ref-bivand:08" role="doc-biblioref">2008, 1–5</a>)</span>, communities of researchers working in and near mathematical and theoretical geography was more integrated in the pre-internet and pre-photocopier age than one might expect, with duplicated working papers prepared using stencils circulating rapidly between collaborating academic centres. Knowledge of the preliminary results of other researchers then fed through into rapid innovation in an exciting climate for those with access to these meetings and working papers.</p>
+<p>There was considerable overlap between quantitative geography and regional science, so that work like <span class="citation" data-cites="cliff+ord:69">Cliff and Ord (<a href="references.html#ref-cliff+ord:69" role="doc-biblioref">1969</a>)</span> is cited by <span class="citation" data-cites="hordijk:74">Hordijk (<a href="references.html#ref-hordijk:74" role="doc-biblioref">1974</a>)</span>, and was certainly known at the Netherlands Economic Institute several years earlier. Although it has not been possible to find out who participated in the August 1968 conference of the British and Irish Section of the Regional Science Association at which <span class="citation" data-cites="cliff+ord:69">Cliff and Ord (<a href="references.html#ref-cliff+ord:69" role="doc-biblioref">1969</a>)</span> was read, it was not unusual for members of other sections to be present, and to return home with bundles of duplicated papers. Up to the 1990s, presenters at conferences handed out copies of their papers, and conference participants posted home parcels of these hand-outs, indexed using the conference programme. </p>
+<p>Leslie Hepple was among the more thorough scholars working on the underpinnings of spatial econometrics prior to the publication of <span class="citation" data-cites="paelinck+klaassen:79">Paelinck and Klaassen (<a href="references.html#ref-paelinck+klaassen:79" role="doc-biblioref">1979</a>)</span>. His wide-ranging review <span class="citation" data-cites="hepple:74">Hepple (<a href="references.html#ref-hepple:74" role="doc-biblioref">1974</a>)</span> is cited by <span class="citation" data-cites="bartels+hordijk:77">Bartels and Hordijk (<a href="references.html#ref-bartels+hordijk:77" role="doc-biblioref">1977</a>)</span>, again demonstrating the close links between those working in this field. We will be returning to the review paper, and to <span class="citation" data-cites="hepple:76">Hepple (<a href="references.html#ref-hepple:76" role="doc-biblioref">1976</a>)</span>, which studies methods of estimation for spatial econometrics models in some depth, building on and extending <span class="citation" data-cites="ord:75">J. K. Ord (<a href="references.html#ref-ord:75" role="doc-biblioref">1975</a>)</span>. </p>
+<p><span class="citation" data-cites="hepple:74">Hepple (<a href="references.html#ref-hepple:74" role="doc-biblioref">1974</a>)</span>, like <span class="citation" data-cites="cliff+ord:73">Cliff and Ord (<a href="references.html#ref-cliff+ord:73" role="doc-biblioref">1973</a>)</span>, saw no distinction between spatial statistics and the antecedents to spatial econometrics. Obviously, spatial econometrics was strongly influenced by the research tasks undertaken by regional and urban economists and regional scientists. As <span class="citation" data-cites="griffith+paelinck:07">Griffith and Paelinck (<a href="references.html#ref-griffith+paelinck:07" role="doc-biblioref">2007, 211</a>)</span> point out, spatial statistics and spatial econometrics continue to share most topics of interests, with each also possessing shorter lists of topics that have been of less concern to the other. They advocate a “non-standard” spatial econometrics, which is inclusive to wider concerns. It seems appropriate in this context to mention the somewhat heterodox position taken by <span class="citation" data-cites="mcmillen:10">McMillen (<a href="references.html#ref-mcmillen:10" role="doc-biblioref">2010</a>)</span>, who draws attention to the crucial issue of functional form, which he argues may well lie behind observed spatial autocorrelation; we will return to this in later chapters. </p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-anselin:88" class="csl-entry" role="listitem">
+Anselin, Luc. 1988. <em>Spatial <span>E</span>conometrics: <span>M</span>ethods and <span>M</span>odels</em>. Dordrecht: Kluwer Academic Publishers.
+</div>
+<div id="ref-anselin:06" class="csl-entry" role="listitem">
+———. 2006. <span>“Spatial Econometrics.”</span> In <em>Palgrave Handbook on Econometrics: Econometric Theory</em>, edited by T. C. Mills and K. Patterson, 901–69. Basingstoke: Palgrave Macmillan.
+</div>
+<div id="ref-anselin:10a" class="csl-entry" role="listitem">
+———. 2010a. <span>“Spatial Econometrics.”</span> In <em>The SAGE Handbook of Spatial Analysis</em>, edited by A. Stewart Fotheringham and Peter A. Rogerson, 255–75. London: SAGE Publications Ltd.
+</div>
+<div id="ref-anselin:10" class="csl-entry" role="listitem">
+———. 2010b. <span>“Thirty Years of Spatial Econometrics.”</span> <em>Papers in Regional Science</em> 89: 3–25.
+</div>
+<div id="ref-baillyetal:12" class="csl-entry" role="listitem">
+Bailly, Antoine, Pierre-Henri Derycke, and André Torre. 2012. <span>“50 Ans de Science Régionale Francophone.”</span> l’Association de Science Régionale de Langue Française. <a href="http://www.asrdlf.org/telechargements/50ansASRDLF.pdf">http://www.asrdlf.org/telechargements/50ansASRDLF.pdf</a>.
+</div>
+<div id="ref-bartels+hordijk:77" class="csl-entry" role="listitem">
+Bartels, Cornelis P. A., and Leen Hordijk. 1977. <span>“On the Power of the Generalized Moran Contiguity Coefficient in Testing for Spatial Autocorrelation Among Regression Disturbances.”</span> <em>Regional Science and Urban Economics</em> 7: 83–101.
+</div>
+<div id="ref-billot+thisse:92" class="csl-entry" role="listitem">
+Billot, Antoine, and Jacques-Francois Thisse. 1992. <span>“Claude <span>P</span>onsard (1927-1990): A Biographical Essay.”</span> <em>Annals of Regional Science</em> 26: 191–98.
+</div>
+<div id="ref-bivand:08" class="csl-entry" role="listitem">
+Bivand, R. S. 2008. <span>“Implementing Representations of Space in Economic Geography.”</span> <em>Journal of Regional Science</em> 48: 1–27.
+</div>
+<div id="ref-boyce:04" class="csl-entry" role="listitem">
+Boyce, David. 2004. <span>“A Short History of the Field of Regional Science.”</span> <em>Papers in Regional Science</em> 83: 31–57.
+</div>
+<div id="ref-cliff+ord:69" class="csl-entry" role="listitem">
+Cliff, A. D., and J. K. Ord. 1969. <span>“The Problem of Spatial Autocorrelation.”</span> In <em>Studies in Regional Science</em>, edited by A. J. Scott, 25–55. London Papers in Regional Science. London: Pion.
+</div>
+<div id="ref-cliff+ord:73" class="csl-entry" role="listitem">
+———. 1973. <em>Spatial Autocorrelation</em>. London: Pion.
+</div>
+<div id="ref-dreze:64" class="csl-entry" role="listitem">
+Drèze, Jacques H. 1964. <span>“Some Postwar Contributions of French Economists to Theory and Public Policy: With Special Emphasis on Problems of Resource Allocation.”</span> <em>The American Economic Review</em> 54 (4): 2–64.
+</div>
+<div id="ref-fujitaetal:99" class="csl-entry" role="listitem">
+Fujita, Masahisa, Paul Krugman, and Anthony J. Venables. 1999. <em>The Spatial Economy</em>. Cambridge, MA: MIT Press.
+</div>
+<div id="ref-gibbons+overman:12" class="csl-entry" role="listitem">
+Gibbons, Stephen, and Henry G. Overman. 2012. <span>“Mostly Pointless Spatial Econometrics?”</span> <em>Journal of Regional Science</em> 52: 172–91.
+</div>
+<div id="ref-graham+romans:71" class="csl-entry" role="listitem">
+Graham, Robert E., and J. Thomas Romans. 1971. <span>“Regional Economic Accounting in the u.s. Office of Business Economics — an Appraisal.”</span> <em>Review of Income and Wealth</em> 17: 1–34.
+</div>
+<div id="ref-granger:69" class="csl-entry" role="listitem">
+Granger, Clive W. J. 1969. <span>“Spatial Data and Time Series Analysis.”</span> In <em>Studies in Regional Science</em>, edited by A. J. Scott, 1–25. London Papers in Regional Science 1. London: Pion.
+</div>
+<div id="ref-griffith+paelinck:07" class="csl-entry" role="listitem">
+Griffith, Daniel A., and Jean H. P. Paelinck. 2007. <span>“An Equation by Any Other Name Is Still the Same: On Spatial Econometrics and Spatial Statistics.”</span> <em>Annals of Regional Science</em> 41: 209–27.
+</div>
+<div id="ref-griliches:67" class="csl-entry" role="listitem">
+Griliches, Zvi. 1967. <span>“Distributed Lags: A Survey.”</span> <em>Econometrica</em> 35: 16–49.
+</div>
+<div id="ref-hepple:74" class="csl-entry" role="listitem">
+Hepple, Leslie W. 1974. <span>“The Impact of Stochastic Process Theory Upon Spatial Analysis in Human Geography.”</span> <em>Progress in Geography</em> 6: 89–142.
+</div>
+<div id="ref-hepple:76" class="csl-entry" role="listitem">
+———. 1976. <span>“A Maximum Likelihood Model for Econometric Estimation with Spatial Series.”</span> In <em>Theory and Practice in Regional Science</em>, edited by I. Masser, 90–104. London Papers in Regional Science. London: Pion.
+</div>
+<div id="ref-hordijk:74" class="csl-entry" role="listitem">
+Hordijk, Leen. 1974. <span>“Spatial Correlation in the Disturbances of a Linear Interregional Model.”</span> <em>Regional and Urban Economics</em> 4: 117–40.
+</div>
+<div id="ref-hordijk+paelinck:76" class="csl-entry" role="listitem">
+Hordijk, Leen, and Jean H. P. Paelinck. 1976. <span>“Some Principles and Results in Spatial Econometrics.”</span> <em>Recherches Economiques de Louvain</em> 42: 175–97.
+</div>
+<div id="ref-klaassenetal:79" class="csl-entry" role="listitem">
+Klaassen, Leo H., Jean H. P. Paelinck, and Sjoerd Wagenaar. 1979. <em>Spatial Systems</em>. Farnborough: Saxon House.
+</div>
+<div id="ref-klein:58" class="csl-entry" role="listitem">
+Klein, L. R. 1958. <span>“The Estimation of Distributed Lags.”</span> <em>Econometrica</em> 26: 553–65.
+</div>
+<div id="ref-koyck:54" class="csl-entry" role="listitem">
+Koyck, L. M. 1954. <em>Distributed Lags and Znoestment Analysis</em>. Amsterdam: North-Holland.
+</div>
+<div id="ref-mcmillen:10" class="csl-entry" role="listitem">
+McMillen, D. P. 2010. <span>“Issues in Spatial Data Analysis.”</span> <em>Journal of Regional Science</em> 50: 119–41.
+</div>
+<div id="ref-ord:75" class="csl-entry" role="listitem">
+Ord, J. K. 1975. <span>“Estimation Methods for Models of Spatial Interaction.”</span> <em>Journal of the American Statistical Association</em> 70: 120–26.
+</div>
+<div id="ref-ord:10" class="csl-entry" role="listitem">
+Ord, J. Keith. 2010. <span>“Spatial Autocorrelation: A Statistician’s Reflections.”</span> In <em>Perspectives on Spatial Data Analysis</em>, edited by L. Anselin and S. J. Rey, 165–80. Berlin: Springer-Verlag.
+</div>
+<div id="ref-paelinck:12" class="csl-entry" role="listitem">
+Paelinck, Jean H. P. 2012. <span>“Specification and Identification in Spatial Econometric Models.”</span> <em>Estadística Española</em> 54: 35–52.
+</div>
+<div id="ref-paelinck:13" class="csl-entry" role="listitem">
+———. 2013. <span>“Some Challenges for Spatial Econometricians.”</span> In <em>Spatial Econometrics and Regional Economic Analysis</em>, edited by Bogdan Suchecki, 292:11–20. Acta Universitas Lodziensis, Folia Oeconomica. Wydawnictwa Uniwersytetu Łódzkiego.
+</div>
+<div id="ref-paelinck+klaassen:79" class="csl-entry" role="listitem">
+Paelinck, Jean H. P., and Leo H. Klaassen. 1979. <em>Spatial Econometrics</em>. Farnborough: Saxon House.
+</div>
+<div id="ref-paelinck+nijkamp:75" class="csl-entry" role="listitem">
+Paelinck, Jean H. P., and Peter Nijkamp. 1975. <em>Operational Theory and Method in Regional Economics</em>. Farnborough: Saxon House.
+</div>
+<div id="ref-perroux:50" class="csl-entry" role="listitem">
+Perroux, François. 1950. <span>“Economic Space: Theory and Applications.”</span> <em>Quarterly Journal of Economics</em> 64: 89–104.
+</div>
+<div id="ref-ponsard:83" class="csl-entry" role="listitem">
+Ponsard, Claude. 1983. <em>History of Spatial Economic Theory</em>. Berlin: Springer-Verlag.
+</div>
+<div id="ref-theil:64" class="csl-entry" role="listitem">
+Theil, H. 1964. <span>“Some Developments of Economic Thought in the Netherlands.”</span> <em>The American Economic Review</em> 54: pp. 34–55.
+</div>
+<div id="ref-wilson:00" class="csl-entry" role="listitem">
+Wilson, Alan G. 2000. <em>Complex Spatial Systems: The Modelling Foundations of Urban and Regional Analysis</em>. Harlow: Prentice Hall.
+</div>
+<div id="ref-wilson:12" class="csl-entry" role="listitem">
+———. 2012. <em>The Science of Cities and Regions: Lectures on Mathematical Model Design</em>. Dordrecht: Springer.
+</div>
+</div>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./04_talk.html" class="pagination-link" aria-label="Creating spatial weights objects">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Creating spatial weights objects</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./06_talk.html" class="pagination-link" aria-label="Economic and social research questions using spatial data">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Economic and social research questions using spatial data</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

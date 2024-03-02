@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.550">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Spatial Econometrics - 7&nbsp; Tests of spatial autocorrelation, model specification</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./08_talk.html" rel="next">
+<link href="./06_talk.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07_talk.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Tests of spatial autocorrelation, model specification</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Spatial Econometrics</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course description</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducing Spatial Econometrics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Working with spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Creating spatial weights objects</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Antecedents</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Economic and social research questions using spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_talk.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Tests of spatial autocorrelation, model specification</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Spatial autoregressive models: conditional (CAR) and simultaneous (SAR)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Estimation of spatial autoregressive models: methods (ML, Bayesian, GMM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">No orthogonality between regression and autoregression coefficients</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Prediction and spatial models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Eigenvectors and eigenvalues of graphs of relationships between cross-sectional observations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#univariate-tests-of-spatial-autocorrelation" id="toc-univariate-tests-of-spatial-autocorrelation" class="nav-link active" data-scroll-target="#univariate-tests-of-spatial-autocorrelation"><span class="header-section-number">7.1</span> Univariate tests of spatial autocorrelation</a></li>
+  <li><a href="#tests-of-residual-spatial-autocorrelation" id="toc-tests-of-residual-spatial-autocorrelation" class="nav-link" data-scroll-target="#tests-of-residual-spatial-autocorrelation"><span class="header-section-number">7.2</span> Tests of residual spatial autocorrelation</a></li>
+  <li><a href="#model-specification" id="toc-model-specification" class="nav-link" data-scroll-target="#model-specification"><span class="header-section-number">7.3</span> Model specification</a></li>
+  <li><a href="#raos-score-lagrange-multiplier-tests" id="toc-raos-score-lagrange-multiplier-tests" class="nav-link" data-scroll-target="#raos-score-lagrange-multiplier-tests"><span class="header-section-number">7.4</span> Rao’s score (Lagrange multiplier) tests</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Tests of spatial autocorrelation, model specification</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="univariate-tests-of-spatial-autocorrelation" class="level2" data-number="7.1">
+<h2 data-number="7.1" data-anchor-id="univariate-tests-of-spatial-autocorrelation"><span class="header-section-number">7.1</span> Univariate tests of spatial autocorrelation</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spdep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: sf</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lw <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(unb, <span class="at">style=</span><span class="st">"W"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(eng324<span class="sc">$</span>realNetPre, <span class="at">listw=</span>lw, <span class="at">randomisation=</span><span class="cn">TRUE</span>, <span class="at">alternative=</span><span class="st">"two.sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under randomisation
+
+data:  eng324$realNetPre  
+weights: lw    
+
+Moran I statistic standard deviate = 6.9357, p-value = 4.042e-12
+alternative hypothesis: two.sided
+sample estimates:
+Moran I statistic       Expectation          Variance 
+      0.244871308      -0.003095975       0.001278221 </code></pre>
+</div>
+</div>
+<p>Moran’s <span class="math inline">I</span> is given as <span class="citation" data-cites="cliff+ord:81">(<a href="references.html#ref-cliff+ord:81" role="doc-biblioref">Cliff and Ord 1981, 17</a>)</span>:</p>
+<p><span class="math display">
+I = \frac{n \sum_{(2)} w_{ij} z_i z_j}{S_0 \sum_{i=1}^{n} z_i^2}
+</span></p>
+<p>where <span class="math inline">x_i, i=1, \ldots, n</span> are <span class="math inline">n</span> observations on the numeric variable of interest, <span class="math inline">z_i = x_i - \bar{x}</span>, <span class="math inline">\bar{x} = \sum_{i=1}^{n} x_i / n</span>, <span class="math inline">\sum_{(2)} = \stackrel{\sum_{i=1}^{n} \sum_{j=1}^{n}}{i \neq j}</span>, <span class="math inline">w_{ij}</span> are the spatial weights, and <span class="math inline">S_0 = \sum_{(2)} w_{ij}</span>. A comparison of implementations of measures of spatial autocorrelation shows that a wide range of measures is available in R in a number of packages, chiefly in the <code>spdep</code> package, and that differences from other implementations can be attributed to design decisions <span class="citation" data-cites="bivand+wong:18">(<a href="references.html#ref-bivand+wong:18" role="doc-biblioref">R. Bivand and Wong 2018</a>)</span>. The <code>spdep</code> package also includes the only implementations of exact and Saddlepoint approximations to global Moran’s I <span class="citation" data-cites="tiefelsdorf:02 bivandetal:09">(<a href="references.html#ref-tiefelsdorf:02" role="doc-biblioref">Tiefelsdorf 2002</a>; <a href="references.html#ref-bivandetal:09" role="doc-biblioref">R. Bivand, Müller, and Reder 2009</a>)</span>.</p>
+<p>Global measures of spatial autocorrelation using spatial weights objects based on graphs of neighbours are, as we have seen, rather blunt tools, which for interpretation depend critically on a reasoned mean model of the variable in question. If the mean model is just the intercept, the global measures will respond to all kinds of mis-specification, not only spatial autocorrelation <span class="citation" data-cites="schabenberger+gotway:2005 mcmillen:03">(<a href="references.html#ref-schabenberger+gotway:2005" role="doc-biblioref">Schabenberger and Gotway 2005</a>; <a href="references.html#ref-mcmillen:03" role="doc-biblioref">McMillen 2003</a>)</span>.</p>
+</section>
+<section id="tests-of-residual-spatial-autocorrelation" class="level2" data-number="7.2">
+<h2 data-number="7.2" data-anchor-id="tests-of-residual-spatial-autocorrelation"><span class="header-section-number">7.2</span> Tests of residual spatial autocorrelation</h2>
+<p>When the model is the null model, containing only the intercept, the univariate test <code>moran.test</code> on the residuals with <code>randomisation=FALSE</code> and the test on residuals <code>lm.morantest</code> are the same:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>lm_null <span class="ot">&lt;-</span> <span class="fu">lm</span>(realNetPre <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data=</span>eng324)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(<span class="fu">residuals</span>(lm_null), <span class="at">listw=</span>lw,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a> <span class="at">randomisation=</span><span class="cn">FALSE</span>, <span class="at">alternative=</span><span class="st">"two.sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under normality
+
+data:  residuals(lm_null)  
+weights: lw    
+
+Moran I statistic standard deviate = 6.7433, p-value = 1.548e-11
+alternative hypothesis: two.sided
+sample estimates:
+Moran I statistic       Expectation          Variance 
+      0.244871308      -0.003095975       0.001352204 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm.morantest</span>(lm_null, <span class="at">listw=</span>lw, <span class="at">alternative=</span><span class="st">"two.sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Global Moran I for regression residuals
+
+data:  
+model: lm(formula = realNetPre ~ 1, data = eng324)
+weights: lw
+
+Moran I statistic standard deviate = 6.7433, p-value = 1.548e-11
+alternative hypothesis: two.sided
+sample estimates:
+Observed Moran I      Expectation         Variance 
+     0.244871308     -0.003095975      0.001352204 </code></pre>
+</div>
+</div>
+<p>If we move to a model with independent variables, we will see that the inferences are not the same:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>form_pre <span class="ot">&lt;-</span> <span class="fu">log</span>(realNetPre) <span class="sc">~</span> <span class="fu">log</span>(units) <span class="sc">+</span> house <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">log</span>(dens) <span class="sc">+</span> Metrop <span class="sc">+</span> <span class="fu">log</span>(realWgPre)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>lm_obj_pre <span class="ot">&lt;-</span> <span class="fu">lm</span>(form_pre, <span class="at">data=</span>eng324)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(<span class="fu">residuals</span>(lm_obj_pre), <span class="at">listw=</span>lw,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a> <span class="at">randomisation=</span><span class="cn">FALSE</span>, <span class="at">alternative=</span><span class="st">"two.sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under normality
+
+data:  residuals(lm_obj_pre)  
+weights: lw    
+
+Moran I statistic standard deviate = 4.521, p-value = 6.156e-06
+alternative hypothesis: two.sided
+sample estimates:
+Moran I statistic       Expectation          Variance 
+      0.163150227      -0.003095975       0.001352204 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm.morantest</span>(lm_obj_pre, <span class="at">listw=</span>lw, <span class="at">alternative=</span><span class="st">"two.sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Global Moran I for regression residuals
+
+data:  
+model: lm(formula = form_pre, data = eng324)
+weights: lw
+
+Moran I statistic standard deviate = 4.7671, p-value = 1.869e-06
+alternative hypothesis: two.sided
+sample estimates:
+Observed Moran I      Expectation         Variance 
+     0.163150227     -0.010433124      0.001325885 </code></pre>
+</div>
+</div>
+<p>This is because <code>lm.morantest</code> takes into account the structure of the regression model, as do <code>lm.morantest.sad</code> and <code>lm.morantest.exact</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm.morantest.sad</span>(lm_obj_pre, <span class="at">listw=</span>lw, <span class="at">alternative=</span><span class="st">"two.sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Saddlepoint approximation for global Moran's I (Barndorff-Nielsen
+    formula)
+
+data:  
+model:lm(formula = form_pre, data = eng324)
+weights: lw
+
+Saddlepoint approximation = 4.4651, p-value = 8.004e-06
+alternative hypothesis: two.sided
+sample estimates:
+Observed Moran I 
+       0.1631502 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm.morantest.exact</span>(lm_obj_pre, <span class="at">listw=</span>lw, <span class="at">alternative=</span><span class="st">"two.sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Global Moran I statistic with exact p-value
+
+data:  
+model:lm(formula = form_pre, data = eng324)
+weights: lw
+
+Exact standard deviate = 4.4649, p-value = 8.01e-06
+alternative hypothesis: two.sided
+sample estimates:
+[1] 0.1631502</code></pre>
+</div>
+</div>
+<p>In all these cases, the measured value of Moran’s <span class="math inline">I</span> is the same, but the inferences differ somewhat.</p>
+</section>
+<section id="model-specification" class="level2" data-number="7.3">
+<h2 data-number="7.3" data-anchor-id="model-specification"><span class="header-section-number">7.3</span> Model specification</h2>
+<p>A recent review of spatial regression in a spatial econometrics setting is given by Kelejian and Piras <span class="citation" data-cites="kelejian+piras:17">(<a href="references.html#ref-kelejian+piras:17" role="doc-biblioref">2017</a>)</span>; note that their usage is to call the spatial coefficient of the lagged response <span class="math inline">\lambda</span> and that of the lagged residuals <span class="math inline">\rho</span>, the reverse of other usage <span class="citation" data-cites="anselin:88 lesage+pace:09">(<a href="references.html#ref-anselin:88" role="doc-biblioref">Luc Anselin 1988</a>; <a href="references.html#ref-lesage+pace:09" role="doc-biblioref">LeSage and Pace 2009</a>)</span>; here we use <span class="math inline">\rho_{\mathrm{Lag}}</span> for the spatial coefficient in the spatial lag model, and <span class="math inline">\rho_{\mathrm{Err}}</span> for the spatial error model. One interesting finding is that relatively dense spatial weights matrices may downweight model estimates, suggesting that sparser weights are preferable <span class="citation" data-cites="smith:09">(<a href="references.html#ref-smith:09" role="doc-biblioref">Smith 2009</a>)</span>. Another useful finding is that the presence of residual spatial autocorrelation need not bias the estimates of variance of regression coefficients, provided that the covariates themselves do not exhibit spatial autocorrelation <span class="citation" data-cites="smith+lee12">(<a href="references.html#ref-smith+lee12" role="doc-biblioref">Smith and Lee 2012</a>)</span>.</p>
+<p>In trying to model these spatial processes, we may choose to model the spatial autocorrelation in the residual with a spatial error model (SEM).</p>
+<p><span class="math display">
+{\mathbf y} = {\mathbf X}{\mathbf \beta} + {\mathbf u},
+\qquad {\mathbf u} = \rho_{\mathrm{Err}} {\mathbf W} {\mathbf u} + {\mathbf \varepsilon},
+</span></p>
+<p>where <span class="math inline">{\mathbf y}</span> is an <span class="math inline">(N \times 1)</span> vector of observations on a response variable taken at each of <span class="math inline">N</span> locations, <span class="math inline">{\mathbf X}</span> is an <span class="math inline">(N \times k)</span> matrix of covariates, <span class="math inline">{\mathbf \beta}</span> is a <span class="math inline">(k \times 1)</span> vector of parameters, <span class="math inline">{\mathbf u}</span> is an <span class="math inline">(N \times 1)</span> spatially autocorrelated disturbance vector, <span class="math inline">{\mathbf \varepsilon}</span> is an <span class="math inline">(N \times 1)</span> vector of independent and identically distributed disturbances and <span class="math inline">\rho_{\mathrm{Err}}</span> is a scalar spatial parameter.</p>
+<p>If the processes in the covariates and the response match, we should find little difference between the coefficients of a least squares and a SEM, but very often they diverge, suggesting that a Hausman test for this condition should be employed <span class="citation" data-cites="pace+lesage:08">(<a href="references.html#ref-pace+lesage:08" role="doc-biblioref">Pace and LeSage 2008</a>)</span>. This may be related to earlier discussions of a spatial equivalent to the unit root and cointegration where spatial processes match <span class="citation" data-cites="fingleton:99">(<a href="references.html#ref-fingleton:99" role="doc-biblioref">Fingleton 1999</a>)</span>.</p>
+<p>A model with a spatial process in the response only is termed a spatial lag model (SLM, often SAR - spatial autoregressive) <span class="citation" data-cites="lesage+pace:09">(<a href="references.html#ref-lesage+pace:09" role="doc-biblioref">LeSage and Pace 2009</a>)</span>.</p>
+<p><span class="math display">
+{\mathbf y} = \rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y} + {\mathbf X}{\mathbf \beta} + {\mathbf \varepsilon},
+</span> where <span class="math inline">\rho_{\mathrm{Lag}}</span> is a scalar spatial parameter.</p>
+<p>Work reviewed by Mur and Angulo <span class="citation" data-cites="mur+angulo:06">(<a href="references.html#ref-mur+angulo:06" role="doc-biblioref">2006</a>)</span> on the Durbin model; the Durbin model adds the spatially lagged covariates to the covariates included in the spatial lag model, giving a spatial Durbin model (SDM) with different processes in the response and covariates:</p>
+<p><span class="math display">
+{\mathbf y} = \rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y} + {\mathbf X}{\mathbf \beta} + {\mathbf W}{\mathbf X}{\mathbf \gamma} + {\mathbf \varepsilon},
+</span></p>
+<p>where <span class="math inline">{\mathbf \gamma}</span> is a <span class="math inline">(k' \times 1)</span> vector of parameters. <span class="math inline">k'</span> defines the subset of the intercept and covariates, often <span class="math inline">k' = k-1</span> when using row standardised spatial weights and omitting the spatially lagged intercept.</p>
+<p>This permits the spatial processes to be viewed and tested for as a Common Factor <span class="citation" data-cites="burridge:81 bivand:84">(<a href="references.html#ref-burridge:81" role="doc-biblioref">Burridge 1981</a>; <a href="references.html#ref-bivand:84" role="doc-biblioref">R. S. Bivand 1984</a>)</span>. The inclusion of spatially lagged covariates lets us check whether the same spatial process is manifest in the response and the covariates (SEM), whether they are different processes, or whether no process is detected. The Common Factor is present when <span class="math inline">{\mathbf \gamma} = - \rho_{\mathrm{Lag}} {\mathbf \beta}</span>:</p>
+<p><span class="math display">
+{\mathbf y} = \rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y} + {\mathbf X}{\mathbf \beta} - \rho_{\mathrm{Lag}} {\mathbf W}{\mathbf X} {\mathbf \beta} + {\mathbf \varepsilon},
+\qquad ({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}){\mathbf y} = ({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}) {\mathbf X}{\mathbf \beta} + {\mathbf \varepsilon},
+</span> where <span class="math inline">{\mathbf I}</span> is the <span class="math inline">N \times N</span> identity matrix, and <span class="math inline">{\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W}</span> is the Common Factor:</p>
+<p><span class="math display">
+\qquad {\mathbf y} = {\mathbf X}{\mathbf \beta} + ({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1} {\mathbf \varepsilon},
+\qquad {\mathbf y} = {\mathbf X}{\mathbf \beta} + {\mathbf u},
+\qquad {\mathbf u} = \rho_{\mathrm{Err}} {\mathbf W} {\mathbf u} + {\mathbf \varepsilon},
+</span></p>
+<p>If we extend this family with processes in the covariates and the residual, we get a spatial error Durbin model (SDEM). If it is chosen to admit a spatial process in the residuals in addition to a spatial process in the response, again two models are formed, a general nested model (GNM) nesting all the others, and a model without spatially lagged covariates (SAC, also known as SARAR - Spatial AutoRegressive-AutoRegressive model). If neither the residuals nor the residual are modelled with spatial processes, spatially lagged covariates may be added to a linear model, as a spatially lagged X model (SLX) <span class="citation" data-cites="elhorst:10 bivand:12 lesage:14 halleck-vega+elhorst:15">(<a href="references.html#ref-elhorst:10" role="doc-biblioref">Elhorst 2010</a>; <a href="references.html#ref-bivand:12" role="doc-biblioref">R. S. Bivand 2012</a>; <a href="references.html#ref-lesage:14" role="doc-biblioref">LeSage 2014</a>; <a href="references.html#ref-halleck-vega+elhorst:15" role="doc-biblioref">Halleck Vega and Elhorst 2015</a>)</span>.</p>
+<p>We can write the general nested model (GNM) as:</p>
+<p><span class="math display">
+{\mathbf y} = \rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y} + {\mathbf X}{\mathbf \beta} + {\mathbf W}{\mathbf X}{\mathbf \gamma} + {\mathbf u},
+\qquad {\mathbf u} = \rho_{\mathrm{Err}} {\mathbf W} {\mathbf u} + {\mathbf \varepsilon},
+</span></p>
+<p>This may be constrained to the double spatial coefficient model SAC/SARAR by setting <span class="math inline">{\mathbf \gamma} = 0</span>, to the spatial Durbin (SDM) by setting <span class="math inline">\rho_{\mathrm{Err}} = 0</span>, and to the error Durbin model (SDEM) by setting <span class="math inline">\rho_{\mathrm{Lag}} = 0</span>. Imposing more conditions gives the spatial lag model (SLM) with <span class="math inline">{\mathbf \gamma} = 0</span> and <span class="math inline">\rho_{\mathrm{Err}} = 0</span>, the spatial error model (SEM) with <span class="math inline">{\mathbf \gamma} = 0</span> and <span class="math inline">\rho_{\mathrm{Lag}} = 0</span>, and the spatially lagged X model (SLX) with <span class="math inline">\rho_{\mathrm{Lag}} = 0</span> and <span class="math inline">\rho_{\mathrm{Err}} = 0</span>.</p>
+<p>The specification problem is then to choose between (from most complex to simplest): GNM (three sets of spatial parameters: <span class="math inline">\rho_{\mathrm{Lag}}</span>, <span class="math inline">\rho_{\mathrm{Err}}</span>, <span class="math inline">{\mathbf \gamma}</span>), SAC, SDM or SDEM (two sets of spatial parameters among the three), SEM, SLM, SLX (one set of spatial parameters among the three) or ordinary least squares (no spatial parameters) - assuming that the dependent variable is Gaussian. Effectively the same specification choice is present with limited dependent variables.</p>
+</section>
+<section id="raos-score-lagrange-multiplier-tests" class="level2" data-number="7.4">
+<h2 data-number="7.4" data-anchor-id="raos-score-lagrange-multiplier-tests"><span class="header-section-number">7.4</span> Rao’s score (Lagrange multiplier) tests</h2>
+<p>When working over 25 years ago on <span class="citation" data-cites="bivand+szymanski:00">R. S. Bivand and Szymanski (<a href="references.html#ref-bivand+szymanski:00" role="doc-biblioref">2000</a>)</span>, the only Rao’s score (Lagrange multiplier) tests available were those newly proposed by <span class="citation" data-cites="anselinetal:96">L. Anselin et al. (<a href="references.html#ref-anselinetal:96" role="doc-biblioref">1996</a>)</span>. The underlying concern is to test whether the spatial parameter of interest could be taken as zero, without estimating the parameter. One works from the information matrix of the spatial model; in the case of the first tests, a mixed regressive-spatial autoregressive model with a spatial autoregressive disturbance (SAC) was considered, as this had also been used for residual autocorrelation in an SLM model. Five tests are proposed, a test for missing <span class="math inline">\rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y}</span>, <code>"RSlag"</code> and pointing to SLM, another for missing <span class="math inline">\rho_{\mathrm{Err}} {\mathbf W} {\mathbf u}</span>, <code>"RSerr"</code> pointing to SEM, two tests matching the first two tests but adjusted for the presence of the other (<code>"adjRSlag"</code>, <code>"adjRSerr"</code>), and a <code>"SARMA"</code> test combining both alternatives, equal to <code>"RSlag"</code> plus <code>"adjRSerr"</code> and <code>"RSerr"</code> plus <code>"adjRSlag"</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm.RStests</span>(lm_obj_pre, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"all"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score (a.k.a Lagrange multiplier) diagnostics for spatial
+    dependence
+data:  
+model: lm(formula = form_pre, data = eng324)
+test weights: lw
+ 
+         statistic parameter   p.value    
+RSerr      19.3936         1 1.064e-05 ***
+RSlag      13.4536         1 0.0002445 ***
+adjRSerr    7.8798         1 0.0049990 ** 
+adjRSlag    1.9398         1 0.1636931    
+SARMA      21.3333         2 2.331e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Here, for the independent variables initially included in the model to account for the logarithm of real net expenditure on garbage collection in each district, the logarithm of the number of pick-up points (<code>units</code>), the proportion of dwellings among the pick-up points (<code>house</code>), the logarithm of pick-up point density (<code>dens</code>), a categorical variable <code>Metrop</code> with levels: <code>"district"</code>, <code>"london"</code>, <code>"metrop"</code>, and the logarithm of the real regional wage rate for regions. In this case, the tests point to a SEM model rather than an SLM model or falling back to OLS.</p>
+<p><span class="citation" data-cites="koley+bera:22">B. Koley Malabika (<a href="references.html#ref-koley+bera:22" role="doc-biblioref">2022</a>)</span> propose a similar set of tests to distinguish between either an SLM or an SLX model based on an SDM model, falling back to ordinary least squares if neither alternative is chosen. Because the interpretation of spatially lagged categorical variables is unclear, we drop <code>Metrop</code> from the tests</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">SD.RStests</span>(lm_obj_pre, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"SDM"</span>,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_pre, <span class="sc">~</span> . <span class="sc">-</span> Metrop)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score test spatial Durbin diagnostics
+data:  
+model: lm(formula = form_pre, data = eng324)
+weights: lw
+Durbin: ~ log(realNetPre) log(units) + house + log(dens) + log(realWgPre)
+ 
+             statistic parameter   p.value    
+SDM_RSlag      13.4536         1 0.0002445 ***
+SDM_adjRSlag   22.4480         1 2.159e-06 ***
+SDM_RSWX        9.0301         4 0.0603510 .  
+SDM_adjRSWX    18.0246         4 0.0012205 ** 
+SDM_Joint      31.4781         5 7.536e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>In this case, an SLX model appears to be indicated rather than SDM, SLM or OLS. However, we also need to look at SDEM as the tests against SAC indicated SEM rather than SLM. <span class="citation" data-cites="koley:24">M. Koley (<a href="references.html#ref-koley:24" role="doc-biblioref">2024</a>)</span> proposes approriate tests:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">SD.RStests</span>(lm_obj_pre, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"SDEM"</span>,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_pre, <span class="sc">~</span> . <span class="sc">-</span> Metrop)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score test spatial Durbin diagnostics
+data:  
+model: lm(formula = form_pre, data = eng324)
+weights: lw
+Durbin: ~ log(realNetPre) log(units) + house + log(dens) + log(realWgPre)
+ 
+           statistic parameter   p.value    
+SDEM_RSerr   19.3936         1 1.064e-05 ***
+SDEM_RSWX     9.0301         4   0.06035 .  
+SDEM_Joint   28.4237         5 3.007e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>which indicate SEM rather than SDEM. Clearly, the underlying difficulty is that the GNM is poorly identified, and as <span class="citation" data-cites="koley:24">M. Koley (<a href="references.html#ref-koley:24" role="doc-biblioref">2024</a>)</span> finds:</p>
+<blockquote class="blockquote">
+<p>… identification conditions have not been established for the GNS model in the spatial literature that also suffers from an identification problem. In fact, to the best of our knowledge, the non-identification of the GNS model has not yet been analytically studied in the literature <span class="citation" data-cites="koley:24">(<a href="references.html#ref-koley:24" role="doc-biblioref">M. Koley 2024, 3</a>)</span>.</p>
+</blockquote>
+<p>However, it has been found that the <code>lm.RStests</code> tests can be used on a fitted SLX model using the <code>lmSLX</code> function in <code>spatialreg</code> <span class="citation" data-cites="koley:24">(<a href="references.html#ref-koley:24" role="doc-biblioref">M. Koley 2024, 18</a>)</span>, again omitting <code>Metrop</code> from the <span class="math inline">{\mathbf W}{\mathbf X}</span> term in addition to omitting the intercept:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatialreg)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>SLX_obj <span class="ot">&lt;-</span> <span class="fu">lmSLX</span>(form_pre, <span class="at">data=</span>eng324, <span class="at">listw=</span>lw,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_pre, <span class="sc">~</span> . <span class="sc">-</span> Metrop))</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm.RStests</span>(SLX_obj, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"all"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score (a.k.a Lagrange multiplier) diagnostics for spatial
+    dependence
+data:  
+model: lm(log(realNetPre) ~ log.units. + house + log.dens. +
+Metroplondon + Metropmetrop + log.realWgPre. + lag.log.units. +
+lag.house + lag.log.dens. + lag.log.realWgPre., data = eng324, listw =
+lw)
+test weights: lw
+ 
+             statistic parameter   p.value    
+GNM_RSerr       16.835         1 4.077e-05 ***
+GNM_RSlag       20.833         1 5.011e-06 ***
+GNM_adjRSerr    12.116         1 0.0004998 ***
+GNM_adjRSlag    16.114         1 5.964e-05 ***
+GNM_SARMA       32.949         2 7.000e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>In <span class="citation" data-cites="bivand+szymanski:00">R. S. Bivand and Szymanski (<a href="references.html#ref-bivand+szymanski:00" role="doc-biblioref">2000</a>)</span>, it was found that the inclusion of the categorical variable <code>Majority</code>, with levels: <code>"coalition"</code>, <code>"conservative"</code> and <code>"labour"</code>, as anecdotal reports indicated that neighbouring districts with the same political party in control shared more information than otherwise, so the yardstick used would be weighted towards the same political party:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>form_pre_maj <span class="ot">&lt;-</span> <span class="fu">update</span>(form_pre, . <span class="sc">~</span>. <span class="sc">+</span> Majority)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>lm_obj_pre_maj <span class="ot">&lt;-</span> <span class="fu">lm</span>(form_pre_maj, <span class="at">data=</span>eng324)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm.RStests</span>(lm_obj_pre_maj, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"all"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score (a.k.a Lagrange multiplier) diagnostics for spatial
+    dependence
+data:  
+model: lm(formula = form_pre_maj, data = eng324)
+test weights: lw
+ 
+         statistic parameter   p.value    
+RSerr       8.1354         1 0.0043410 ** 
+RSlag      11.2331         1 0.0008035 ***
+adjRSerr    1.4132         1 0.2345225    
+adjRSlag    4.5109         1 0.0336791 *  
+SARMA      12.6463         2 0.0017943 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>The tests here indicate some support for the inclusion of <span class="math inline">\rho_{\mathrm{Lag}} {\mathbf W}{\mathbf y}</span>. On turning to the new tests for SDM compared to SLM or SLX:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">SD.RStests</span>(lm_obj_pre_maj, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"SDM"</span>),</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_pre_maj, <span class="sc">~</span> . <span class="sc">-</span> Metrop <span class="sc">-</span> Majority))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score test spatial Durbin diagnostics
+data:  
+model: lm(formula = form_pre_maj, data = eng324)
+weights: lw
+ 
+             statistic parameter   p.value    
+SDM_RSlag      11.2331         1 0.0008035 ***
+SDM_adjRSlag    8.1354         1 0.0043410 ** 
+SDM_RSWX       38.6726         8 5.653e-06 ***
+SDM_adjRSWX    35.5749         8 2.100e-05 ***
+SDM_Joint      46.8079         9 4.262e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>There is as yet very little experience of interpreting the outcomes, but here an SDM seems to be indicated; we turn to the next set of tests:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">SD.RStests</span>(lm_obj_pre_maj, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"SDEM"</span>),</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_pre_maj, <span class="sc">~</span> . <span class="sc">-</span> Metrop <span class="sc">-</span> Majority))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score test spatial Durbin diagnostics
+data:  
+model: lm(formula = form_pre_maj, data = eng324)
+weights: lw
+ 
+           statistic parameter   p.value    
+SDEM_RSerr    8.1354         1  0.004341 ** 
+SDEM_RSWX    38.6726         8 5.653e-06 ***
+SDEM_Joint   46.8079         9 4.262e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>but the SDEM versus SLX or SEM also looks feasible. Testing the fitted SLX model appears to point to the SDM model rather than the SDEM model:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatialreg)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>SLX_obj_pre_maj <span class="ot">&lt;-</span> <span class="fu">lmSLX</span>(form_pre_maj, <span class="at">data=</span>eng324, <span class="at">listw=</span>lw,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_pre_maj, <span class="sc">~</span> . <span class="sc">-</span> Metrop <span class="sc">-</span> Majority))</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm.RStests</span>(SLX_obj_pre_maj, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"all"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score (a.k.a Lagrange multiplier) diagnostics for spatial
+    dependence
+data:  
+model: lm(log(realNetPre) ~ log.units. + house + log.dens. +
+Metroplondon + Metropmetrop + log.realWgPre. + MajorityCONS +
+MajorityLAB + lag.log.units. + lag.house + lag.log.dens. +
+lag.log.realWgPre., data = eng324, listw = lw)
+test weights: lw
+ 
+             statistic parameter   p.value    
+GNM_RSerr       3.7201         1  0.053760 .  
+GNM_RSlag      10.6248         1  0.001116 ** 
+GNM_adjRSerr   16.3201         1 5.349e-05 ***
+GNM_adjRSlag   23.2247         1 1.441e-06 ***
+GNM_SARMA      26.9449         2 1.409e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Of course, we should repeat these exercises for the post-CCT net expenditures:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>form_post <span class="ot">&lt;-</span> <span class="fu">update</span>(form_pre, <span class="fu">log</span>(realNetPst) <span class="sc">~</span> . <span class="sc">-</span> <span class="fu">log</span>(realWgPre) <span class="sc">+</span> <span class="fu">log</span>(realWgPst))</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>form_post_maj <span class="ot">&lt;-</span> <span class="fu">update</span>(form_post, . <span class="sc">~</span> . <span class="sc">+</span> Majority)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>lm_obj_post <span class="ot">&lt;-</span> <span class="fu">lm</span>(form_post, <span class="at">data=</span>eng324)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm.RStests</span>(lm_obj_post, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"all"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score (a.k.a Lagrange multiplier) diagnostics for spatial
+    dependence
+data:  
+model: lm(formula = form_post, data = eng324)
+test weights: lw
+ 
+         statistic parameter   p.value    
+RSerr     14.50206         1 0.0001400 ***
+RSlag      7.15833         1 0.0074617 ** 
+adjRSerr   7.63077         1 0.0057381 ** 
+adjRSlag   0.28704         1 0.5921255    
+SARMA     14.78910         2 0.0006146 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">SD.RStests</span>(lm_obj_post, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"SDM"</span>,</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_post, <span class="sc">~</span> . <span class="sc">-</span> Metrop)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score test spatial Durbin diagnostics
+data:  
+model: lm(formula = form_post, data = eng324)
+weights: lw
+Durbin: ~ log(realNetPst) log(units) + house + log(dens) + log(realWgPst)
+ 
+             statistic parameter   p.value    
+SDM_RSlag       7.1583         1 0.0074617 ** 
+SDM_adjRSlag   18.0764         1 2.122e-05 ***
+SDM_RSWX        7.6105         4 0.1069333    
+SDM_adjRSWX    18.5285         4 0.0009725 ***
+SDM_Joint      25.6869         5 0.0001026 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">SD.RStests</span>(lm_obj_post, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"SDEM"</span>,</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_post, <span class="sc">~</span> . <span class="sc">-</span> Metrop)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score test spatial Durbin diagnostics
+data:  
+model: lm(formula = form_post, data = eng324)
+weights: lw
+Durbin: ~ log(realNetPst) log(units) + house + log(dens) + log(realWgPst)
+ 
+           statistic parameter   p.value    
+SDEM_RSerr   14.5021         1 0.0001400 ***
+SDEM_RSWX     7.6105         4 0.1069333    
+SDEM_Joint   22.1126         5 0.0004984 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatialreg)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>SLX_post_obj <span class="ot">&lt;-</span> <span class="fu">lmSLX</span>(form_post, <span class="at">data=</span>eng324, <span class="at">listw=</span>lw,</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_post, <span class="sc">~</span> . <span class="sc">-</span> Metrop))</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm.RStests</span>(SLX_post_obj, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"all"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score (a.k.a Lagrange multiplier) diagnostics for spatial
+    dependence
+data:  
+model: lm(log(realNetPst) ~ log.units. + house + log.dens. +
+Metroplondon + Metropmetrop + log.realWgPst. + lag.log.units. +
+lag.house + lag.log.dens. + lag.log.realWgPst., data = eng324, listw =
+lw)
+test weights: lw
+ 
+             statistic parameter   p.value    
+GNM_RSerr       14.119         1 0.0001716 ***
+GNM_RSlag       17.930         1 2.292e-05 ***
+GNM_adjRSerr    14.321         1 0.0001541 ***
+GNM_adjRSlag    18.132         1 2.061e-05 ***
+GNM_SARMA       32.251         2 9.926e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>lm_obj_post_maj <span class="ot">&lt;-</span> <span class="fu">lm</span>(form_post_maj, <span class="at">data=</span>eng324)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm.RStests</span>(lm_obj_post_maj, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"all"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score (a.k.a Lagrange multiplier) diagnostics for spatial
+    dependence
+data:  
+model: lm(formula = form_post_maj, data = eng324)
+test weights: lw
+ 
+         statistic parameter  p.value   
+RSerr       6.8129         1 0.009050 **
+RSlag       7.0744         1 0.007819 **
+adjRSerr    1.7879         1 0.181185   
+adjRSlag    2.0494         1 0.152270   
+SARMA       8.8623         2 0.011901 * 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">SD.RStests</span>(lm_obj_post_maj, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"SDM"</span>),</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_post_maj, <span class="sc">~</span> . <span class="sc">-</span> Metrop <span class="sc">-</span> Majority))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score test spatial Durbin diagnostics
+data:  
+model: lm(formula = form_post_maj, data = eng324)
+weights: lw
+ 
+             statistic parameter   p.value    
+SDM_RSlag       7.0744         1  0.007819 ** 
+SDM_adjRSlag    6.8129         1  0.009050 ** 
+SDM_RSWX       35.5024         8 2.165e-05 ***
+SDM_adjRSWX    35.2409         8 2.417e-05 ***
+SDM_Joint      42.3153         9 2.878e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">SD.RStests</span>(lm_obj_post_maj, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"SDEM"</span>),</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_post_maj, <span class="sc">~</span> . <span class="sc">-</span> Metrop <span class="sc">-</span> Majority))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score test spatial Durbin diagnostics
+data:  
+model: lm(formula = form_post_maj, data = eng324)
+weights: lw
+ 
+           statistic parameter   p.value    
+SDEM_RSerr    6.8129         1   0.00905 ** 
+SDEM_RSWX    35.5024         8 2.165e-05 ***
+SDEM_Joint   42.3153         9 2.878e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatialreg)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>SLX_obj_post_maj <span class="ot">&lt;-</span> <span class="fu">lmSLX</span>(form_post_maj, <span class="at">data=</span>eng324, <span class="at">listw=</span>lw,</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_post_maj, <span class="sc">~</span> . <span class="sc">-</span> Metrop <span class="sc">-</span> Majority))</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm.RStests</span>(SLX_obj_post_maj, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"all"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rao's score (a.k.a Lagrange multiplier) diagnostics for spatial
+    dependence
+data:  
+model: lm(log(realNetPst) ~ log.units. + house + log.dens. +
+Metroplondon + Metropmetrop + log.realWgPst. + MajorityCONS +
+MajorityLAB + lag.log.units. + lag.house + lag.log.dens. +
+lag.log.realWgPst., data = eng324, listw = lw)
+test weights: lw
+ 
+             statistic parameter   p.value    
+GNM_RSerr       4.7900         1 0.0286252 *  
+GNM_RSlag       9.7710         1 0.0017728 ** 
+GNM_adjRSerr    6.6243         1 0.0100599 *  
+GNM_adjRSlag   11.6053         1 0.0006576 ***
+GNM_SARMA      16.3953         2 0.0002753 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-anselinetal:96" class="csl-entry" role="listitem">
+Anselin, L., A. K. Bera, R. Florax, and M. J. Yoon. 1996. <span>“Simple Diagnostic Tests for Spatial Dependence.”</span> <em>Regional Science and Urban Economics</em> 26: 77–104. <a href="https://doi.org/10.1016/0166-0462(95)02111-6">https://doi.org/10.1016/0166-0462(95)02111-6</a>.
+</div>
+<div id="ref-anselin:88" class="csl-entry" role="listitem">
+Anselin, Luc. 1988. <em>Spatial <span>E</span>conometrics: <span>M</span>ethods and <span>M</span>odels</em>. Dordrecht: Kluwer Academic Publishers.
+</div>
+<div id="ref-bivand:84" class="csl-entry" role="listitem">
+Bivand, R. S. 1984. <span>“Regression Modeling with Spatial Dependence: An Application of Some Class Selection and Estimation Methods.”</span> <em>Geographical Analysis</em> 16: 25–37.
+</div>
+<div id="ref-bivand:12" class="csl-entry" role="listitem">
+———. 2012. <span>“After <span>‘<span class="nocase">Raising the Bar</span>’</span>: Applied Maximum Likelihood Estimation of Families of Models in Spatial Econometrics.”</span> <em>Estadística Española</em> 54: 71–88.
+</div>
+<div id="ref-bivand+szymanski:00" class="csl-entry" role="listitem">
+Bivand, R. S., and S. Szymanski. 2000. <span>“Modelling the Spatial Impact of the Introduction of Compulsory Competitive Tendering.”</span> <em>Regional Science and Urban Economics</em> 30: 203–19.
+</div>
+<div id="ref-bivandetal:09" class="csl-entry" role="listitem">
+Bivand, Roger, W. Müller, and M. Reder. 2009. <span>“Power Calculations for Global and Local <span>M</span>oran’s <span><span class="math inline">I</span></span>.”</span> <em>Computational Statistics and Data Analysis</em> 53: 2859–72.
+</div>
+<div id="ref-bivand+wong:18" class="csl-entry" role="listitem">
+Bivand, Roger, and David W. S. Wong. 2018. <span>“Comparing Implementations of Global and Local Indicators of Spatial Association.”</span> <em>TEST</em> 27 (3): 716–48. <a href="https://doi.org/10.1007/s11749-018-0599-x">https://doi.org/10.1007/s11749-018-0599-x</a>.
+</div>
+<div id="ref-burridge:81" class="csl-entry" role="listitem">
+Burridge, P. 1981. <span>“Testing for a Common Factor in a Spatial Autoregression Model.”</span> <em>Environment and Planning A</em> 13: 795–800.
+</div>
+<div id="ref-cliff+ord:81" class="csl-entry" role="listitem">
+Cliff, A. D., and J. K. Ord. 1981. <em>Spatial Processes</em>. London: Pion.
+</div>
+<div id="ref-elhorst:10" class="csl-entry" role="listitem">
+Elhorst, J. Paul. 2010. <span>“Applied Spatial Econometrics: Raising the Bar.”</span> <em>Spatial Economic Analysis</em> 5: 9–28.
+</div>
+<div id="ref-fingleton:99" class="csl-entry" role="listitem">
+Fingleton, B. 1999. <span>“<span class="nocase">Spurious spatial regression: Some Monte Carlo results with a spatial unit root and spatial cointegration</span>.”</span> <em><span>Journal of Regional Science</span></em> <span>39</span>: 1–19.
+</div>
+<div id="ref-halleck-vega+elhorst:15" class="csl-entry" role="listitem">
+Halleck Vega, Solmaria, and J. Paul Elhorst. 2015. <span>“The <span>SLX</span> Model.”</span> <em>Journal of Regional Science</em> 55 (3): 339–63. <a href="https://doi.org/10.1111/jors.12188">https://doi.org/10.1111/jors.12188</a>.
+</div>
+<div id="ref-kelejian+piras:17" class="csl-entry" role="listitem">
+Kelejian, Harry, and Gianfranco Piras. 2017. <em>Spatial Econometrics</em>. London: Academic Press.
+</div>
+<div id="ref-koley+bera:22" class="csl-entry" role="listitem">
+Koley, Bera, Malabika. 2022. <span>“Testing for Spatial Dependence in a Spatial Autoregressive (SAR) Model in the Presence of Endogenous Regressors.”</span> <em>Journal of Spatial Econometrics</em> 3 (11): 1–46. <a href="https://doi.org/10.1007/s43071-022-00026-7">https://doi.org/10.1007/s43071-022-00026-7</a>.
+</div>
+<div id="ref-koley:24" class="csl-entry" role="listitem">
+Koley, Malabika. 2024. <span>“Specification Testing Under General Nesting Spatial Model.”</span> <a href="https://drive.google.com/file/d/1jDAQEmczE7vlPPX1jKaYajD1VtmL4Zvh/view">https://drive.google.com/file/d/1jDAQEmczE7vlPPX1jKaYajD1VtmL4Zvh/view</a>.
+</div>
+<div id="ref-lesage:14" class="csl-entry" role="listitem">
+LeSage, James. 2014. <span>“What Regional Scientists Need to Know about Spatial Econometrics.”</span> <em>The Review of Regional Studies</em> 44 (1). <a href="http://journal.srsa.org/ojs/index.php/RRS/article/view/44.1.2">http://journal.srsa.org/ojs/index.php/RRS/article/view/44.1.2</a>.
+</div>
+<div id="ref-lesage+pace:09" class="csl-entry" role="listitem">
+LeSage, James, and Robert Kelley Pace. 2009. <em>Introduction to Spatial Econometrics</em>. Boca Raton FL: Chapman; Hall/CRC.
+</div>
+<div id="ref-mcmillen:03" class="csl-entry" role="listitem">
+McMillen, Daniel P. 2003. <span>“Spatial Autocorrelation or Model Misspecification?”</span> <em>International Regional Science Review</em> 26: 208–17.
+</div>
+<div id="ref-mur+angulo:06" class="csl-entry" role="listitem">
+Mur, Jesús, and Ana Angulo. 2006. <span>“The Spatial Durbin Model and the Common Factor Tests.”</span> <em>Spatial Economic Analysis</em> 1 (2): 207–26. <a href="https://doi.org/10.1080/17421770601009841">https://doi.org/10.1080/17421770601009841</a>.
+</div>
+<div id="ref-pace+lesage:08" class="csl-entry" role="listitem">
+Pace, R. K., and James P. LeSage. 2008. <span>“A Spatial <span>H</span>ausman Test.”</span> <em>Economics Letters</em> 101: 282–84.
+</div>
+<div id="ref-schabenberger+gotway:2005" class="csl-entry" role="listitem">
+Schabenberger, O., and C. A. Gotway. 2005. <em>Statistical Methods for Spatial Data Analysis</em>. Boca Raton/London: Chapman &amp; Hall/CRC.
+</div>
+<div id="ref-smith:09" class="csl-entry" role="listitem">
+Smith, Tony E. 2009. <span>“Estimation Bias in Spatial Models with Strongly Connected Weight Matrices.”</span> <em>Geographical Analysis</em> 41 (3): 307–32. <a href="https://doi.org/10.1111/j.1538-4632.2009.00758.x">https://doi.org/10.1111/j.1538-4632.2009.00758.x</a>.
+</div>
+<div id="ref-smith+lee12" class="csl-entry" role="listitem">
+Smith, Tony E., and K. L. Lee. 2012. <span>“<span class="nocase">The effects of spatial autoregressive dependencies on inference in ordinary least squares: a geometric approach</span>.”</span> <em>Journal of Geographical Systems</em> 14 (January): 91–124. <a href="https://doi.org/10.1007/s10109-011-0152-x">https://doi.org/10.1007/s10109-011-0152-x</a>.
+</div>
+<div id="ref-tiefelsdorf:02" class="csl-entry" role="listitem">
+Tiefelsdorf, M. 2002. <span>“The Saddlepoint Approximation of <span>Moran</span>’s <span>I</span> and Local <span>Moran</span>’s <span class="math inline">{I}_i</span> Reference Distributions and Their Numerical Evaluation.”</span> <em>Geographical Analysis</em> 34: 187–206.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./06_talk.html" class="pagination-link" aria-label="Economic and social research questions using spatial data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Economic and social research questions using spatial data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./08_talk.html" class="pagination-link" aria-label="Spatial autoregressive models: conditional (CAR) and simultaneous (SAR)">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Spatial autoregressive models: conditional (CAR) and simultaneous (SAR)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

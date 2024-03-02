@@ -285,7 +285,7 @@ tt(etf, digits=4)
 Although we could generate "density" plots using the standard errors, a more parsimonious approach might be a pair of coefficient plots:
 
 ```{r imp_gmm_pre_post_maj_fig, size="footnotesize", out.width="80%"}
-#| label: imp_gmm_pre_post_maj_figimp_pre_post_tr_fig
+#| label: imp_gmm_pre_post_maj_fig
 #| fig-cap: Spatial coefficient value and chosen variable total impacts and eigenvalue-based standard errors, pre-CCT and post-CCT, GMM SLM models, 324 English districts
 library(tinyplot)
 level <- 0.95

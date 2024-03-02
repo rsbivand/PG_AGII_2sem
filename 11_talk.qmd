@@ -1,3 +1,148 @@
 # Prediction and spatial models
 
+```{r pl_io0, echo=FALSE, results="hide"}
+io_dir <- "Input_output"
+if (!dir.exists(io_dir)) io_dir <- paste0("../", io_dir)
+```
+```{r echo=FALSE}
+load(file = paste0(io_dir, "/talk7.RData"))
+```
+
+@dubin:03 presented a contrast from simulation between geostatistical prediction and prediction from fitted spatial econometrics models.
+
+@bivand:02 inquired whether prediction had been neglected in spatial econometrics. Other authors rather considered missing data in spatial econometrics models, as followed up by @kato:13. @suesse+zamit-mangion:17 and @suesse:18 continue the examination of imputing missing spatial data @goulardetal:17 review what was then known about prediction using spatial econometrics models, providing implementations of existing and proposed methods in `spatialreg`.
+
+## Prediction and impacts
+
+In models fitted by OLS, the marginal effect of a unit change in a numerical independent variable is equal to the regression coefficient. Taking the mean difference of predicted values before and after the incrementation, we can see that this holds:
+
+```{r OLS1_pre, size="footnotesize"}
+OLS_pre <- lm(form_pre_maj, data=eng324)
+row.names(eng324) <- eng324$NAME
+newdata <- eng324
+p0 <- predict(OLS_pre, newdata=newdata)
+newdata$dens <- exp(log(newdata$dens)+1)
+p1 <- predict(OLS_pre, newdata=newdata)
+mean(p1-p0)
+coefficients(OLS_pre)["log(dens)"]
+```
+
+When the spatially lagged dependent variable is included in the model (SLM, SDM, GNM), and as we have just seen, global spill-over occurs, varying in intensity as the coefficient departs from zero.
+
+```{r est1, size="footnotesize", message=FALSE}
+library(spdep)
+lw <- nb2listw(unb, style="W")
+library(spatialreg)
+e <- eigenw(lw)
+W <- as(lw, "CsparseMatrix")
+trMat <- trW(W, type="mult")
+```
+
+```{r SLM1_pre_ml1, size="footnotesize"}
+SLM_pre_maj <- lagsarlm(form_pre_maj, data=eng324, listw=lw, control=list(pre_eig=e))
+SLM_post_maj <- lagsarlm(form_post_maj, data=eng324, listw=lw, control=list(pre_eig=e))
+```
+```{r SLM1_pre_ml2, size="footnotesize"}
+(imp_SLM_pre_maj_ev <- impacts(SLM_pre_maj, listw=lw, evalue=e))
+```
+
+Doing this by hand and using the reduced form model: $\hat{{\mathbf y}} = ({\mathbf I} - \rho {\mathbf W})^{-1}{\mathbf X}{\mathbf \beta}$, we can see that the equality between the mean difference of before-and-after incrementation predictions is not with the regression coefficient for the chosen variable, byt with its total impact:
+
+```{r SLM1_pred_pre0, size="footnotesize"}
+IrW <- invIrW(lw, rho=SLM_pre_maj$rho)
+p0a <- IrW %*% SLM_pre_maj$X %*% coef(SLM_pre_maj)[-1]
+nd <- SLM_pre_maj$X
+nd[,4] <- nd[,4] + 1
+p1 <- IrW %*% nd %*% coef(SLM_pre_maj)[-1]
+mean(p1-p0a)
+coefficients(SLM_pre_maj)["log(dens)"]
+imp_SLM_pre_maj_ev$total[3]
+```
+
+Using the `predict` method described by @goulardetal:17, we can see that this continues to hold:
+
+```{r SLM1_pred_pre1, size="footnotesize"}
+p0 <- predict(SLM_pre_maj, newdata=eng324, listw=lw, pred.type="TS", legacy=FALSE)
+all.equal(unclass(p0), c(p0a), check.attributes=FALSE)
+p1 <- predict(SLM_pre_maj, newdata=newdata, listw=lw, pred.type="TS", legacy=FALSE)
+mean(p1-p0)
+imp_SLM_pre_maj_ev$total[3]
+```
+
+## Predicting post-CCT with the pre-CCT model
+
+We can also use prediction in a counterfactual setting, by changing the only time-varying independent variable (real wages) in the `newdata` object. The model is fitted with the pre-CCT data, but the predictions are made with the fitted pre-CCT model and post-CCT data:
+
+```{r SLM1_pred_pre_post1, size="footnotesize"}
+pre_nd <- eng324
+pre_nd$realWgPre <- pre_nd$realWgPst
+pre_post <- predict(SLM_pre_maj, newdata=pre_nd, listw=lw, pred.type="TS", legacy=FALSE)
+eng324$diff <- eng324$realNetPst-eng324$realNetPre
+eng324$pre_diff <- eng324$realNetPst-exp(pre_post)
+```
+
+```{r SLM1_pred_pre_post1_fig, size="footnotesize", out.width="100%"}
+#| label: SLM1_pred_pre_post1_fig
+#| fig-cap: Difference between real net expenditure post-CCT and pre-CCT (left), and predictions made with post-CCT independent variables and pre-CCT SLM model coefficients (right)
+library(tmap)
+tm_shape(eng324) + tm_fill(c("diff", "pre_diff"), n=11, style="pretty", midpoint=0, palette="-RdBu", title="£ 000") + tm_borders() + tm_facets(free.scales=FALSE) + tm_layout(panel.labels=c("Post-CCT - Pre-CCT expenditure", "Post-CCT expenditure - prediction from pre-CCT model"))
+```
+
+## Out-of-sample prediction
+
+The situation becomes more complex for out-of-sample prediction. If we make predictions for a set of observations not linked in space through the spatial weights object with the set of observations used to fit the model, there are no troublesome spill-overs between the fitting set and the prediction set. Recall from chapter 6 that:
+
+There is now an extensive literature both on
+the split between training and test data sets, and on the use of fitted
+models for prediction to areas that were un- or under-represented in the
+data used to fit the model [@meyeretal:18; @valavietal:19; @meyeretal:19;
+@schratzetal:19; @meyer+pebesma:21; @milaetal:22; @meyer+pebesma:22;
+@linnenbrinketal:23]. These articles are accompanied by software
+permitting the reproduction of their findings and the application of
+suggested adaptations, replacing random permutations in machine learning
+model fitting and tuning by spatially-aware procedures.
+
+Here we will split England into the North region and the rest, modify the `Metrop` factor because no `"london"` level is present in the North, and divide the data and neighbour objects:
+
+```{r SML_pred_oos0r, size="footnotesize"}
+eng324$Metrop |> as.character() |> (\(d) sub("london", "metrop", x=d))() |> factor() -> eng324$Metrop
+```
+
+```{r SML_pred_oos1r, size="footnotesize"}
+rest <- eng324$region != "NORTH"
+eng324_rest <- eng324[rest,]
+unb_rest <- subset(unb, rest)
+unb_rest
+lw_rest <- nb2listw(unb_rest, style="W")
+e_rest <- eigenw(lw_rest)
+```
+
+Then we fit the rest of England subset using the formula without the political control variable, as there were no Conservative controlled local authorities in the North, and prepare the predictions made for the whole data set for mapping, allowing spill-over to occur between North and the rest of England:
+
+```{r SML_pred_oos2, size="footnotesize"}
+SLM_rest <-lagsarlm(form_pre, data=eng324_rest, listw=lw_rest, control=list(pre_eig=e_rest))
+eng324$rest_pred <- exp(c(unclass(predict(SLM_rest, newdata=eng324, listw=lw, pred.type="TS", legacy=FALSE))))
+```
+
+Next, we repeat the subsetting, fitting the same formula to North data, and predicting for the whole data set:
+
+```{r SML_pred_oos1n, size="footnotesize"}
+eng324_north <- eng324[!rest,]
+unb_north <- subset(unb, !rest)
+unb_north
+lw_north <- nb2listw(unb_north, style="W")
+e_north <- eigenw(lw_north)
+```
+
+```{r SML_pred_oos2n, size="footnotesize"}
+SLM_north <-lagsarlm(form_pre, data=eng324_north, listw=lw_north, control=list(pre_eig=e_north))
+eng324$north_pred <- exp(c(unclass(predict(SLM_north, newdata=eng324, listw=lw, pred.type="TS", legacy=FALSE))))
+```
+
+
+```{r SLM1_pred_oos_fig, size="footnotesize", out.width="100%"}
+#| label: SLM1_pred_oos_fig
+#| fig-cap: Difference between real net expenditure post-CCT and pre-CCT (left), and predictions made with post-CCT independent variables and pre-CCT SLM model coefficients (right)
+tm_shape(eng324) + tm_fill(c("rest_pred", "north_pred"), n=7, style="quantile", palette="YlOrBr", title="£ 000") + tm_borders(col="grey") + tm_facets(free.scales=FALSE) + tm_layout(panel.labels=c("Predicted pre-CCT expenditure, model without North region", "Predicted pre-CCT expenditure, North region model"))
+```
 

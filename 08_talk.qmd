@@ -235,7 +235,7 @@ SLX_pre <- lmSLX(form_pre, data=eng324, listw=lw, Durbin=update(form_pre, ~ . - 
 OLS_pre <- lm(form_pre, data=eng324)
 ```
 
-we now have eight fitted pre-CCT models, and can calculate the likelihood ratio tests between nested models. GNM nests all models, SAC nests SEM, SLM and OLS, SDEM nests SEM, SLX and OLS, SDM nests SLM, SLX and OLS, and SEM, SLX and SLM nest OLS:
+we now have eight fitted pre-CCT models, and can calculate the likelihood ratio tests between nested models. GNM nests all models, SAC nests SEM, SLM and OLS, SDEM nests SEM, SLX and OLS, SDM nests SLM, SLX and OLS (and SEM through the Common Factor $\rho_{\mathrm{Err}} = - \rho_{\mathrm{Lag}}{\mathbf \beta}$), and SEM, SLX and SLM nest OLS:
 
 ```{r LR2_pre, size="footnotesize", warning=FALSE}
 mlist_pre <- list(GNM=GNM_pre, SAC=SAC_pre, SDEM=SDEM_pre, SDM=SDM_pre, SLX=SLX_pre, SEM=SEM_pre, SLM=SLM_pre, OLS=OLS_pre)
@@ -248,7 +248,7 @@ for (j in 6:8) LR_pre[2, j] <- lrtest(mlist_pre[[2]],
     mlist_pre[[j]])[[2, "Pr(>Chisq)"]]
 for (j in c(5, 6, 8)) LR_pre[3, j] <- lrtest(mlist_pre[[3]],
     mlist_pre[[j]])[[2, "Pr(>Chisq)"]]
-for (j in c(5, 7, 8)) LR_pre[4, j] <- lrtest(mlist_pre[[4]],
+for (j in c(5:8)) LR_pre[4, j] <- lrtest(mlist_pre[[4]],
     mlist_pre[[j]])[[2, "Pr(>Chisq)"]]
 for (i in 5:7) LR_pre[i, 8] <- lrtest(mlist_pre[[i]],
     mlist_pre[[8]])[[2, "Pr(>Chisq)"]]
@@ -338,7 +338,7 @@ for (j in 6:8) LR_pre_maj[2, j] <- lrtest(mlist_pre_maj[[2]],
     mlist_pre_maj[[j]])[[2, "Pr(>Chisq)"]]
 for (j in c(5, 6, 8)) LR_pre_maj[3, j] <- lrtest(mlist_pre_maj[[3]],
     mlist_pre_maj[[j]])[[2, "Pr(>Chisq)"]]
-for (j in c(5, 7, 8)) LR_pre_maj[4, j] <- lrtest(mlist_pre_maj[[4]],
+for (j in c(5:8)) LR_pre_maj[4, j] <- lrtest(mlist_pre_maj[[4]],
     mlist_pre_maj[[j]])[[2, "Pr(>Chisq)"]]
 for (i in 5:7) LR_pre_maj[i, 8] <- lrtest(mlist_pre_maj[[i]],
     mlist_pre_maj[[8]])[[2, "Pr(>Chisq)"]]
@@ -418,7 +418,7 @@ for (j in 6:8) LR_post_maj[2, j] <- lrtest(mlist_post_maj[[2]],
     mlist_post_maj[[j]])[[2, "Pr(>Chisq)"]]
 for (j in c(5, 6, 8)) LR_post_maj[3, j] <- lrtest(mlist_post_maj[[3]],
     mlist_post_maj[[j]])[[2, "Pr(>Chisq)"]]
-for (j in c(5, 7, 8)) LR_post_maj[4, j] <- lrtest(mlist_post_maj[[4]],
+for (j in c(5:8)) LR_post_maj[4, j] <- lrtest(mlist_post_maj[[4]],
     mlist_post_maj[[j]])[[2, "Pr(>Chisq)"]]
 for (i in 5:7) LR_post_maj[i, 8] <- lrtest(mlist_post_maj[[i]],
     mlist_post_maj[[8]])[[2, "Pr(>Chisq)"]]

@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.550">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Spatial Econometrics - 6&nbsp; Economic and social research questions using spatial data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./07_talk.html" rel="next">
+<link href="./05_talk.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06_talk.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Economic and social research questions using spatial data</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Spatial Econometrics</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course description</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducing Spatial Econometrics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Working with spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Creating spatial weights objects</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Antecedents</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_talk.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Economic and social research questions using spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Tests of spatial autocorrelation, model specification</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Spatial autoregressive models: conditional (CAR) and simultaneous (SAR)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Estimation of spatial autoregressive models: methods (ML, Bayesian, GMM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">No orthogonality between regression and autoregression coefficients</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Prediction and spatial models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Eigenvectors and eigenvalues of graphs of relationships between cross-sectional observations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-why-econ-soc" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Economic and social research questions using spatial data</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In their critical appraisal of spatial econometrics, <span class="citation" data-cites="gibbons+overman:12">Gibbons and Overman (<a href="references.html#ref-gibbons+overman:12" role="doc-biblioref">2012</a>)</span> state that:</p>
+<blockquote class="blockquote">
+<p>In many (micro) economic fields—particularly development, education, environment, labor, health, and public finance—empirical work is increasingly concerned with questions about causality … If we increase an individual’s years of education, what happens to their wages? If we decrease class sizes, what happens to student grades? These questions are fundamentally of the type ‘if we change x, what do we expect to happen to y.’ Just as with economics more generally, such questions are fundamental to our understanding of spatial economics <span class="citation" data-cites="gibbons+overman:12">(<a href="references.html#ref-gibbons+overman:12" role="doc-biblioref">Gibbons and Overman 2012, 172–73</a>)</span>.</p>
+</blockquote>
+<p>In the years preceding their description of spatial econometrics risking becoming <em>mostly pointless</em>, practicioners had been realising that interpretation of model output was not as simple as had been assumed. In aspatial models, there is no spatial spillover to consider, and in time-series models, only past observations can influence the present. However, in spatial autoregressive models using for example the average of neighbours’ values of the dependent variable as an explanatory variable, the coefficient of the spatially lagged dependent variable interacts with the coefficients of the independent variables <span class="citation" data-cites="kelejianetal:06 lesage+fischer:08 ward+gleditsch:08 lesage+pace:09">(<a href="references.html#ref-kelejianetal:06" role="doc-biblioref">Kelejian, Tavlas, and Hondroyiannis 2006</a>; <a href="references.html#ref-lesage+fischer:08" role="doc-biblioref">J. P. LeSage and Fischer 2008</a>; <a href="references.html#ref-ward+gleditsch:08" role="doc-biblioref">Ward and Gleditsch 2008</a>; <a href="references.html#ref-lesage+pace:09" role="doc-biblioref">J. LeSage and Pace 2009</a>)</span>. The correct interpretation of the estimated coefficients of models using spatial data is, naturally, central to exploring “‘if we change x, what do we expect to happen to y.’” See also <span class="citation" data-cites="corrado+fingleton:12">Corrado and Fingleton (<a href="references.html#ref-corrado+fingleton:12" role="doc-biblioref">2012</a>)</span> for further discussion of the importance of thinking of spatial econometric models as tools for studying causality as understood at that time. </p>
+<p>A further, associated, bundle of strands of development in spatial econometrics following 2010 also involved causality. <span class="citation" data-cites="delgado+florax:15">Delgado and Florax (<a href="references.html#ref-delgado+florax:15" role="doc-biblioref">2015</a>)</span> draw on <span class="citation" data-cites="rubin:74">Rubin (<a href="references.html#ref-rubin:74" role="doc-biblioref">1974</a>)</span>; <span class="citation" data-cites="rubin:78">Rubin (<a href="references.html#ref-rubin:78" role="doc-biblioref">1978</a>)</span> to highlight the risk posed to the stable unit treatment value assumption (SUTVA) by unmodelled spatial dependency in the data. This key assumption for causal alaysis “implies that potential outcomes for person <span class="math inline">i</span> are unrelated to the treatment status of other individuals” <span class="citation" data-cites="angristetal:96">(<a href="references.html#ref-angristetal:96" role="doc-biblioref">Angrist, Imbens, and Rubin 1996</a>)</span>. The assumption and the risk of its violation when spatial data is modelled aspatially is also discussed at that time by <span class="citation" data-cites="koschinsky:13">Koschinsky (<a href="references.html#ref-koschinsky:13" role="doc-biblioref">2013</a>)</span> and <span class="citation" data-cites="baylis+ham:15">Baylis and Ham (<a href="references.html#ref-baylis+ham:15" role="doc-biblioref">2015</a>)</span>. </p>
+<p>Work by <span class="citation" data-cites="delgado+florax:15">Delgado and Florax (<a href="references.html#ref-delgado+florax:15" role="doc-biblioref">2015</a>)</span> has been followed up by <span class="citation" data-cites="bardakaetal:18">Bardaka, Delgado, and Florax (<a href="references.html#ref-bardakaetal:18" role="doc-biblioref">2018</a>)</span> and <span class="citation" data-cites="bardakaetal:19">Bardaka, Delgado, and Florax (<a href="references.html#ref-bardakaetal:19" role="doc-biblioref">2019</a>)</span>, showing practically how a difference-in-difference (DID) econometric design measuring the impact of change on a chosen dependent variable. <span class="citation" data-cites="dubeetal:14">Dubé et al. (<a href="references.html#ref-dubeetal:14" role="doc-biblioref">2014</a>)</span> approach spatial difference-in-difference in a similar way, followed up in <span class="citation" data-cites="dubeetal:17">Dubé et al. (<a href="references.html#ref-dubeetal:17" role="doc-biblioref">2017</a>)</span> and <span class="citation" data-cites="dubeetal:21">Dubé, AbdelHalim, and Devaux (<a href="references.html#ref-dubeetal:21" role="doc-biblioref">2021</a>)</span>. <span class="citation" data-cites="bardakaetal:18">Bardaka, Delgado, and Florax (<a href="references.html#ref-bardakaetal:18" role="doc-biblioref">2018</a>)</span> express the two approaches:</p>
+<blockquote class="blockquote">
+<p>Spatial DID models have been proposed by Dubé et al.&nbsp;(2014) and Delgado and Florax (2015); Delgado and Florax (2015) focus on violations of SUTVA in the case of spillover eﬀects local to the treatment whereas Dubé et al.&nbsp;(2014) focus on global eﬀects <span class="citation" data-cites="bardakaetal:18">(<a href="references.html#ref-bardakaetal:18" role="doc-biblioref">Bardaka, Delgado, and Florax 2018, 17</a>)</span>.</p>
+</blockquote>
+<p><span class="citation" data-cites="dubeetal:14">Dubé et al. (<a href="references.html#ref-dubeetal:14" role="doc-biblioref">2014</a>)</span> and work derived from this, such as <span class="citation" data-cites="sunak+madlener:16">Sunak and Madlener (<a href="references.html#ref-sunak+madlener:16" role="doc-biblioref">2016</a>)</span> and <span class="citation" data-cites="diaoetal:17">Diao, Leonard, and Sing (<a href="references.html#ref-diaoetal:17" role="doc-biblioref">2017</a>)</span>, has been referred to directly and indirectly by an increasing number of applied studies, including <span class="citation" data-cites="fang:21">Fang (<a href="references.html#ref-fang:21" role="doc-biblioref">2021</a>)</span>, <span class="citation" data-cites="jiaetal:21">Jia, Shao, and Yang (<a href="references.html#ref-jiaetal:21" role="doc-biblioref">2021</a>)</span>, <span class="citation" data-cites="qiu+tong:21">Qiu and Tong (<a href="references.html#ref-qiu+tong:21" role="doc-biblioref">2021</a>)</span>, <span class="citation" data-cites="liuetal:22">Liu et al. (<a href="references.html#ref-liuetal:22" role="doc-biblioref">2022</a>)</span>, <span class="citation" data-cites="chenetal:23">Chen et al. (<a href="references.html#ref-chenetal:23" role="doc-biblioref">2023</a>)</span>, <span class="citation" data-cites="gao+wang:23">D. Gao and Wang (<a href="references.html#ref-gao+wang:23" role="doc-biblioref">2023</a>)</span>, <span class="citation" data-cites="panetal:23">Pan et al. (<a href="references.html#ref-panetal:23" role="doc-biblioref">2023</a>)</span>, <span class="citation" data-cites="yu+jin:23">Yu and Jin (<a href="references.html#ref-yu+jin:23" role="doc-biblioref">2023</a>)</span> and <span class="citation" data-cites="zengetal:23">Zeng, Blanco-González-Tejero, and Sendra (<a href="references.html#ref-zengetal:23" role="doc-biblioref">2023</a>)</span>. Some refer to both spatial DID origins: <span class="citation" data-cites="chagasetal:16">Chagas, Azzoni, and Almeida (<a href="references.html#ref-chagasetal:16" role="doc-biblioref">2016</a>)</span> and <span class="citation" data-cites="qiu+tong:21">Qiu and Tong (<a href="references.html#ref-qiu+tong:21" role="doc-biblioref">2021</a>)</span>, while some derive from <span class="citation" data-cites="delgado+florax:15">Delgado and Florax (<a href="references.html#ref-delgado+florax:15" role="doc-biblioref">2015</a>)</span> alone: <span class="citation" data-cites="hanetal:18">Han et al. (<a href="references.html#ref-hanetal:18" role="doc-biblioref">2018</a>)</span> and <span class="citation" data-cites="kosfeldetal:21">Kosfeld et al. (<a href="references.html#ref-kosfeldetal:21" role="doc-biblioref">2021</a>)</span>. It is clear that the demand for assessments of the consequences of for example infrastructure investments on house prices or environmental measures is enormous, so it is likely that such studies will continue to proliferate. Both <span class="citation" data-cites="dubeetal:14">Dubé et al. (<a href="references.html#ref-dubeetal:14" role="doc-biblioref">2014</a>)</span> and <span class="citation" data-cites="delgado+florax:15">Delgado and Florax (<a href="references.html#ref-delgado+florax:15" role="doc-biblioref">2015</a>)</span> presuppose that applied researchers using their approaches are adequately trained in spatial econometrics, so that these researchers are more than familiar with the spatial extensions to aspatial econometric techniques. These spatial extensions are the core of our book. </p>
+<p>Before continuing to present the structure of this book, it is also sensible to cover three “breaking” topics related to causality in a spatial context. The first of the “breaking” topics extends regression discontinuity designs, from discussion in <span class="citation" data-cites="gibbonsetal:13">Gibbons, Machin, and Silva (<a href="references.html#ref-gibbonsetal:13" role="doc-biblioref">2013</a>)</span> through <span class="citation" data-cites="calonicoetal:14">Calonico, Cattaneo, and Titiunik (<a href="references.html#ref-calonicoetal:14" role="doc-biblioref">2014</a>)</span> and <span class="citation" data-cites="keele+titiunik:15">Keele and Titiunik (<a href="references.html#ref-keele+titiunik:15" role="doc-biblioref">2015</a>)</span> to <span class="citation" data-cites="butts:23">Butts (<a href="references.html#ref-butts:23" role="doc-biblioref">2023a</a>)</span> and <span class="citation" data-cites="butts:23b">Butts (<a href="references.html#ref-butts:23b" role="doc-biblioref">2023b</a>)</span>, with <span class="citation" data-cites="cattaneo+titiunik:22">Cattaneo and Titiunik (<a href="references.html#ref-cattaneo+titiunik:22" role="doc-biblioref">2022</a>)</span> as an up-to-date general review. While neither <span class="citation" data-cites="dubeetal:14">Dubé et al. (<a href="references.html#ref-dubeetal:14" role="doc-biblioref">2014</a>)</span> nor <span class="citation" data-cites="delgado+florax:15">Delgado and Florax (<a href="references.html#ref-delgado+florax:15" role="doc-biblioref">2015</a>)</span> appear to be directly backed by software, software packages for R, Python and Stata for work by Sebastian Calonico, Matias D. Cattaneo and Rocío Titiunik is <a href="https://rdpackages.github.io/">published</a>; ongoing work by <a href="https://github.com/kylebutts">Kyle Butts</a> is also available. </p>
+<p>The second two “breaking” topics relate directly to <span class="citation" data-cites="olsson:70">Olsson (<a href="references.html#ref-olsson:70" role="doc-biblioref">1970</a>)</span>, in which he addressed the question of the extent to which prediction and explanation could be seen as symmetric. Summarising his findings, Olsson asserted that:</p>
+<blockquote class="blockquote">
+<p>… an adequate explanation may lead to a successful prediction, but … successful prediction is not the same as successful explanation. <span class="citation" data-cites="olsson:70">(<a href="references.html#ref-olsson:70" role="doc-biblioref">Olsson 1970, 230</a>)</span></p>
+</blockquote>
+<p>This relates directly to: “‘if we change x, what do we expect to happen to y’”, which is more about explanation (and hence causality) than prediction. Many contemporary quantitative methods utilise predictive success to attempt to improve model fit, and having achieved predictive success try to re-construct the meaning of the output model in order to work back to explanation.</p>
+<p>Secondly, three important surveys of causality in spatial data analysis have appeared recently: <span class="citation" data-cites="kolak+anselin:20">Kolak and Anselin (<a href="references.html#ref-kolak+anselin:20" role="doc-biblioref">2020</a>)</span>, <span class="citation" data-cites="gaoetal:22">B. Gao et al. (<a href="references.html#ref-gaoetal:22" role="doc-biblioref">2022</a>)</span>, and <span class="citation" data-cites="akbarietal:23">Akbari, Winter, and Tomko (<a href="references.html#ref-akbarietal:23" role="doc-biblioref">2023</a>)</span>. All of these take up spatial challenges to the stable unit treatment value assumption, <span class="citation" data-cites="kolak+anselin:20">Kolak and Anselin (<a href="references.html#ref-kolak+anselin:20" role="doc-biblioref">2020</a>)</span> with an example of the impact of changes in minimum legal drinking age laws on mortality for US states. <span class="citation" data-cites="gaoetal:22">B. Gao et al. (<a href="references.html#ref-gaoetal:22" role="doc-biblioref">2022</a>)</span> point to the rapid extension of spatial statistics to other knowledge domains including bioinformatics, in which causal inference is clearly important. The main use cases considered by <span class="citation" data-cites="akbarietal:23">Akbari, Winter, and Tomko (<a href="references.html#ref-akbarietal:23" role="doc-biblioref">2023</a>)</span> are in spatial cognition, including wayfinding processes and navigation systems, because these are so much broader in impact than program evaluations. Because <span class="citation" data-cites="akbarietal:23">Akbari, Winter, and Tomko (<a href="references.html#ref-akbarietal:23" role="doc-biblioref">2023</a>)</span> is a literature review, it does not propose methods, but describes those available. They also comment that of the minority of articles included in the review that reported what software was used, the most commonly used software was R. Only 12 percent of the articles cited code needed to reproduce their results <span class="citation" data-cites="wolf:23">(see also <a href="references.html#ref-wolf:23" role="doc-biblioref">Wolf 2023</a>)</span>. They comment: </p>
+<blockquote class="blockquote">
+<p>This low rate of accessibility to code is a big challenge that not only limits reproducibility of the reviewed papers, but also affects the portability and translation of approaches to other case studies in spatial causal inference. … In sum, in most of the reviewed research, there are no clear procedures related to reproducibility and validation. We can trust more the results of papers with straightforward approaches with a sufficient level of details. <span class="citation" data-cites="akbarietal:23">(<a href="references.html#ref-akbarietal:23" role="doc-biblioref">Akbari, Winter, and Tomko 2023, 79</a>)</span></p>
+</blockquote>
+<p>The final “breaking” topic is the influence of spatial autocorrelation on machine learning, statistical learning, and convolutional neural networks. <span class="citation" data-cites="kattenbornetal:22">Kattenborn et al. (<a href="references.html#ref-kattenbornetal:22" role="doc-biblioref">2022</a>)</span> study the impact of spatial autocorrelation on the training of convolutional neural networks for data acquired by drones, and find: </p>
+<blockquote class="blockquote">
+<p>Our results suggest that violating spatial independence between training and test data can severely inflate model apparent performance (up to almost 30%) and, hence, lead to an overly optimistic evaluation of the generalization of such models. <span class="citation" data-cites="kattenbornetal:22">(<a href="references.html#ref-kattenbornetal:22" role="doc-biblioref">Kattenborn et al. 2022, 7</a>)</span></p>
+</blockquote>
+<p>This observation, that the violation of the assumption of spatial independence between training, validation and test data sets prejudices outcomes, has been recognised in much of spatial data science for years, at least from <span class="citation" data-cites="brenning:12">Brenning (<a href="references.html#ref-brenning:12" role="doc-biblioref">2012</a>)</span>. There is now an extensive literature both on the split between training and test data sets, and on the use of fitted models for prediction to areas that were un- or under-represented in the data used to fit the model <span class="citation" data-cites="meyeretal:18 valavietal:19 meyeretal:19 schratzetal:19 meyer+pebesma:21 milaetal:22 meyer+pebesma:22 linnenbrinketal:23">(<a href="references.html#ref-meyeretal:18" role="doc-biblioref">Meyer et al. 2018</a>, <a href="references.html#ref-meyeretal:19" role="doc-biblioref">2019</a>; <a href="references.html#ref-valavietal:19" role="doc-biblioref">Valavi et al. 2019</a>; <a href="references.html#ref-schratzetal:19" role="doc-biblioref">Schratz et al. 2019</a>; <a href="references.html#ref-meyer+pebesma:21" role="doc-biblioref">Meyer and Pebesma 2021</a>, <a href="references.html#ref-meyer+pebesma:22" role="doc-biblioref">2022</a>; <a href="references.html#ref-milaetal:22" role="doc-biblioref">Mila et al. 2022</a>; <a href="references.html#ref-linnenbrinketal:23" role="doc-biblioref">Linnenbrink et al. 2023</a>)</span>. These articles are accompanied by software permitting the reproduction of their findings and the application of suggested adaptations, replacing random permutations in machine learning model fitting and tuning by spatially-aware procedures. </p>
+<p><span class="citation" data-cites="kopczewska:22">Kopczewska (<a href="references.html#ref-kopczewska:22" role="doc-biblioref">2022</a>)</span> summarises the current research position with regard to spatial data use in machine learning in this way: </p>
+<blockquote class="blockquote">
+<p>It is clear from many studies that unaddressed spatial autocorrelation generates problems, such as overoptimistic fit of models, omitted information and/or biased (suboptimal) prediction. Thus, an up-to-date toolbox dealing with spatial autocorrelation should be used in all ML models in order to ensure methodological appropriateness. <span class="citation" data-cites="kopczewska:22">(<a href="references.html#ref-kopczewska:22" role="doc-biblioref">Kopczewska 2022, 732</a>)</span></p>
+</blockquote>
+<p>She does, however, provide encouraging examples of the spatially-informed use of machine learning methods, and a concise overview of concepts and a listing of relevant R packages in two appendices <span class="citation" data-cites="kopczewska:22">(<a href="references.html#ref-kopczewska:22" role="doc-biblioref">Kopczewska 2022, 735–49</a>)</span>. </p>
+<p><span class="citation" data-cites="wagner+zeileis:19">Wagner and Zeileis (<a href="references.html#ref-wagner+zeileis:19" role="doc-biblioref">2019</a>)</span> use model-based recursive partitioning handling the spatial dependencies by including the spatially lagged dependent variable in a spatial econometric model to study heterogeneous growth. <span class="citation" data-cites="vidolietal22">Vidoli, Pignataro, and Benedetti (<a href="references.html#ref-vidolietal22" role="doc-biblioref">2022</a>)</span> approach heterogeneity through spatial regimes, as do <span class="citation" data-cites="piras+sarrias:23">Piras and Sarrias (<a href="references.html#ref-piras+sarrias:23" role="doc-biblioref">2023</a>)</span>; all three articles are backed by software. </p>
+<p><span class="citation" data-cites="nikparvar+thill:21">Nikparvar and Thill (<a href="references.html#ref-nikparvar+thill:21" role="doc-biblioref">2021</a>)</span> give a broad review of machine learning methods and applications to spatial data, including attention to spatial autocorrelation, spatial scale and spatial heterogeneity. <span class="citation" data-cites="credit:22">Credit (<a href="references.html#ref-credit:22" role="doc-biblioref">2022</a>)</span> considers the intersection of random forest models - a machine learning method aggregating the outout of many decision trees - and spatial econometrics models. In addition to the inclusion of the spatially lagged dependent variable <span class="citation" data-cites="wagner+zeileis:19">(<a href="references.html#ref-wagner+zeileis:19" role="doc-biblioref">Wagner and Zeileis 2019</a>)</span>, spatially lagged independent variables were considered. <span class="citation" data-cites="yosidaetal:22">Yoshida, Murakami, and Seya (<a href="references.html#ref-yosidaetal:22" role="doc-biblioref">2022</a>)</span> compare a selection of spatially-aware machine learning approaches and a nearest-neighbour Gaussian process model for predicting apartment rents, following some of the suggestions made by <span class="citation" data-cites="credit:22">Credit (<a href="references.html#ref-credit:22" role="doc-biblioref">2022</a>)</span>; references to software are provided. </p>
+<p>Consideration of machine learning and the application of deep learning/neural networks overlaps in a fair number of cases, raising similar concerns about how the probable lack of independence between proximate observations in space will be handled. <span class="citation" data-cites="ahmedetal:21">Ahmed et al. (<a href="references.html#ref-ahmedetal:21" role="doc-biblioref">2021</a>)</span> stress the need for interpretability and explainability in deep learning/neural networks (also known as artificial intelligence) as well as in machine learning, and explore model agnostic greedy explanations of model predictions; references to software are provided. </p>
+<p><span class="citation" data-cites="zhangetal:22">Zhang et al. (<a href="references.html#ref-zhangetal:22" role="doc-biblioref">2022</a>)</span> and <span class="citation" data-cites="dengetal:23">Deng, He, and Liu (<a href="references.html#ref-dengetal:23" role="doc-biblioref">2023</a>)</span> also focus on interpretability of machine learning methods for predicting crime risk; <span class="citation" data-cites="dengetal:23">Deng, He, and Liu (<a href="references.html#ref-dengetal:23" role="doc-biblioref">2023</a>)</span> provide their complete data set. <span class="citation" data-cites="zhuetal:22 zhuetal:23">Zhu et al. (<a href="references.html#ref-zhuetal:22" role="doc-biblioref">2023b</a>; minor correction <a href="references.html#ref-zhuetal:23" role="doc-biblioref">Zhu et al. 2023a</a>)</span> propose spatial regression graph convolutional neural networks for modelling and predicting multivariate spatial data, also considering what is known as feature selection (or engineering), which is related to interpretability; references to software are provided. </p>
+<p><span class="citation" data-cites="lietal:23">Li et al. (<a href="references.html#ref-lietal:23" role="doc-biblioref">2023</a>)</span>, like <span class="citation" data-cites="credit:22">Credit (<a href="references.html#ref-credit:22" role="doc-biblioref">2022</a>)</span>, introduce the spatially lagged dependent variable (whether a manhole in an urban drainage system overflows or not) into a deep neural network model. <span class="citation" data-cites="xiaoetal:23">Xiao, Song, and Wang (<a href="references.html#ref-xiaoetal:23" role="doc-biblioref">2023</a>)</span> and <span class="citation" data-cites="wang+song:23">Wang and Song (<a href="references.html#ref-wang+song:23" role="doc-biblioref">2023</a>)</span> in two articles with overlapping authorships look more closely at integrating adaptations of classical spatial econometrics models - spatial autoregressive models - into deep neural network models, both making nonparametric additions to the classical models. </p>
+<p>The literatures covering the interpretation of spatial econometric models, causality when the data used are spatial and so challenge standard econometric assumptions, and training/test set data splits affecting machine learning and artificial intelligence applications, are all burgeoning. It might be thought that the superficial mentioning of these questions in this section should direct us to focus attention in this book on emerging research opportunities. However, our reading of contributions to the current literature, taken with readings of the many other articles published since 2020 - <span class="citation" data-cites="dubeetal:14">Dubé et al. (<a href="references.html#ref-dubeetal:14" role="doc-biblioref">2014</a>)</span> has been cited hundreds of times, mostly since 2020 - suggests that many authors would benefit substantially from a clearer grasp of the background to spatial econometric models, and many of their internal characteristcs. Hence, based in part on this motivation, we will now move to present the structure of this book.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-ahmedetal:21" class="csl-entry" role="listitem">
+Ahmed, Zia U., Kang Sun, Michael Shelly, and Lina Mu. 2021. <span>“Explainable Artificial Intelligence (XAI) for Exploring Spatial Variability of Lung and Bronchus Cancer (LBC) Mortality Rates in the Contiguous USA.”</span> <em>Scientific Reports</em> 11: 24090. <a href="https://doi.org/10.1038/s41598-021-03198-8">https://doi.org/10.1038/s41598-021-03198-8</a>.
+</div>
+<div id="ref-akbarietal:23" class="csl-entry" role="listitem">
+Akbari, Kamal, Stephan Winter, and Martin Tomko. 2023. <span>“Spatial Causality: A Systematic Review on Spatial Causal Inference.”</span> <em>Geographical Analysis</em> 55 (1): 56–89. <a href="https://doi.org/10.1111/gean.12312">https://doi.org/10.1111/gean.12312</a>.
+</div>
+<div id="ref-angristetal:96" class="csl-entry" role="listitem">
+Angrist, Joshua D., Guido W. Imbens, and Donald B. Rubin. 1996. <span>“Identification of Causal Effects Using Instrumental Variables.”</span> <em>Journal of the American Statistical Association</em> 91 (434): 444–72.
+</div>
+<div id="ref-bardakaetal:18" class="csl-entry" role="listitem">
+Bardaka, Eleni, Michael S. Delgado, and Raymond J. G. M. Florax. 2018. <span>“Causal Identification of Transit-Induced Gentrification and Spatial Spillover Effects: The Case of the Denver Light Rail.”</span> <em>Journal of Transport Geography</em> 71: 15–31. <a href="https://doi.org/10.1016/j.jtrangeo.2018.06.025">https://doi.org/10.1016/j.jtrangeo.2018.06.025</a>.
+</div>
+<div id="ref-bardakaetal:19" class="csl-entry" role="listitem">
+———. 2019. <span>“A Spatial Multiple Treatment/Multiple Outcome Difference-in-Differences Model with an Application to Urban Rail Infrastructure and Gentrification.”</span> <em>Transportation Research Part A: Policy and Practice</em> 121: 325–45. <a href="https://doi.org/10.1016/j.tra.2019.01.028">https://doi.org/10.1016/j.tra.2019.01.028</a>.
+</div>
+<div id="ref-baylis+ham:15" class="csl-entry" role="listitem">
+Baylis, Kathy, and Andrés Ham. 2015. <span>“How Important Is Spatial Correlation in Randomized Controlled Trials?”</span> <a href="https://ageconsearch.umn.edu/record/205586/">https://ageconsearch.umn.edu/record/205586/</a>.
+</div>
+<div id="ref-brenning:12" class="csl-entry" role="listitem">
+Brenning, Alexander. 2012. <span>“Spatial Cross-Validation and Bootstrap for the Assessment of Prediction Rules in Remote Sensing: The r Package Sperrorest.”</span> In <em>2012 IEEE International Geoscience and Remote Sensing Symposium</em>, 5372–75. <a href="https://doi.org/10.1109/IGARSS.2012.6352393">https://doi.org/10.1109/IGARSS.2012.6352393</a>.
+</div>
+<div id="ref-butts:23" class="csl-entry" role="listitem">
+Butts, Kyle. 2023a. <span>“Geographic Difference-in-Discontinuities.”</span> <em>Applied Economics Letters</em> 30 (5): 615–19. <a href="https://doi.org/10.1080/13504851.2021.2005236">https://doi.org/10.1080/13504851.2021.2005236</a>.
+</div>
+<div id="ref-butts:23b" class="csl-entry" role="listitem">
+———. 2023b. <span>“JUE Insight: Difference-in-Differences with Geocoded Microdata.”</span> <em>Journal of Urban Economics</em> 133: 103493. <a href="https://doi.org/10.1016/j.jue.2022.103493">https://doi.org/10.1016/j.jue.2022.103493</a>.
+</div>
+<div id="ref-calonicoetal:14" class="csl-entry" role="listitem">
+Calonico, Sebastian, Matias D. Cattaneo, and Rocio Titiunik. 2014. <span>“Robust Nonparametric Confidence Intervals for Regression-Discontinuity Designs.”</span> <em>Econometrica</em> 82 (6): 2295–2326. <a href="https://doi.org/10.3982/ECTA11757">https://doi.org/10.3982/ECTA11757</a>.
+</div>
+<div id="ref-cattaneo+titiunik:22" class="csl-entry" role="listitem">
+Cattaneo, Matias D., and Rocı́o Titiunik. 2022. <span>“Regression Discontinuity Designs.”</span> <em>Annual Review of Economics</em> 14 (1): 821–51. <a href="https://doi.org/10.1146/annurev-economics-051520-021409">https://doi.org/10.1146/annurev-economics-051520-021409</a>.
+</div>
+<div id="ref-chagasetal:16" class="csl-entry" role="listitem">
+Chagas, André L. S., Carlos R. Azzoni, and Alexandre N. Almeida. 2016. <span>“A Spatial Difference-in-Differences Analysis of the Impact of Sugarcane Production on Respiratory Diseases.”</span> <em>Regional Science and Urban Economics</em> 59: 24–36. <a href="https://doi.org/10.1016/j.regsciurbeco.2016.04.002">https://doi.org/10.1016/j.regsciurbeco.2016.04.002</a>.
+</div>
+<div id="ref-chenetal:23" class="csl-entry" role="listitem">
+Chen, Jinyu, Wenjing Luo, Xiaohang Ren, and Tianqi Liu. 2023. <span>“The Local-Neighborhood Effects of Low-Carbon City Pilots Program on PM2.5 in China: A Spatial Difference-in-Differences Analysis.”</span> <em>Science of The Total Environment</em> 857: 159511. <a href="https://doi.org/10.1016/j.scitotenv.2022.159511">https://doi.org/10.1016/j.scitotenv.2022.159511</a>.
+</div>
+<div id="ref-corrado+fingleton:12" class="csl-entry" role="listitem">
+Corrado, Luisa, and Bernard Fingleton. 2012. <span>“Where Is the Economics in Spatial Econometrics?”</span> <em>Journal of Regional Science</em> 52: 210–39.
+</div>
+<div id="ref-credit:22" class="csl-entry" role="listitem">
+Credit, Kevin. 2022. <span>“Spatial Models or Random Forest? Evaluating the Use of Spatially Explicit Machine Learning Methods to Predict Employment Density Around New Transit Stations in Los Angeles.”</span> <em>Geographical Analysis</em> 54 (1): 58–83. <a href="https://doi.org/10.1111/gean.12273">https://doi.org/10.1111/gean.12273</a>.
+</div>
+<div id="ref-delgado+florax:15" class="csl-entry" role="listitem">
+Delgado, Michael S., and Raymond J. G. M. Florax. 2015. <span>“Difference-in-Differences Techniques for Spatial Data: Local Autocorrelation and Spatial Interaction.”</span> <em>Economics Letters</em> 137: 123–26. <a href="https://doi.org/10.1016/j.econlet.2015.10.035">https://doi.org/10.1016/j.econlet.2015.10.035</a>.
+</div>
+<div id="ref-dengetal:23" class="csl-entry" role="listitem">
+Deng, Yue, Rixing He, and Yang Liu. 2023. <span>“Crime Risk Prediction Incorporating Geographical Spatiotemporal Dependency into Machine Learning Models.”</span> <em>Information Sciences</em> 646: 119414. <a href="https://doi.org/10.1016/j.ins.2023.119414">https://doi.org/10.1016/j.ins.2023.119414</a>.
+</div>
+<div id="ref-diaoetal:17" class="csl-entry" role="listitem">
+Diao, Mi, Delon Leonard, and Tien Foo Sing. 2017. <span>“Spatial-Difference-in-Differences Models for Impact of New Mass Rapid Transit Line on Private Housing Values.”</span> <em>Regional Science and Urban Economics</em> 67: 64–77. <a href="https://doi.org/10.1016/j.regsciurbeco.2017.08.006">https://doi.org/10.1016/j.regsciurbeco.2017.08.006</a>.
+</div>
+<div id="ref-dubeetal:21" class="csl-entry" role="listitem">
+Dubé, Jean, Maha AbdelHalim, and Nicolas Devaux. 2021. <span>“Evaluating the Impact of Floods on Housing Price Using a Spatial Matching Difference-in-Differences (SM-DID) Approach.”</span> <em>Sustainability</em> 13 (2). <a href="https://doi.org/10.3390/su13020804">https://doi.org/10.3390/su13020804</a>.
+</div>
+<div id="ref-dubeetal:14" class="csl-entry" role="listitem">
+Dubé, Jean, Diègo Legros, Marius Thériault, and François Des Rosiers. 2014. <span>“A Spatial Difference-in-Differences Estimator to Evaluate the Effect of Change in Public Mass Transit Systems on House Prices.”</span> <em>Transportation Research Part B: Methodological</em> 64: 24–40. <a href="https://doi.org/10.1016/j.trb.2014.02.007">https://doi.org/10.1016/j.trb.2014.02.007</a>.
+</div>
+<div id="ref-dubeetal:17" class="csl-entry" role="listitem">
+———. 2017. <span>“Measuring and Interpreting Urban Externalities in Real-Estate Data: A Spatio-Temporal Difference-in-Differences (STDID) Estimator.”</span> <em>Buildings</em> 7 (2). <a href="https://doi.org/10.3390/buildings7020051">https://doi.org/10.3390/buildings7020051</a>.
+</div>
+<div id="ref-fang:21" class="csl-entry" role="listitem">
+Fang, Jing. 2021. <span>“Impacts of High-Speed Rail on Urban Smog Pollution in China: A Spatial Difference-in-Difference Approach.”</span> <em>Science of The Total Environment</em> 777: 146153. <a href="https://doi.org/10.1016/j.scitotenv.2021.146153">https://doi.org/10.1016/j.scitotenv.2021.146153</a>.
+</div>
+<div id="ref-gaoetal:22" class="csl-entry" role="listitem">
+Gao, Bingbo, Jinfeng Wang, Alfred Stein, and Ziyue Chen. 2022. <span>“Causal Inference in Spatial Statistics.”</span> <em>Spatial Statistics</em> 50: 100621. <a href="https://doi.org/10.1016/j.spasta.2022.100621">https://doi.org/10.1016/j.spasta.2022.100621</a>.
+</div>
+<div id="ref-gao+wang:23" class="csl-entry" role="listitem">
+Gao, Da, and Guimei Wang. 2023. <span>“Does the Opening of High-Speed Rails Improve Urban Carbon Efficiency? Evidence from a Spatial Difference-in-Difference Method.”</span> <em>Environmental Science and Pollution Research</em> 30: 101873–87.
+</div>
+<div id="ref-gibbonsetal:13" class="csl-entry" role="listitem">
+Gibbons, Stephen, Stephen Machin, and Olmo Silva. 2013. <span>“Valuing School Quality Using Boundary Discontinuities.”</span> <em>Journal of Urban Economics</em> 75: 15–28.
+</div>
+<div id="ref-gibbons+overman:12" class="csl-entry" role="listitem">
+Gibbons, Stephen, and Henry G. Overman. 2012. <span>“Mostly Pointless Spatial Econometrics?”</span> <em>Journal of Regional Science</em> 52: 172–91.
+</div>
+<div id="ref-hanetal:18" class="csl-entry" role="listitem">
+Han, Mengjie, Oana Mihaescu, Yujiao Li, and Niklas Rudholm. 2018. <span>“Comparison and One-Stop Shopping After Big-Box Retail Entry: A Spatial Difference-in-Difference Analysis.”</span> <em>Journal of Retailing and Consumer Services</em> 40: 175–87. <a href="https://doi.org/10.1016/j.jretconser.2017.10.003">https://doi.org/10.1016/j.jretconser.2017.10.003</a>.
+</div>
+<div id="ref-jiaetal:21" class="csl-entry" role="listitem">
+Jia, Ruining, Shuai Shao, and Lili Yang. 2021. <span>“High-Speed Rail and CO2 Emissions in Urban China: A Spatial Difference-in-Differences Approach.”</span> <em>Energy Economics</em> 99: 105271. <a href="https://doi.org/10.1016/j.eneco.2021.105271">https://doi.org/10.1016/j.eneco.2021.105271</a>.
+</div>
+<div id="ref-kattenbornetal:22" class="csl-entry" role="listitem">
+Kattenborn, Teja, Felix Schiefer, Julian Frey, Hannes Feilhauer, Miguel D. Mahecha, and Carsten F. Dormann. 2022. <span>“Spatially Autocorrelated Training and Validation Samples Inflate Performance Assessment of Convolutional Neural Networks.”</span> <em>ISPRS Open Journal of Photogrammetry and Remote Sensing</em> 5: 100018. <a href="https://doi.org/10.1016/j.ophoto.2022.100018">https://doi.org/10.1016/j.ophoto.2022.100018</a>.
+</div>
+<div id="ref-keele+titiunik:15" class="csl-entry" role="listitem">
+Keele, Luke J., and Rocío Titiunik. 2015. <span>“Geographic Boundaries as Regression Discontinuities.”</span> <em>Political Analysis</em> 23 (1): 127–55. <a href="https://doi.org/10.1093/pan/mpu014">https://doi.org/10.1093/pan/mpu014</a>.
+</div>
+<div id="ref-kelejianetal:06" class="csl-entry" role="listitem">
+Kelejian, H. H., G. Tavlas, and G. Hondroyiannis. 2006. <span>“A Spatial Modelling Approach to Contagion Among Emerging Economies.”</span> <em>Open Economies Review</em> 17: 423–41.
+</div>
+<div id="ref-kolak+anselin:20" class="csl-entry" role="listitem">
+Kolak, Marynia, and Luc Anselin. 2020. <span>“A Spatial Perspective on the Econometrics of Program Evaluation.”</span> <em>International Regional Science Review</em> 43 (1-2): 128–53. <a href="https://doi.org/10.1177/0160017619869781">https://doi.org/10.1177/0160017619869781</a>.
+</div>
+<div id="ref-kopczewska:22" class="csl-entry" role="listitem">
+Kopczewska, Katarzyna. 2022. <span>“Spatial Machine Learning: New Opportunities for Regional Science.”</span> <em>The Annals of Regional Science</em> 68 (3): 713–55. <a href="https://doi.org/10.1007/s00168-021-01101-x">https://doi.org/10.1007/s00168-021-01101-x</a>.
+</div>
+<div id="ref-koschinsky:13" class="csl-entry" role="listitem">
+Koschinsky, Julia. 2013. <span>“The Case for Spatial Analysis in Evaluation to Reduce Health Inequities.”</span> <em>Evaluation and Program Planning</em> 36 (1): 172–76. <a href="https://doi.org/10.1016/j.evalprogplan.2012.03.004">https://doi.org/10.1016/j.evalprogplan.2012.03.004</a>.
+</div>
+<div id="ref-kosfeldetal:21" class="csl-entry" role="listitem">
+Kosfeld, Reinhold, Timo Mitze, Johannes Rode, and Klaus Wälde. 2021. <span>“The Covid-19 Containment Effects of Public Health Measures: A Spatial Difference-in-Differences Approach.”</span> <em>Journal of Regional Science</em> 61 (4): 799–825. <a href="https://doi.org/10.1111/jors.12536">https://doi.org/10.1111/jors.12536</a>.
+</div>
+<div id="ref-lesage+fischer:08" class="csl-entry" role="listitem">
+LeSage, James P., and Manfred M. Fischer. 2008. <span>“Spatial Growth Regression: Model Specification, Estimation and Interpretation.”</span> <em>Spatial Economic Analysis</em> 3: 275–304.
+</div>
+<div id="ref-lesage+pace:09" class="csl-entry" role="listitem">
+LeSage, James, and Robert Kelley Pace. 2009. <em>Introduction to Spatial Econometrics</em>. Boca Raton FL: Chapman; Hall/CRC.
+</div>
+<div id="ref-lietal:23" class="csl-entry" role="listitem">
+Li, Heng, Chunxiao Zhang, Min Chen, Dingtao Shen, and Yunyun Niu. 2023. <span>“Data-Driven Surrogate Modeling: Introducing Spatial Lag to Consider Spatial Autocorrelation of Flooding Within Urban Drainage Systems.”</span> <em>Environmental Modelling &amp; Software</em> 161: 105623. <a href="https://doi.org/10.1016/j.envsoft.2023.105623">https://doi.org/10.1016/j.envsoft.2023.105623</a>.
+</div>
+<div id="ref-linnenbrinketal:23" class="csl-entry" role="listitem">
+Linnenbrink, J., C. Milà, M. Ludwig, and H. Meyer. 2023. <span>“kNNDM: K-Fold Nearest Neighbour Distance Matching Cross-Validation for Map Accuracy Estimation.”</span> <em>EGUsphere</em> 2023: 1–16. <a href="https://doi.org/10.5194/egusphere-2023-1308">https://doi.org/10.5194/egusphere-2023-1308</a>.
+</div>
+<div id="ref-liuetal:22" class="csl-entry" role="listitem">
+Liu, Jun, Yu Qian, Shun-feng Song, and Rong-rong Duan. 2022. <span>“Industrial Symbiotic Agglomeration and Green Economic Growth: A Spatial Difference-in-Differences Approach.”</span> <em>Journal of Cleaner Production</em> 364: 132560. <a href="https://doi.org/10.1016/j.jclepro.2022.132560">https://doi.org/10.1016/j.jclepro.2022.132560</a>.
+</div>
+<div id="ref-meyer+pebesma:21" class="csl-entry" role="listitem">
+Meyer, Hanna, and Edzer Pebesma. 2021. <span>“Predicting into Unknown Space? Estimating the Area of Applicability of Spatial Prediction Models.”</span> <em>Methods in Ecology and Evolution</em> 12 (9): 1620–33. <a href="https://doi.org/10.1111/2041-210X.13650">https://doi.org/10.1111/2041-210X.13650</a>.
+</div>
+<div id="ref-meyer+pebesma:22" class="csl-entry" role="listitem">
+———. 2022. <span>“Machine Learning-Based Global Maps of Ecological Variables and the Challenge of Assessing Them.”</span> <em>Nature Communincations</em> 13. <a href="https://doi.org/ 10.1038/s41467-022-29838-9 ">https://doi.org/ 10.1038/s41467-022-29838-9 </a>.
+</div>
+<div id="ref-meyeretal:18" class="csl-entry" role="listitem">
+Meyer, Hanna, Christoph Reudenbach, Tomislav Hengl, Marwan Katurji, and Thomas Nauss. 2018. <span>“Improving Performance of Spatio-Temporal Machine Learning Models Using Forward Feature Selection and Target-Oriented Validation.”</span> <em>Environmental Modelling &amp; Software</em> 101: 1–9. <a href="https://doi.org/10.1016/j.envsoft.2017.12.001">https://doi.org/10.1016/j.envsoft.2017.12.001</a>.
+</div>
+<div id="ref-meyeretal:19" class="csl-entry" role="listitem">
+Meyer, Hanna, Christoph Reudenbach, Stephan Wöllauer, and Thomas Nauss. 2019. <span>“Importance of Spatial Predictor Variable Selection in Machine Learning Applications – Moving from Data Reproduction to Spatial Prediction.”</span> <em>Ecological Modelling</em> 411: 108815. <a href="https://doi.org/10.1016/j.ecolmodel.2019.108815">https://doi.org/10.1016/j.ecolmodel.2019.108815</a>.
+</div>
+<div id="ref-milaetal:22" class="csl-entry" role="listitem">
+Mila, Carles, Jorge Mateu, Edzer Pebesma, and Hanna Meyer. 2022. <span>“Nearest Neighbour Distance Matching Leave-One-Out Cross-Validation for Map Validation.”</span> <em>Methods in Ecology and Evolution</em> 13 (6): 1304–16. <a href="https://doi.org/10.1111/2041-210X.13851">https://doi.org/10.1111/2041-210X.13851</a>.
+</div>
+<div id="ref-nikparvar+thill:21" class="csl-entry" role="listitem">
+Nikparvar, Behnam, and Jean-Claude Thill. 2021. <span>“Machine Learning of Spatial Data.”</span> <em>ISPRS International Journal of Geo-Information</em> 10 (9). <a href="https://doi.org/10.3390/ijgi10090600">https://doi.org/10.3390/ijgi10090600</a>.
+</div>
+<div id="ref-olsson:70" class="csl-entry" role="listitem">
+Olsson, Gunnar. 1970. <span>“Explanation, Prediction, and Meaning Variance: An Assessment of Distance Interaction Models.”</span> <em>Economic Geography</em> 46: 223–33. <a href="http://www.jstor.org/stable/143140">http://www.jstor.org/stable/143140</a>.
+</div>
+<div id="ref-panetal:23" class="csl-entry" role="listitem">
+Pan, Minjie, Weiyong Zou, Kangjuan Lv, and Xinlei Qian. 2023. <span>“Can Environmental Protection Interview Policy Reduce Air Pollution? -a Spatial Difference-in-Differences Approach.”</span> <em>Applied Economics</em> 55 (11): 1217–33. <a href="https://doi.org/10.1080/00036846.2022.2096869">https://doi.org/10.1080/00036846.2022.2096869</a>.
+</div>
+<div id="ref-piras+sarrias:23" class="csl-entry" role="listitem">
+Piras, Gianfranco, and Mauricio Sarrias. 2023. <span>“Heterogeneous Spatial Models in r: Spatial Regimes Models.”</span> <em>Journal of Spatial Econometrics</em> 4. <a href="https://doi.org/10.1007/s43071-023-00034-1">https://doi.org/10.1007/s43071-023-00034-1</a>.
+</div>
+<div id="ref-qiu+tong:21" class="csl-entry" role="listitem">
+Qiu, Feng, and Qingmeng Tong. 2021. <span>“A Spatial Difference-in-Differences Approach to Evaluate the Impact of Light Rail Transit on Property Values.”</span> <em>Economic Modelling</em> 99: 105496. <a href="https://doi.org/10.1016/j.econmod.2021.03.015">https://doi.org/10.1016/j.econmod.2021.03.015</a>.
+</div>
+<div id="ref-rubin:74" class="csl-entry" role="listitem">
+Rubin, Donald B. 1974. <span>“Estimating Causal Effects of Treatments in Randomized and Nonrandomized Studies.”</span> <em>Journal of Educational Psychology</em> 66: 688–701. <a href="https://doi.org/10.1037/h0037350">https://doi.org/10.1037/h0037350</a>.
+</div>
+<div id="ref-rubin:78" class="csl-entry" role="listitem">
+———. 1978. <span>“Bayesian Inference for Causal Effects: The Role of Randomization.”</span> <em>The Annals of Statistics</em> 6 (1): 34–58.
+</div>
+<div id="ref-schratzetal:19" class="csl-entry" role="listitem">
+Schratz, Patrick, Jannes Muenchow, Eugenia Iturritxa, Jakob Richter, and Alexander Brenning. 2019. <span>“Hyperparameter Tuning and Performance Assessment of Statistical and Machine-Learning Algorithms Using Spatial Data.”</span> <em>Ecological Modelling</em> 406: 109–20. <a href="https://doi.org/10.1016/j.ecolmodel.2019.06.002">https://doi.org/10.1016/j.ecolmodel.2019.06.002</a>.
+</div>
+<div id="ref-sunak+madlener:16" class="csl-entry" role="listitem">
+Sunak, Yasin, and Reinhard Madlener. 2016. <span>“The Impact of Wind Farm Visibility on Property Values: A Spatial Difference-in-Differences Analysis.”</span> <em>Energy Economics</em> 55: 79–91. <a href="https://doi.org/10.1016/j.eneco.2015.12.025">https://doi.org/10.1016/j.eneco.2015.12.025</a>.
+</div>
+<div id="ref-valavietal:19" class="csl-entry" role="listitem">
+Valavi, Roozbeh, Jane Elith, José J. Lahoz-Monfort, and Gurutzeta Guillera-Arroita. 2019. <span>“blockCV: An <span>R</span> Package for Generating Spatially or Environmentally Separated Folds for k-Fold Cross-Validation of Species Distribution Models.”</span> <em>Methods in Ecology and Evolution</em> 10 (2): 225–32. <a href="https://doi.org/10.1111/2041-210X.13107">https://doi.org/10.1111/2041-210X.13107</a>.
+</div>
+<div id="ref-vidolietal22" class="csl-entry" role="listitem">
+Vidoli, Francesco, Giacomo Pignataro, and Roberto Benedetti. 2022. <span>“Identification of Spatial Regimes of the Production Function of Italian Hospitals Through Spatially Constrained Cluster-Wise Regression.”</span> <em>Socio-Economic Planning Sciences</em> 82: 101223. <a href="https://doi.org/10.1016/j.seps.2022.101223">https://doi.org/10.1016/j.seps.2022.101223</a>.
+</div>
+<div id="ref-wagner+zeileis:19" class="csl-entry" role="listitem">
+Wagner, Martin, and Achim Zeileis. 2019. <span>“Heterogeneity and Spatial Dependence of Regional Growth in the <span>EU</span>: A Recursive Partitioning Approach.”</span> <em>German Economic Review</em> 20 (1): 67–82. <a href="https://doi.org/10.1111/geer.12146">https://doi.org/10.1111/geer.12146</a>.
+</div>
+<div id="ref-wang+song:23" class="csl-entry" role="listitem">
+Wang, Zhijian, and Yunquan Song. 2023. <span>“Deep Learning for the Spatial Additive Autoregressive Model with Nonparametric Endogenous Effect.”</span> <em>Spatial Statistics</em> 55: 100743. <a href="https://doi.org/10.1016/j.spasta.2023.100743">https://doi.org/10.1016/j.spasta.2023.100743</a>.
+</div>
+<div id="ref-ward+gleditsch:08" class="csl-entry" role="listitem">
+Ward, M. D., and K. S. Gleditsch. 2008. <em>Spatial Regression Models</em>. Thousand Oaks, CA: Sage.
+</div>
+<div id="ref-wolf:23" class="csl-entry" role="listitem">
+Wolf, Levi John. 2023. <span>“Beyond Open Science: Data, Code, and Causality.”</span> <em>Environment and Planning B: Urban Analytics and City Science</em> 50 (9): 2333–36. <a href="https://doi.org/10.1177/23998083231210180">https://doi.org/10.1177/23998083231210180</a>.
+</div>
+<div id="ref-xiaoetal:23" class="csl-entry" role="listitem">
+Xiao, Shuyue, Yunquan Song, and Zhijian Wang. 2023. <span>“Nonparametric Spatial Autoregressive Model Using Deep Neural Networks.”</span> <em>Spatial Statistics</em> 57: 100766. <a href="https://doi.org/10.1016/j.spasta.2023.100766">https://doi.org/10.1016/j.spasta.2023.100766</a>.
+</div>
+<div id="ref-yosidaetal:22" class="csl-entry" role="listitem">
+Yoshida, Takahiro, Daisuke Murakami, and Hajime Seya. 2022. <span>“Spatial Prediction of Apartment Rent Using Regression-Based and Machine Learning-Based Approaches with a Large Dataset.”</span> <em>Journal of Real Estate Finance &amp; Economics</em>, 1–28. <a href="https://doi.org/10.1007/s11146-022-09929-6">https://doi.org/10.1007/s11146-022-09929-6</a>.
+</div>
+<div id="ref-yu+jin:23" class="csl-entry" role="listitem">
+Yu, Nannan, and Ying Jin. 2023. <span>“The Unintended Economic Impact of High-Speed Rail on China’s Non-Core Cities: A Spatial-Difference-in-Differences Analysis.”</span> <em>Cities</em> 143: 104618. <a href="https://doi.org/10.1016/j.cities.2023.104618">https://doi.org/10.1016/j.cities.2023.104618</a>.
+</div>
+<div id="ref-zengetal:23" class="csl-entry" role="listitem">
+Zeng, Juying, Cristina Blanco-González-Tejero, and F. Javier Sendra. 2023. <span>“The Spatial Difference-in-Difference Measurement of Policy Effect of Environmental Protection Interview on Green Innovation.”</span> <em>Technological Forecasting and Social Change</em> 191: 122511. <a href="https://doi.org/10.1016/j.techfore.2023.122511">https://doi.org/10.1016/j.techfore.2023.122511</a>.
+</div>
+<div id="ref-zhangetal:22" class="csl-entry" role="listitem">
+Zhang, Xu, Lin Liu, Minxuan Lan, Guangwen Song, Luzi Xiao, and Jianguo Chen. 2022. <span>“Interpretable Machine Learning Models for Crime Prediction.”</span> <em>Computers, Environment and Urban Systems</em> 94: 101789. <a href="https://doi.org/10.1016/j.compenvurbsys.2022.101789">https://doi.org/10.1016/j.compenvurbsys.2022.101789</a>.
+</div>
+<div id="ref-zhuetal:23" class="csl-entry" role="listitem">
+Zhu, Di, Yu Liu, Xin Yao, and Manfred M. Fischer. 2023a. <span>“Correction to: Spatial Regression Graph Convolutional Neural Networks: A Deep Learning Paradigm for Spatial Multivariate Distributions.”</span> <em>GeoInformatica</em> 27: 641–42. <a href="https://doi.org/10.1007/s10707-022-00461-6">https://doi.org/10.1007/s10707-022-00461-6</a>.
+</div>
+<div id="ref-zhuetal:22" class="csl-entry" role="listitem">
+———. 2023b. <span>“Spatial Regression Graph Convolutional Neural Networks: A Deep Learning Paradigm for Spatial Multivariate Distributions.”</span> <em>GeoInformatica</em> 26: 645–76. <a href="https://doi.org/10.1007/s10707-021-00454-x">https://doi.org/10.1007/s10707-021-00454-x</a>.
+</div>
+</div>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./05_talk.html" class="pagination-link" aria-label="Antecedents">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Antecedents</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./07_talk.html" class="pagination-link" aria-label="Tests of spatial autocorrelation, model specification">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Tests of spatial autocorrelation, model specification</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.550">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Spatial Econometrics - 11&nbsp; Prediction and spatial models</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./12_talk.html" rel="next">
+<link href="./10_talk.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11_talk.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Prediction and spatial models</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Spatial Econometrics</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course description</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducing Spatial Econometrics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Working with spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Creating spatial weights objects</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Antecedents</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Economic and social research questions using spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Tests of spatial autocorrelation, model specification</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Spatial autoregressive models: conditional (CAR) and simultaneous (SAR)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Estimation of spatial autoregressive models: methods (ML, Bayesian, GMM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">No orthogonality between regression and autoregression coefficients</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_talk.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Prediction and spatial models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Eigenvectors and eigenvalues of graphs of relationships between cross-sectional observations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#prediction-and-impacts" id="toc-prediction-and-impacts" class="nav-link active" data-scroll-target="#prediction-and-impacts"><span class="header-section-number">11.1</span> Prediction and impacts</a></li>
+  <li><a href="#predicting-post-cct-with-the-pre-cct-model" id="toc-predicting-post-cct-with-the-pre-cct-model" class="nav-link" data-scroll-target="#predicting-post-cct-with-the-pre-cct-model"><span class="header-section-number">11.2</span> Predicting post-CCT with the pre-CCT model</a></li>
+  <li><a href="#out-of-sample-prediction" id="toc-out-of-sample-prediction" class="nav-link" data-scroll-target="#out-of-sample-prediction"><span class="header-section-number">11.3</span> Out-of-sample prediction</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Prediction and spatial models</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><span class="citation" data-cites="dubin:03">Dubin (<a href="references.html#ref-dubin:03" role="doc-biblioref">2003</a>)</span> presented a contrast from simulation between geostatistical prediction and prediction from fitted spatial econometrics models.</p>
+<p><span class="citation" data-cites="bivand:02">Bivand (<a href="references.html#ref-bivand:02" role="doc-biblioref">2002</a>)</span> inquired whether prediction had been neglected in spatial econometrics. Other authors rather considered missing data in spatial econometrics models, as followed up by <span class="citation" data-cites="kato:13">Kato (<a href="references.html#ref-kato:13" role="doc-biblioref">2013</a>)</span>. <span class="citation" data-cites="suesse+zamit-mangion:17">Suesse and Zammit-Mangion (<a href="references.html#ref-suesse+zamit-mangion:17" role="doc-biblioref">2017</a>)</span> and <span class="citation" data-cites="suesse:18">Suesse (<a href="references.html#ref-suesse:18" role="doc-biblioref">2018</a>)</span> continue the examination of imputing missing spatial data <span class="citation" data-cites="goulardetal:17">Goulard, Laurent, and Thomas-Agnan (<a href="references.html#ref-goulardetal:17" role="doc-biblioref">2017</a>)</span> review what was then known about prediction using spatial econometrics models, providing implementations of existing and proposed methods in <code>spatialreg</code>.</p>
+<section id="prediction-and-impacts" class="level2" data-number="11.1">
+<h2 data-number="11.1" data-anchor-id="prediction-and-impacts"><span class="header-section-number">11.1</span> Prediction and impacts</h2>
+<p>In models fitted by OLS, the marginal effect of a unit change in a numerical independent variable is equal to the regression coefficient. Taking the mean difference of predicted values before and after the incrementation, we can see that this holds:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>OLS_pre <span class="ot">&lt;-</span> <span class="fu">lm</span>(form_pre_maj, <span class="at">data=</span>eng324)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(eng324) <span class="ot">&lt;-</span> eng324<span class="sc">$</span>NAME</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> eng324</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fu">predict</span>(OLS_pre, <span class="at">newdata=</span>newdata)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>newdata<span class="sc">$</span>dens <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">log</span>(newdata<span class="sc">$</span>dens)<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(OLS_pre, <span class="at">newdata=</span>newdata)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(p1<span class="sc">-</span>p0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.01552116</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(OLS_pre)[<span class="st">"log(dens)"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  log(dens) 
+-0.01552116 </code></pre>
+</div>
+</div>
+<p>When the spatially lagged dependent variable is included in the model (SLM, SDM, GNM), and as we have just seen, global spill-over occurs, varying in intensity as the coefficient departs from zero.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spdep)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>lw <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(unb, <span class="at">style=</span><span class="st">"W"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatialreg)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">eigenw</span>(lw)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">as</span>(lw, <span class="st">"CsparseMatrix"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>trMat <span class="ot">&lt;-</span> <span class="fu">trW</span>(W, <span class="at">type=</span><span class="st">"mult"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SLM_pre_maj <span class="ot">&lt;-</span> <span class="fu">lagsarlm</span>(form_pre_maj, <span class="at">data=</span>eng324, <span class="at">listw=</span>lw, <span class="at">control=</span><span class="fu">list</span>(<span class="at">pre_eig=</span>e))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>SLM_post_maj <span class="ot">&lt;-</span> <span class="fu">lagsarlm</span>(form_post_maj, <span class="at">data=</span>eng324, <span class="at">listw=</span>lw, <span class="at">control=</span><span class="fu">list</span>(<span class="at">pre_eig=</span>e))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(imp_SLM_pre_maj_ev <span class="ot">&lt;-</span> <span class="fu">impacts</span>(SLM_pre_maj, <span class="at">listw=</span>lw, <span class="at">evalue=</span>e))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Impact measures (lag, exact):
+                    Direct     Indirect       Total
+log(units)      0.97021645  0.166102763  1.13631922
+house          -1.75150349 -0.299860477 -2.05136397
+log(dens)      -0.02019100 -0.003456735 -0.02364774
+Metroplondon    0.07432424  0.012724440  0.08704868
+Metropmetrop   -0.05080358 -0.008697662 -0.05950124
+log(realWgPre)  0.34764203  0.059516927  0.40715896
+MajorityCONS    0.03796509  0.006499690  0.04446478
+MajorityLAB     0.19524091  0.033425587  0.22866650</code></pre>
+</div>
+</div>
+<p>Doing this by hand and using the reduced form model: <span class="math inline">\hat{{\mathbf y}} = ({\mathbf I} - \rho {\mathbf W})^{-1}{\mathbf X}{\mathbf \beta}</span>, we can see that the equality between the mean difference of before-and-after incrementation predictions is not with the regression coefficient for the chosen variable, byt with its total impact:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>IrW <span class="ot">&lt;-</span> <span class="fu">invIrW</span>(lw, <span class="at">rho=</span>SLM_pre_maj<span class="sc">$</span>rho)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>p0a <span class="ot">&lt;-</span> IrW <span class="sc">%*%</span> SLM_pre_maj<span class="sc">$</span>X <span class="sc">%*%</span> <span class="fu">coef</span>(SLM_pre_maj)[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> SLM_pre_maj<span class="sc">$</span>X</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>nd[,<span class="dv">4</span>] <span class="ot">&lt;-</span> nd[,<span class="dv">4</span>] <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> IrW <span class="sc">%*%</span> nd <span class="sc">%*%</span> <span class="fu">coef</span>(SLM_pre_maj)[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(p1<span class="sc">-</span>p0a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.02364774</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(SLM_pre_maj)[<span class="st">"log(dens)"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  log(dens) 
+-0.02009104 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>imp_SLM_pre_maj_ev<span class="sc">$</span>total[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.02364774</code></pre>
+</div>
+</div>
+<p>Using the <code>predict</code> method described by <span class="citation" data-cites="goulardetal:17">Goulard, Laurent, and Thomas-Agnan (<a href="references.html#ref-goulardetal:17" role="doc-biblioref">2017</a>)</span>, we can see that this continues to hold:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fu">predict</span>(SLM_pre_maj, <span class="at">newdata=</span>eng324, <span class="at">listw=</span>lw, <span class="at">pred.type=</span><span class="st">"TS"</span>, <span class="at">legacy=</span><span class="cn">FALSE</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(<span class="fu">unclass</span>(p0), <span class="fu">c</span>(p0a), <span class="at">check.attributes=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(SLM_pre_maj, <span class="at">newdata=</span>newdata, <span class="at">listw=</span>lw, <span class="at">pred.type=</span><span class="st">"TS"</span>, <span class="at">legacy=</span><span class="cn">FALSE</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(p1<span class="sc">-</span>p0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.02364774</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>imp_SLM_pre_maj_ev<span class="sc">$</span>total[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.02364774</code></pre>
+</div>
+</div>
+</section>
+<section id="predicting-post-cct-with-the-pre-cct-model" class="level2" data-number="11.2">
+<h2 data-number="11.2" data-anchor-id="predicting-post-cct-with-the-pre-cct-model"><span class="header-section-number">11.2</span> Predicting post-CCT with the pre-CCT model</h2>
+<p>We can also use prediction in a counterfactual setting, by changing the only time-varying independent variable (real wages) in the <code>newdata</code> object. The model is fitted with the pre-CCT data, but the predictions are made with the fitted pre-CCT model and post-CCT data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pre_nd <span class="ot">&lt;-</span> eng324</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>pre_nd<span class="sc">$</span>realWgPre <span class="ot">&lt;-</span> pre_nd<span class="sc">$</span>realWgPst</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>pre_post <span class="ot">&lt;-</span> <span class="fu">predict</span>(SLM_pre_maj, <span class="at">newdata=</span>pre_nd, <span class="at">listw=</span>lw, <span class="at">pred.type=</span><span class="st">"TS"</span>, <span class="at">legacy=</span><span class="cn">FALSE</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>eng324<span class="sc">$</span>diff <span class="ot">&lt;-</span> eng324<span class="sc">$</span>realNetPst<span class="sc">-</span>eng324<span class="sc">$</span>realNetPre</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>eng324<span class="sc">$</span>pre_diff <span class="ot">&lt;-</span> eng324<span class="sc">$</span>realNetPst<span class="sc">-</span><span class="fu">exp</span>(pre_post)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Breaking News: tmap 3.x is retiring. Please test v4, e.g. with
+remotes::install_github('r-tmap/tmap')</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(eng324) <span class="sc">+</span> <span class="fu">tm_fill</span>(<span class="fu">c</span>(<span class="st">"diff"</span>, <span class="st">"pre_diff"</span>), <span class="at">n=</span><span class="dv">11</span>, <span class="at">style=</span><span class="st">"pretty"</span>, <span class="at">midpoint=</span><span class="dv">0</span>, <span class="at">palette=</span><span class="st">"-RdBu"</span>, <span class="at">title=</span><span class="st">"£ 000"</span>) <span class="sc">+</span> <span class="fu">tm_borders</span>() <span class="sc">+</span> <span class="fu">tm_facets</span>(<span class="at">free.scales=</span><span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">tm_layout</span>(<span class="at">panel.labels=</span><span class="fu">c</span>(<span class="st">"Post-CCT - Pre-CCT expenditure"</span>, <span class="st">"Post-CCT expenditure - prediction from pre-CCT model"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="11_talk_files/figure-html/SLM1_pred_pre_post1_fig-1.png" style="width:100.0%" class="figure-img"></p>
+<figcaption>Difference between real net expenditure post-CCT and pre-CCT (left), and predictions made with post-CCT independent variables and pre-CCT SLM model coefficients (right)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="out-of-sample-prediction" class="level2" data-number="11.3">
+<h2 data-number="11.3" data-anchor-id="out-of-sample-prediction"><span class="header-section-number">11.3</span> Out-of-sample prediction</h2>
+<p>The situation becomes more complex for out-of-sample prediction. If we make predictions for a set of observations not linked in space through the spatial weights object with the set of observations used to fit the model, there are no troublesome spill-overs between the fitting set and the prediction set. Recall from chapter 6 that:</p>
+<p>There is now an extensive literature both on the split between training and test data sets, and on the use of fitted models for prediction to areas that were un- or under-represented in the data used to fit the model <span class="citation" data-cites="meyeretal:18 valavietal:19 meyeretal:19 schratzetal:19 meyer+pebesma:21 milaetal:22 meyer+pebesma:22 linnenbrinketal:23">(<a href="references.html#ref-meyeretal:18" role="doc-biblioref">Meyer et al. 2018</a>, <a href="references.html#ref-meyeretal:19" role="doc-biblioref">2019</a>; <a href="references.html#ref-valavietal:19" role="doc-biblioref">Valavi et al. 2019</a>; <a href="references.html#ref-schratzetal:19" role="doc-biblioref">Schratz et al. 2019</a>; <a href="references.html#ref-meyer+pebesma:21" role="doc-biblioref">Meyer and Pebesma 2021</a>, <a href="references.html#ref-meyer+pebesma:22" role="doc-biblioref">2022</a>; <a href="references.html#ref-milaetal:22" role="doc-biblioref">Mila et al. 2022</a>; <a href="references.html#ref-linnenbrinketal:23" role="doc-biblioref">Linnenbrink et al. 2023</a>)</span>. These articles are accompanied by software permitting the reproduction of their findings and the application of suggested adaptations, replacing random permutations in machine learning model fitting and tuning by spatially-aware procedures.</p>
+<p>Here we will split England into the North region and the rest, modify the <code>Metrop</code> factor because no <code>"london"</code> level is present in the North, and divide the data and neighbour objects:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>eng324<span class="sc">$</span>Metrop <span class="sc">|&gt;</span> <span class="fu">as.character</span>() <span class="sc">|&gt;</span> (\(d) <span class="fu">sub</span>(<span class="st">"london"</span>, <span class="st">"metrop"</span>, <span class="at">x=</span>d))() <span class="sc">|&gt;</span> <span class="fu">factor</span>() <span class="ot">-&gt;</span> eng324<span class="sc">$</span>Metrop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>rest <span class="ot">&lt;-</span> eng324<span class="sc">$</span>region <span class="sc">!=</span> <span class="st">"NORTH"</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>eng324_rest <span class="ot">&lt;-</span> eng324[rest,]</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>unb_rest <span class="ot">&lt;-</span> <span class="fu">subset</span>(unb, rest)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>unb_rest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Neighbour list object:
+Number of regions: 297 
+Number of nonzero links: 1454 
+Percentage nonzero weights: 1.648358 
+Average number of links: 4.895623 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>lw_rest <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(unb_rest, <span class="at">style=</span><span class="st">"W"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>e_rest <span class="ot">&lt;-</span> <span class="fu">eigenw</span>(lw_rest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then we fit the rest of England subset using the formula without the political control variable, as there were no Conservative controlled local authorities in the North, and prepare the predictions made for the whole data set for mapping, allowing spill-over to occur between North and the rest of England:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>SLM_rest <span class="ot">&lt;-</span><span class="fu">lagsarlm</span>(form_pre, <span class="at">data=</span>eng324_rest, <span class="at">listw=</span>lw_rest, <span class="at">control=</span><span class="fu">list</span>(<span class="at">pre_eig=</span>e_rest))</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>eng324<span class="sc">$</span>rest_pred <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">c</span>(<span class="fu">unclass</span>(<span class="fu">predict</span>(SLM_rest, <span class="at">newdata=</span>eng324, <span class="at">listw=</span>lw, <span class="at">pred.type=</span><span class="st">"TS"</span>, <span class="at">legacy=</span><span class="cn">FALSE</span>))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.Sarlm(SLM_rest, newdata = eng324, listw = lw, pred.type =
+"TS", : some region.id are both in data and newdata</code></pre>
+</div>
+</div>
+<p>Next, we repeat the subsetting, fitting the same formula to North data, and predicting for the whole data set:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>eng324_north <span class="ot">&lt;-</span> eng324[<span class="sc">!</span>rest,]</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>unb_north <span class="ot">&lt;-</span> <span class="fu">subset</span>(unb, <span class="sc">!</span>rest)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>unb_north</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Neighbour list object:
+Number of regions: 27 
+Number of nonzero links: 112 
+Percentage nonzero weights: 15.36351 
+Average number of links: 4.148148 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>lw_north <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(unb_north, <span class="at">style=</span><span class="st">"W"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>e_north <span class="ot">&lt;-</span> <span class="fu">eigenw</span>(lw_north)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>SLM_north <span class="ot">&lt;-</span><span class="fu">lagsarlm</span>(form_pre, <span class="at">data=</span>eng324_north, <span class="at">listw=</span>lw_north, <span class="at">control=</span><span class="fu">list</span>(<span class="at">pre_eig=</span>e_north))</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>eng324<span class="sc">$</span>north_pred <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">c</span>(<span class="fu">unclass</span>(<span class="fu">predict</span>(SLM_north, <span class="at">newdata=</span>eng324, <span class="at">listw=</span>lw, <span class="at">pred.type=</span><span class="st">"TS"</span>, <span class="at">legacy=</span><span class="cn">FALSE</span>))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.Sarlm(SLM_north, newdata = eng324, listw = lw, pred.type =
+"TS", : some region.id are both in data and newdata</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(eng324) <span class="sc">+</span> <span class="fu">tm_fill</span>(<span class="fu">c</span>(<span class="st">"rest_pred"</span>, <span class="st">"north_pred"</span>), <span class="at">n=</span><span class="dv">7</span>, <span class="at">style=</span><span class="st">"quantile"</span>, <span class="at">palette=</span><span class="st">"YlOrBr"</span>, <span class="at">title=</span><span class="st">"£ 000"</span>) <span class="sc">+</span> <span class="fu">tm_borders</span>(<span class="at">col=</span><span class="st">"grey"</span>) <span class="sc">+</span> <span class="fu">tm_facets</span>(<span class="at">free.scales=</span><span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">tm_layout</span>(<span class="at">panel.labels=</span><span class="fu">c</span>(<span class="st">"Predicted pre-CCT expenditure, model without North region"</span>, <span class="st">"Predicted pre-CCT expenditure, North region model"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="11_talk_files/figure-html/SLM1_pred_oos_fig-1.png" style="width:100.0%" class="figure-img"></p>
+<figcaption>Difference between real net expenditure post-CCT and pre-CCT (left), and predictions made with post-CCT independent variables and pre-CCT SLM model coefficients (right)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-bivand:02" class="csl-entry" role="listitem">
+Bivand, Roger. 2002. <span>“Spatial Econometrics Functions in <span>R</span>: Classes and Methods.”</span> <em>Journal of Geographical Systems</em> 4: 405–21.
+</div>
+<div id="ref-dubin:03" class="csl-entry" role="listitem">
+Dubin, Robin. 2003. <span>“Robustness of Spatial Autocorrelation Specifications: Some Monte Carlo Evidence.”</span> <em>Journal of Regional Science</em> 43 (2): 221–48. <a href="https://doi.org/10.1111/1467-9787.00297">https://doi.org/10.1111/1467-9787.00297</a>.
+</div>
+<div id="ref-goulardetal:17" class="csl-entry" role="listitem">
+Goulard, Michel, Thibault Laurent, and Christine Thomas-Agnan. 2017. <span>“About Predictions in Spatial Autoregressive Models: Optimal and Almostoptimal Strategies.”</span> <em>Spatial Economic Analysis</em> 12 (2-3): 304–25. <a href="https://doi.org/10.1080/17421772.2017.1300679">https://doi.org/10.1080/17421772.2017.1300679</a>.
+</div>
+<div id="ref-kato:13" class="csl-entry" role="listitem">
+Kato, Takafumi. 2013. <span>“Usefulness of the Information Contained in the Prediction Sample for the Spatial Error Model.”</span> <em>The Journal of Real Estate Finance and Economics</em> 47: 169–95. <a href="https://doi.org/10.1007/s11146-011-9345-9">https://doi.org/10.1007/s11146-011-9345-9</a>.
+</div>
+<div id="ref-linnenbrinketal:23" class="csl-entry" role="listitem">
+Linnenbrink, J., C. Milà, M. Ludwig, and H. Meyer. 2023. <span>“kNNDM: K-Fold Nearest Neighbour Distance Matching Cross-Validation for Map Accuracy Estimation.”</span> <em>EGUsphere</em> 2023: 1–16. <a href="https://doi.org/10.5194/egusphere-2023-1308">https://doi.org/10.5194/egusphere-2023-1308</a>.
+</div>
+<div id="ref-meyer+pebesma:21" class="csl-entry" role="listitem">
+Meyer, Hanna, and Edzer Pebesma. 2021. <span>“Predicting into Unknown Space? Estimating the Area of Applicability of Spatial Prediction Models.”</span> <em>Methods in Ecology and Evolution</em> 12 (9): 1620–33. <a href="https://doi.org/10.1111/2041-210X.13650">https://doi.org/10.1111/2041-210X.13650</a>.
+</div>
+<div id="ref-meyer+pebesma:22" class="csl-entry" role="listitem">
+———. 2022. <span>“Machine Learning-Based Global Maps of Ecological Variables and the Challenge of Assessing Them.”</span> <em>Nature Communincations</em> 13. <a href="https://doi.org/ 10.1038/s41467-022-29838-9 ">https://doi.org/ 10.1038/s41467-022-29838-9 </a>.
+</div>
+<div id="ref-meyeretal:18" class="csl-entry" role="listitem">
+Meyer, Hanna, Christoph Reudenbach, Tomislav Hengl, Marwan Katurji, and Thomas Nauss. 2018. <span>“Improving Performance of Spatio-Temporal Machine Learning Models Using Forward Feature Selection and Target-Oriented Validation.”</span> <em>Environmental Modelling &amp; Software</em> 101: 1–9. <a href="https://doi.org/10.1016/j.envsoft.2017.12.001">https://doi.org/10.1016/j.envsoft.2017.12.001</a>.
+</div>
+<div id="ref-meyeretal:19" class="csl-entry" role="listitem">
+Meyer, Hanna, Christoph Reudenbach, Stephan Wöllauer, and Thomas Nauss. 2019. <span>“Importance of Spatial Predictor Variable Selection in Machine Learning Applications – Moving from Data Reproduction to Spatial Prediction.”</span> <em>Ecological Modelling</em> 411: 108815. <a href="https://doi.org/10.1016/j.ecolmodel.2019.108815">https://doi.org/10.1016/j.ecolmodel.2019.108815</a>.
+</div>
+<div id="ref-milaetal:22" class="csl-entry" role="listitem">
+Mila, Carles, Jorge Mateu, Edzer Pebesma, and Hanna Meyer. 2022. <span>“Nearest Neighbour Distance Matching Leave-One-Out Cross-Validation for Map Validation.”</span> <em>Methods in Ecology and Evolution</em> 13 (6): 1304–16. <a href="https://doi.org/10.1111/2041-210X.13851">https://doi.org/10.1111/2041-210X.13851</a>.
+</div>
+<div id="ref-schratzetal:19" class="csl-entry" role="listitem">
+Schratz, Patrick, Jannes Muenchow, Eugenia Iturritxa, Jakob Richter, and Alexander Brenning. 2019. <span>“Hyperparameter Tuning and Performance Assessment of Statistical and Machine-Learning Algorithms Using Spatial Data.”</span> <em>Ecological Modelling</em> 406: 109–20. <a href="https://doi.org/10.1016/j.ecolmodel.2019.06.002">https://doi.org/10.1016/j.ecolmodel.2019.06.002</a>.
+</div>
+<div id="ref-suesse:18" class="csl-entry" role="listitem">
+Suesse, Thomas. 2018. <span>“Marginal Maximum Likelihood Estimation of SAR Models with Missing Data.”</span> <em>Computational Statistics &amp; Data Analysis</em> 120: 98–110. <a href="https://doi.org/10.1016/j.csda.2017.11.004">https://doi.org/10.1016/j.csda.2017.11.004</a>.
+</div>
+<div id="ref-suesse+zamit-mangion:17" class="csl-entry" role="listitem">
+Suesse, Thomas, and Andrew Zammit-Mangion. 2017. <span>“Computational Aspects of the EM Algorithm for Spatial Econometric Models with Missing Data.”</span> <em>Journal of Statistical Computation and Simulation</em> 87 (9): 1767–86. <a href="https://doi.org/10.1080/00949655.2017.1286495">https://doi.org/10.1080/00949655.2017.1286495</a>.
+</div>
+<div id="ref-valavietal:19" class="csl-entry" role="listitem">
+Valavi, Roozbeh, Jane Elith, José J. Lahoz-Monfort, and Gurutzeta Guillera-Arroita. 2019. <span>“blockCV: An <span>R</span> Package for Generating Spatially or Environmentally Separated Folds for k-Fold Cross-Validation of Species Distribution Models.”</span> <em>Methods in Ecology and Evolution</em> 10 (2): 225–32. <a href="https://doi.org/10.1111/2041-210X.13107">https://doi.org/10.1111/2041-210X.13107</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./10_talk.html" class="pagination-link" aria-label="No orthogonality between regression and autoregression coefficients">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">No orthogonality between regression and autoregression coefficients</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./12_talk.html" class="pagination-link" aria-label="Eigenvectors and eigenvalues of graphs of relationships between cross-sectional observations">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Eigenvectors and eigenvalues of graphs of relationships between cross-sectional observations</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

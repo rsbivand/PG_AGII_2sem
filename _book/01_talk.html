@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.550">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Spatial Econometrics - 1&nbsp; Introducing Spatial Econometrics</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./02_talk.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_talk.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducing Spatial Econometrics</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Spatial Econometrics</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course description</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_talk.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducing Spatial Econometrics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Working with spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Creating spatial weights objects</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Antecedents</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Economic and social research questions using spatial data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Tests of spatial autocorrelation, model specification</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Spatial autoregressive models: conditional (CAR) and simultaneous (SAR)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Estimation of spatial autoregressive models: methods (ML, Bayesian, GMM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">No orthogonality between regression and autoregression coefficients</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Prediction and spatial models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_talk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Eigenvectors and eigenvalues of graphs of relationships between cross-sectional observations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-why-special" id="toc-sec-why-special" class="nav-link active" data-scroll-target="#sec-why-special"><span class="header-section-number">1.1</span> Why is spatial data special?</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-why" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducing Spatial Econometrics</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="sec-why-special" class="level2" data-number="1.1">
+<h2 data-number="1.1" data-anchor-id="sec-why-special"><span class="header-section-number">1.1</span> Why is spatial data special?</h2>
+<p>The three kinds of spatial data <span class="citation" data-cites="cressie:93">(<a href="references.html#ref-cressie:93" role="doc-biblioref">Cressie 1993</a>)</span> are spatial point patterns, geostatistical data observed at sample stations for prediction to unobserved locations, and areal data, also known as lattice data. In the case of spatial point patterns, it is assumed that all points are known, and the point process of interest is that driving the patterning of the points, for example that they are more clustered than if they were randomly distributed over the study area. Geostatistical modelling developed from hydrology and mining (environmental science) to estimate areas or volumes of quantities of interest, where more variability in the variables observed might suggest the need for sample locations to be closer to each other. While spatial econometrics has some links with spatial point patterns <span class="citation" data-cites="arbia01 marconetal15 marcon+puech17 marcon+puech23">(e.g. <a href="references.html#ref-arbia01" role="doc-biblioref">Arbia 2001</a>; <a href="references.html#ref-marconetal15" role="doc-biblioref">Marcon et al. 2015</a>; <a href="references.html#ref-marcon+puech17" role="doc-biblioref">Marcon and Puech 2017</a>, <a href="references.html#ref-marcon+puech23" role="doc-biblioref">2023</a>)</span>, and geostatistics <span class="citation" data-cites="dearmon+smith21">(e.g. <a href="references.html#ref-dearmon+smith21" role="doc-biblioref">Dearmon and Smith 2021</a>)</span>, areal or lattice spatial data are much more commonly analysed. </p>
+<p>Areal or lattice spatial data may be aggregates within administrative boundaries, such as municipalities, counties or census tracts, or may be points representing observations that do not reasonably match observations on a continuous surface as would have suited a geostatistical approach. In preparing data for modelling, support is often changed when, for example, night-time light intensity observed over raster cells is aggregated to irregular polygons, or read off by dropping points onto the raster cells. By support, we mean the geometry of the initial observation <span class="citation" data-cites="pebesma+bivand:23">(<a href="references.html#ref-pebesma+bivand:23" role="doc-biblioref">Pebesma and Bivand 2023, 49–54</a>)</span>, so that when we for example use the centroid of an areal observation in place of its boundaries, we change the meaning of the variables - the population count for the polygon is not the same as the count at the centroid point. </p>
+<p>Change of support <span class="citation" data-cites="gotway+young:02">(<a href="references.html#ref-gotway+young:02" role="doc-biblioref">Gotway and Young 2002</a>)</span> remains a largely unresolved, even unseen, problem, such as reading off data from sources with a different support than the modelled variable - like register data address points on other aggregate or estimated variables. Change of support implies acceptance that the transformed data are an estimate with a distribution, and that this uncertainty is often not carried through to the target estimation. This problem affects temporal data, but here the possible implied smoothing incurred when changing temporal units (hours, days, weeks, quarters, years) is better understood. What are the specific challenges involved in analysing areal spatial data? </p>
+<p>Temporal autocorrelation and cross-correlation are quite well understood, an observation of a continuous variable at time point or interval <span class="math inline">t</span> is likely to be more similar to the value at <span class="math inline">t-1</span> than when the time lag is greater, unless periodicity is more dominant. Two variables may well co-vary in time; knowing the degree of co-variation and autocorrelation, forecasts can be made readily. For time series, we know that present values depend in some degree on past values, observed at points or intervals of time for which entities of observation have an acknowledged status. </p>
+<p>Understanding of spatial autocorrelation is less simple, partly because it also includes the more fluid association of observed values with observational units. A classic case is the discussion following the presentation of a paper in anthropology by Tylor on marriage and descent laws and customs <span class="citation" data-cites="tylor89">(<a href="references.html#ref-tylor89" role="doc-biblioref">Tylor 1889</a>)</span>. In the discussion - printed with the paper, Galton raises the question of the independence of the reported observations (Galton’s Problem is also known as phylogenetic autocorrelation): </p>
+<blockquote class="blockquote">
+<p>It was extremely desirable for the sake of those who may wish to study the evidence for Dr.&nbsp;Tylor’s conclusions, that full information should be given as to the degree in which the customs of the tribes and races which are compared together are independent. It might be, that some of the tribes had derived them from a common source, so that they were duplicate copies of the same original. Certainly, in such an investigation as this, each of the observations ought, in the language of statisticians, to be carefully “weighted.” It would give a useful idea of the distribution of the several customs and of their relative prevalence in the world, if a map were so marked by shadings and colour as to present a picture of their geographical ranges. <span class="citation" data-cites="tylor89">(<a href="references.html#ref-tylor89" role="doc-biblioref">Tylor 1889, 270</a>)</span> </p>
+</blockquote>
+<p>The speaker responded:</p>
+<blockquote class="blockquote">
+<p>The difficulty raised by Mr.&nbsp;Galton that some of the concurrences might result from transmission from a common source, so that a single character might be counted several times from its mere duplicates, is a difficulty ever present in such investigations, as for instance in the Malay region, where groups of islands have enough differentiation in their marriage systems to justify their being classed separately, though traces of common origin are at the same time conspicuous. The only way of meeting this objection is to make separate clsssification depend on well marked differences, and to do this all over the world. <span class="citation" data-cites="tylor89">(<a href="references.html#ref-tylor89" role="doc-biblioref">Tylor 1889, 272</a>)</span> </p>
+</blockquote>
+<p>One view of this exchange is that nearness in space and the fluid assignment of boundaries between observations may affect our view of how many valid observations have been made. Is <span class="math inline">n</span> <span class="math inline">n</span> or some reduced number reflecting the common origins of the data reported? The assignment of bourdaries between observations, entitation, is a key concept in the modelling of spatial interaction <span class="citation" data-cites="wilson:00 wilson:02 wilson:12">(<a href="references.html#ref-wilson:00" role="doc-biblioref">Wilson 2000</a>, <a href="references.html#ref-wilson:02" role="doc-biblioref">2002</a>, <a href="references.html#ref-wilson:12" role="doc-biblioref">2012</a>)</span>, where often unobservable micro-level movements are tallied by meso-level containers. As <span class="citation" data-cites="openshaw+taylor79">Openshaw and Taylor (<a href="references.html#ref-openshaw+taylor79" role="doc-biblioref">1979</a>)</span> showed, the “modifiable areal unit problem” (MAUP), can permit the re-arrangement of component spatial sub-units into higher-level contiguous units that give the desired outcome (also known as gerrymandering, creating voting districts to ensure desired outcomes).</p>
+<p><span class="citation" data-cites="yule+kendall:58">Yule and Kendall (<a href="references.html#ref-yule+kendall:58" role="doc-biblioref">1958</a>)</span> distinguish clearly between modifiable units of observation and units that cannot be modified by subdivision or aggregation (temporal units are also modifiable). If units are modifiable, then any results from analysis will be valid only in relation to the units:</p>
+<blockquote class="blockquote">
+<p>They have no absolute validity independently of those units, but are relative to them. They measure, as it were, not only the variation in the quantities under consideration, but the properties of the unit-mesh which we have imposed on the system in order to measure it. <span class="citation" data-cites="yule+kendall:58">(<a href="references.html#ref-yule+kendall:58" role="doc-biblioref">Yule and Kendall 1958, 312</a>)</span></p>
+</blockquote>
+<p>An extension of this view is seen where the units of observation chosen do not address important sources of variation in the response; <span class="citation" data-cites="kendall39">Kendall (<a href="references.html#ref-kendall39" role="doc-biblioref">1939</a>)</span> analysed crop productivity in England by crop counties for which data were readily available, but was criticised in discussion for not using soil or climate classifications in their place by Dudley Stamp, who was directing the Land Utilisation Survey of Britain at that time: </p>
+<blockquote class="blockquote">
+<p>… the author had partly anticipated his main criticism - namely, that the foundation of data actually available was at the present time totally inadequate to support the superstructure which he had erected on it. …<br>
+it would be difficult to find any division of England more unsuitable for the arrangement of the superstructure than the administrative counties. <span class="citation" data-cites="kendall39">(<a href="references.html#ref-kendall39" role="doc-biblioref">Kendall 1939, 52</a>)</span></p>
+</blockquote>
+<p>The speaker responded:</p>
+<blockquote class="blockquote">
+<p>It was an inherent defect in this work, as far as it was a practical description of the geography of the country, that it did deal with particular counties and not with farming districts. Such value as might be claimed for the paper lay in the nature of the trial methods rather than in the results themselves, but he did differ from Dr.&nbsp;Stamp on one point. Dr.&nbsp;Stamp, if Mr.&nbsp;Kendall understood him correctly, suggested a division of the country on climatic or pedological lines. Mr.&nbsp;Kendall thought that if one had to select smaller areas within the county for study, one would select them on a farming type basis, not on a geographical basis. Apart from soil and climate the existing organization of the farm had a powerful influence on its nature and on its productivity. <span class="citation" data-cites="kendall39">(<a href="references.html#ref-kendall39" role="doc-biblioref">Kendall 1939, 61</a>)</span></p>
+</blockquote>
+<p>An overlapping view on Galton’s Problem is that, assuming that the spatial units of observation are accepted as given, spurious correlation due to position may arise from unobserved spillover between nearby observations; <span class="citation" data-cites="student:14">Student (<a href="references.html#ref-student:14" role="doc-biblioref">1914</a>)</span> touches briefly on agricultural trial plots in describing this aspect of the problem as treatments may leach between neighbouring plots. Student had been concerned in several contexts with the effective degrees of freedom of a collection of observations. Positive spillover, leading to more likeness between neighbours, would clearly reduce the effective count of independent observations. <span class="citation" data-cites="stephan:34">Stephan (<a href="references.html#ref-stephan:34" role="doc-biblioref">1934</a>)</span> gives us a powerful picture of the problem: </p>
+<blockquote class="blockquote">
+<p>Data of geographic units are tied together, like bunches of grapes, not separate, like balls in an urn. Of course mere contiguity in time and space does not of itself indicate lack of independence between units in a relevant variable or attribute, but in dealing with social data, we know that by virtue of their very social character, persons, groups and their characteristics are interrelated and not independent. <span class="citation" data-cites="stephan:34">(<a href="references.html#ref-stephan:34" role="doc-biblioref">Stephan 1934, 165</a>)</span></p>
+</blockquote>
+<p>Tobler expresses his view, perhaps the view that is most often cited in discussing spatial data, in this way: </p>
+<blockquote class="blockquote">
+<p>… the first law of geography: everything is related to everything else, but near things are more related than distant things. <span class="citation" data-cites="tobler:70">(<a href="references.html#ref-tobler:70" role="doc-biblioref">Tobler 1970, 236</a>)</span></p>
+</blockquote>
+<p>However, <span class="citation" data-cites="olsson:70">Olsson (<a href="references.html#ref-olsson:70" role="doc-biblioref">1970</a>)</span> asks whether the unquestioning application of the ubiquity of spatial autocorrelation, as the only lens through which to view spatial data, is wise: </p>
+<blockquote class="blockquote">
+<p>The existence of such autocorrelations makes it tempting to agree with Tobler (1970, 236 [the original refers to the pagination of a conference paper]) that ‘everything is related to everything else, but near things are more related than distant things.’ On the other hand, the fact that the autocorrelations seem to hide systematic specification errors suggests that the elevation of this statement to the status of ‘the first law of geography’ is at best premature. At worst, the statement may represent the spatial variant of the post hoc fallacy, which would mean that coincidence has been mistaken for a causal relation. <span class="citation" data-cites="olsson:70 pebesma+bivand:23">(<a href="references.html#ref-olsson:70" role="doc-biblioref">Olsson 1970, 228</a>; cf. <a href="references.html#ref-pebesma+bivand:23" role="doc-biblioref">Pebesma and Bivand 2023, 210</a>)</span> </p>
+</blockquote>
+<p>Specification errors of the kind concerning Olsson may be manifold, such as inappropriate entitation, inappropriate functional form, and omitted variables among others. Standard tests for spatial autocorrelation, like tests for temporal autocorrelation, often pick up other causes of mis-specification than the mutual dependence of observations that the tests were created to detect <span class="citation" data-cites="schabenberger+gotway:2005 mcmillen:03">(<a href="references.html#ref-schabenberger+gotway:2005" role="doc-biblioref">Schabenberger and Gotway 2005</a>; <a href="references.html#ref-mcmillen:03" role="doc-biblioref">McMillen 2003</a>)</span>. Inappropriate entitation may involve the spatial scale of the empirical processes of interest, where the units of observation may be too large to pick up the phenomena being observed, or the footprint of the observed phenomenon may be split up among many units of observation (Galton’s Problem). The interaction of scale, heterogeneity - based on scale, functional form, and/or missing covariates - and spatial autocorrelation has been a major topic of debate in numerical ecology for many years <span class="citation" data-cites="drayetal12">(<a href="references.html#ref-drayetal12" role="doc-biblioref">Dray et al. 2012</a>)</span>. </p>
+<p>At this point it might be tempting to step back, sensing that spatial data is special, not so much specially promising, but more specially challenging <span class="citation" data-cites="ripley:88">(<a href="references.html#ref-ripley:88" role="doc-biblioref">Ripley 1988</a>)</span>. However, if the data to hand or the data to be collected are spatially located, it is sensible to accept the challenges that analysis of such data may entail. The next section will depict how spatial econometrics was created in the form in which we now know it, to address som of the challenges and to benefit from some of the opportunities presented.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-arbia01" class="csl-entry" role="listitem">
+Arbia, Giuseppe. 2001. <span>“Modelling the Geography of Economic Activities on a Continuous Space.”</span> <em>Papers in Regional Science</em> 80 (4): 411–24. <a href="https://doi.org/10.1111/j.1435-5597.2001.tb01211.x">https://doi.org/10.1111/j.1435-5597.2001.tb01211.x</a>.
+</div>
+<div id="ref-cressie:93" class="csl-entry" role="listitem">
+Cressie, N. A. C. 1993. <em>Statistics for Spatial Data</em>. New York: John Wiley &amp; Sons.
+</div>
+<div id="ref-dearmon+smith21" class="csl-entry" role="listitem">
+Dearmon, Jacob, and Tony E. Smith. 2021. <span>“A Hierarchical Approach to Scalable <span>G</span>aussian Process Regression for Spatial Data.”</span> <em>Journal of Spatial Econometrics</em> 2 (7): 1–33. <a href="https://doi.org/10.1007/s43071-021-00012-5">https://doi.org/10.1007/s43071-021-00012-5</a>.
+</div>
+<div id="ref-drayetal12" class="csl-entry" role="listitem">
+Dray, S., R. Pélissier, P. Couteron, M.-J. Fortin, P. Legendre, P. R. Peres-Neto, E. Bellier, et al. 2012. <span>“Community Ecology in the Age of Multivariate Multiscale Spatial Analysis.”</span> <em>Ecological Monographs</em> 82 (3): 257–75. <a href="https://doi.org/10.1890/11-1183.1">https://doi.org/10.1890/11-1183.1</a>.
+</div>
+<div id="ref-gotway+young:02" class="csl-entry" role="listitem">
+Gotway, C. A., and L. J. Young. 2002. <span>“Combining Incompatible Spatial Data.”</span> <em>Journal of the American Statistical Association</em> 97: 632–48.
+</div>
+<div id="ref-kendall39" class="csl-entry" role="listitem">
+Kendall, M. G. 1939. <span>“The Geographical Distribution of Crop Productivity in England.”</span> <em>Journal of the Royal Statistical Society</em> 102 (1): 21–62. <a href="http://www.jstor.org/stable/2980138">http://www.jstor.org/stable/2980138</a>.
+</div>
+<div id="ref-marcon+puech17" class="csl-entry" role="listitem">
+Marcon, Eric, and Florence Puech. 2017. <span>“A Typology of Distance-Based Measures of Spatial Concentration.”</span> <em>Regional Science and Urban Economics</em> 62: 56–67. <a href="https://doi.org/10.1016/j.regsciurbeco.2016.10.004">https://doi.org/10.1016/j.regsciurbeco.2016.10.004</a>.
+</div>
+<div id="ref-marcon+puech23" class="csl-entry" role="listitem">
+———. 2023. <span>“Mapping Distributions in Non‑homogeneous Space with Distance‑based Methods.”</span> <em>Journal of Spatial Econometrics</em> 4 (13): 1–16. <a href="https://doi.org/10.1007/s43071-023-00042-1">https://doi.org/10.1007/s43071-023-00042-1</a>.
+</div>
+<div id="ref-marconetal15" class="csl-entry" role="listitem">
+Marcon, Eric, Stéphane Traissac, Florence Puech, and Gabriel Lang. 2015. <span>“Tools to Characterize Point Patterns: Dbmss for r.”</span> <em>Journal of Statistical Software, Code Snippets</em> 67 (3): 1–15. <a href="https://doi.org/10.18637/jss.v067.c03">https://doi.org/10.18637/jss.v067.c03</a>.
+</div>
+<div id="ref-mcmillen:03" class="csl-entry" role="listitem">
+McMillen, Daniel P. 2003. <span>“Spatial Autocorrelation or Model Misspecification?”</span> <em>International Regional Science Review</em> 26: 208–17.
+</div>
+<div id="ref-olsson:70" class="csl-entry" role="listitem">
+Olsson, Gunnar. 1970. <span>“Explanation, Prediction, and Meaning Variance: An Assessment of Distance Interaction Models.”</span> <em>Economic Geography</em> 46: 223–33. <a href="http://www.jstor.org/stable/143140">http://www.jstor.org/stable/143140</a>.
+</div>
+<div id="ref-openshaw+taylor79" class="csl-entry" role="listitem">
+Openshaw, S., and P. J. Taylor. 1979. <span>“A Million or so Correlation Coefficients: Three Experiments on the Modifiable Area Unit Problem.”</span> In <em>Statistical Applications in the Spatial Sciences</em>, edited by N. Wrigley, 127–44. London: Pion.
+</div>
+<div id="ref-pebesma+bivand:23" class="csl-entry" role="listitem">
+Pebesma, Edzer, and Roger Bivand. 2023. <em>Spatial Data Science with Applications in <span>R</span></em>. Boca Raton, FL: CRC Press.
+</div>
+<div id="ref-ripley:88" class="csl-entry" role="listitem">
+Ripley, B. D. 1988. <em>Statistical Inference for Spatial Processes</em>. Cambridge: Cambridge University Press.
+</div>
+<div id="ref-schabenberger+gotway:2005" class="csl-entry" role="listitem">
+Schabenberger, O., and C. A. Gotway. 2005. <em>Statistical Methods for Spatial Data Analysis</em>. Boca Raton/London: Chapman &amp; Hall/CRC.
+</div>
+<div id="ref-stephan:34" class="csl-entry" role="listitem">
+Stephan, Frederick F. 1934. <span>“Sampling Errors and Interpretations of Social Data Ordered in Time and Space.”</span> <em>Journal of the American Statistical Association</em> 29 (185): 165–66.
+</div>
+<div id="ref-student:14" class="csl-entry" role="listitem">
+Student. 1914. <span>“The Elimination of Spurious Correlation Due to Position in Time or Space.”</span> <em>Biometrika</em> 10 (1): 179–80.
+</div>
+<div id="ref-tobler:70" class="csl-entry" role="listitem">
+Tobler, Waldo R. 1970. <span>“A Computer Movie Simulating Urban Growth in the Detroit Region.”</span> <em>Economic Geography</em> 46: 234–40.
+</div>
+<div id="ref-tylor89" class="csl-entry" role="listitem">
+Tylor, Edward B. 1889. <span>“On a Method of Investigating the Development of Institutions; Applied to Laws of Marriage and Descent.”</span> <em>The Journal of the Anthropological Institute of Great Britain and Ireland</em> 18: 245–72. <a href="http://www.jstor.org/stable/2842423">http://www.jstor.org/stable/2842423</a>.
+</div>
+<div id="ref-wilson:00" class="csl-entry" role="listitem">
+Wilson, Alan G. 2000. <em>Complex Spatial Systems: The Modelling Foundations of Urban and Regional Analysis</em>. Harlow: Prentice Hall.
+</div>
+<div id="ref-wilson:02" class="csl-entry" role="listitem">
+———. 2002. <span>“Complex Spatial Systems: Challenges for Modellers.”</span> <em>Mathematical and Computer Modelling</em> 36: 379–87.
+</div>
+<div id="ref-wilson:12" class="csl-entry" role="listitem">
+———. 2012. <em>The Science of Cities and Regions: Lectures on Mathematical Model Design</em>. Dordrecht: Springer.
+</div>
+<div id="ref-yule+kendall:58" class="csl-entry" role="listitem">
+Yule, G. Udny, and M. G. Kendall. 1958. <em>An Introduction to the Theory of Statistics</em>. 14th ed. London: Charles Griffin.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="Course description">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Course description</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./02_talk.html" class="pagination-link" aria-label="Spatial data">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Spatial data</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
