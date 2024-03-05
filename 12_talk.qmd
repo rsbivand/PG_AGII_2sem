@@ -1,3 +1,251 @@
 # Eigenvectors and eigenvalues of graphs of relationships between cross-sectional observations
 
+```{r pl_io0, echo=FALSE, results="hide"}
+io_dir <- "Input_output"
+if (!dir.exists(io_dir)) io_dir <- paste0("../", io_dir)
+```
+```{r echo=FALSE}
+load(file = paste0(io_dir, "/talk7.RData"))
+```
+
+
+
+```{r, ev1, size="footnotesize"}
+library(spdep)
+lwB <- nb2listw(unb, style="B")
+lwW <- nb2listw(unb, style="W")
+```
+
+## Neighbours as graphs
+
+A neighbour object may be represented as a sparse matrix, and as the relationship is symmetric, as an undirected graph. Graphs may be directed or undirected, and edges may be weighted. Graphs are in wide contemporary use in analysing social networks, traffic metadata, and internet advertising. Graph analysis techniques may tell us helpful things about our representation of neighbours.
+
+Moving from binary spatial weights to a symmetric sparse matrix - an adjacency matrix, we can go  on to an undirected graph (see https://r.igraph.org/articles/igraph.html for details) using `igraph`; note that the `region.id` attribute of the `nb` object propagates through the row and column names of the sparse matrix to node names of the graph: 
+
+```{r ev2, size="footnotesize"}
+library(spatialreg)
+B0 <- as(lwB, "symmetricMatrix")
+library(igraph)
+g1 <- graph_from_adjacency_matrix(B0, mode="undirected")
+c1 <- components(g1)
+str(c1)
+```
+
+Had `unb` had subgraphs, the number of components would have been greater than one - this is the same as `n.comp.nb` in `spdep`:
+
+```{r ev3, size="footnotesize"}
+str(n.comp.nb(unb))
+```
+
+This is also shown by `is_connected`, as there are no nodes that are unconnected:
+
+```{r ev4, size="footnotesize"}
+is_connected(g1)
+```
+
+`diameter` is the largest number of steps taken to traverse the graph, and the $i$ to $j$ step count is highly correlated with the measured metric distance:
+
+```{r ev5, size="footnotesize"}
+diameter(g1)
+```
+
+`distances` provides a matrix of all $i$ to $j$ step counts, showing that the minimum is 0, $i$ to $i$ steps with no self-loops:
+
+```{r ev6, size="footnotesize"}
+str(g1d <- distances(g1))
+summary(c(g1d))
+```
+
+We can also look at the `degree` counts, which are symmetric for edges in an undirected graph, but which could be in-degree or out-degree for directed graphs:
+
+```{r ev7, size="footnotesize"}
+head(sort(degree(g1), decreasing=TRUE))
+```
+
+This is the same as examining the cardinality of neighbour sets:
+
+```{r ev8, size="footnotesize"}
+cunb <- card(unb)
+names(cunb) <- attr(unb, "region.id")
+head(sort(cunb, decreasing=TRUE))
+```
+
+Since we are looking at eigenvalues, `page_rank` - the Google approach to sorting hyperlinks (as a directed graph) - which uses the solution to the eigenvalue decomposition of the graph to rank web pages by incoming links:
+
+```{r ev9, size="footnotesize"}
+head(sort(page_rank(g1)$vector, decreasing=TRUE))
+```
+
+or the  `eigen_centrality` of the graph:
+
+```{r ev10, size="footnotesize"}
+head(sort(eigen_centrality(g1)$vector, decreasing=TRUE))
+```
+
+So using eigenvalues in relation to graphs is well-established.
+
+## Eigenproblem
+
+In general, the number of neighbours for each observation will be small compared to $n$, so that ${\mathbf W}$ is usually sparse. @ord:75 gives a maximum likelihood method for estimating the spatial error SAR model. Unlike the time series case, the logarithm of the determinant of the $(N \times N)$ matrix $({\mathbf I} - \lambda {\mathbf W})$ does not tend to zero with increasing sample size. It constrains the parameter values to their feasible range between the inverses of the smallest and largest eigenvalues of ${\mathbf W}$. For positive autocorrelation, $\ln | {\mathbf I} - \lambda {\mathbf W}| \rightarrow -\infty$ as $\lambda \rightarrow 1/\max_i(\zeta_i)$ - $\zeta_i$ are the eigenvalues of ${\mathbf W}$. 
+
+The log-likelihood function for the spatial error model:
+
+$$
+\ell(\lambda, \sigma^2) = - \frac{N}{2} \ln 2 \pi - \frac{N}{2} \ln \sigma^2 + \ln |{\mathbf I} - \lambda {\mathbf W}| - \frac{1}{2 \sigma^2} \big[{\mathbf y}'({\mathbf I} - \lambda {\mathbf W})' ({\mathbf I} - {\mathbf Q}_{\lambda}{\mathbf Q}_{\lambda}') ({\mathbf I} - \lambda {\mathbf W}){\mathbf y}\big]
+$$
+
+where ${\mathbf Q}_{\lambda}$ is obtained by decomposing $({\mathbf X} - \lambda {\mathbf W}{\mathbf X}) = {\mathbf Q}_{\lambda} {\mathbf R}_{\lambda}$.
+
+As we can see, the problem is one of balancing the log determinant term against the sum of squares term. When $\lambda$ approaches the ends of its feasible range, the log determinant term may swamp the sum of squares term.
+
+### Computing the Jacobian
+
+There are a number of areas in applied statistical data analysis in which the efficient computation of the log determinant of a possibly sparse real symmetric positive definite matrix is necessary. One of these is in finding the values of the log likelihood function for various spatial regression models, where the underlying sparse matrix of spatial weights represents a graph of relationships between observations. For small numbers of observations, there are no difficulties in treating the spatial weights matrix as dense, and computing the log determinant using its eigenvalues. The intention in this class is to discuss in detail developments in the computation of such log determinants.
+
+### Eigenvalue approach
+
+The first published versions of the eigenvalue method for finding the Jacobian [@ord:75] is:
+
+$$
+\log(|{\mathbf I} - \lambda {\mathbf W}|) = \sum_{i=1}^{N} \log(1 - \lambda\zeta_i)
+$$
+
+where $\zeta_i$ are the eigenvalues of ${\mathbf W}$. One specific problem addressed by Ord is that of the eigenvalues of the asymmetric row-standardised matrix $W$ with underlying symmetric neighbour relations $c_{ij} = c_{ji}$. If we write ${\mathbf w} = {\mathbf C}{\mathbf 1}$, where ${\mathbf 1}$ is a vector of ones, we can get: ${\mathbf W} = {\mathbf C}{\mathbf D}$, where ${\mathbf D} = {\mathrm {diag}}(1/{\mathbf w})$; by similarity, the eigenvalues of ${\mathbf W}$ are equal to those of: ${\mathbf D}^{\frac{1}{2}}{\mathbf C}{\mathbf D}^{\frac{1}{2}}$.
+
+Many disciplines using spatial regression methods simply use unstandardised neighbour relations matrices which may or may not be symmetric. We show the lower and upper bounds for $\rho$ for the 324 districts under different weights representations. The underlying eigenvalues have been calculated using the R `eigen` function, with symmetry of the input matrix determined by the internal code. Where symmetry by similarity exists, it is also discovered by the function:
+
+```{r ev11, size="footnotesize"}
+eB <- eigenw(lwB)
+eW <- eigenw(similar.listw(lwW))
+cat("Class:", class(eB), "min:", 1/min(eB), "max:", 1/max(eB), "\n")
+eigW <- eigenw(similar.listw(lwW))
+cat("Class:", class(eW), "min:", 1/min(eW), "max:", 1/max(eW), "\n")
+```
+
+Jacobian term and extreme eigenvalues
+
+```{r ev12_fig, size="footnotesize"}
+#| label: ev12_fig
+#| fig-cap: Values of the log determinant term for ranges of values of the spatial parameter
+oopar <- par(mfrow=c(1,2), mar=c(4,2,4,2))
+rhoB <- seq(1/min(eB), 1/max(eB), length.out=500)
+plot(rhoB, sapply(rhoB, function(rho) sum(log(1 - rho*eB))), type="l", xlab=expression(rho), ylab="", main="Binary weights")
+abline(v=1/range(eB), lty=2, lwd=2, col="#EB811B")
+abline(h=0, v=0, lty=2, col="grey")
+legend("bottomright", bty="n", legend=c(expression(plain(ln) * group("|", bold(I) - rho * bold(W), "|")), "extreme eigenvalues"), lty=c(1, 2), lwd=c(1, 2), col=c("black", "#EB811B"), cex=0.8)
+rhoW <- seq(1/min(eW), 1/max(eW), length.out=500)
+plot(rhoW, sapply(rhoW, function(rho) sum(log(1 - rho*eW))), type="l", xlab=expression(rho), ylab="", main="Row-standardised weights")
+abline(v=1/range(eW), lty=2, lwd=2, col="#EB811B")
+abline(h=0, v=0, lty=2, col="grey")
+par(oopar)
+```
+
+In a series of contributions, @pace+barry:97a show that sparse matrix methods can be used to find the log determinant directly. The method of choice is the Cholesky decomposition of a sparse, symmetric, positive-definite matrix. It but can be extended to the LU decomposition if requirements on the matrix need to be relaxed. Naturally, for the same sparse, symmetric, positive-definite matrix, one would expect the log determinants based on the Cholesky decomposition and the LU decomposition to be identical within machine precision.
+
+## APLE
+
+Unlike the Saddlepoint approximation and the exact distribution, APLE does not require the calculation of the eigenvalues but rather the trace of $\mathbf{W}\mathbf{W}$. The trace is used to ``stretch'' Moran's $I$ with respect to the feasible range of the equivalent simultaneous autoregression coefficient, which APLE approximates. Inference on APLE is based on permutation bootstrap [@lietal:12].
+
+```{r ev13, size="footnotesize"}
+c(crossprod(eigW))
+```
+
+The cross-product of the eigenvalues is equal to the trace of the second power of the weights:
+
+```{r ev14, size="footnotesize"}
+W <- as(lwW, "CsparseMatrix")
+sum(diag(W %*% W))
+```
+
+giving us the APLE:
+
+```{r ev15, size="footnotesize"}
+var <- scale(log(eng324$realNetPre), scale=FALSE)[,1]
+set.seed(1)
+aple.mc(var, lwW, nsim=999)
+```
+
+
+
+## Moran eigenvectors - spatial filtering
+
+It has been suggested by @griffith:03 that maps of eigenvectors of the spatial weights matrix may be used to explore the effect of scale, because some eigenvectors will show large scale structures, others will capture regional differences, and others again will represent small scale patterns [@chun+griffith:13; @griffith:10; @patuellietal:12]
+
+
+```{r ev16, size="footnotesize"}
+x <- log(eng324$realNetPre)
+moran.test(x, lwW)$estimate
+```
+```{r ev17, size="footnotesize"}
+n <- nrow(eng324)
+M <- diag(n) - (tcrossprod(rep(1, n)))/n
+MCM <- M %*% W %*% M
+c((n/sum(W)) * crossprod(x, MCM %*% x)/crossprod(x, M %*% x))
+```
+
+Following @tiefelsdorf+griffith:07, we can choose the eigenvectors of the doubly centred matrix that reduce residual autocorrelation most:
+
+```{r ev18, size="footnotesize"}
+SF_pre_maj <- SpatialFiltering(form_pre_maj, data=eng324, nb=unb, style="W", alpha=0.33)
+SF_pre_maj
+```
+
+Then add this spatial term to the regular aspatial OLS model:
+
+```{r ev19, size="footnotesize"}
+SF_pre_maj_lm <- lm(update(form_pre_maj, . ~ . + fitted(SF_pre_maj)), data=eng324)
+spdep::lm.morantest(SF_pre_maj_lm, lwW)
+```
+
+
+
+## Extreme eigenvalues
+
+The largest and smallest eigenvalues are needed to find the bounds of the domain of the spatial autoregressive coefficient. If $n$ is moderate, as it is here, we can solve the eigenproblem by computation, and so have a benchmark. We can also use an approximation given by @griffith:04 to find the extreme eiegenvalues of binary and row-standardised weights. Alternative methods can also be used, such as `RSpectra` to return the extreme eigenvalues of large sparse matrices.
+
+### Rayleigh quotient approaches
+
+ @griffith:04 shows how extreme eigenvalues of a binary symmetric contiguity matrix ${\mathbf C}$ expressed as an undirected irreducible planar graph may be calculated.
+
+The largest eigenvalue is found using the Rayleigh quotient approach:
+
+$$
+\lambda_1 = \lim_{k\to\infty} \frac{({\mathbf 1}'{\mathbf C}^{k+1}{\mathbf 1})}{({\mathbf 1}'{\mathbf C}^k{\mathbf 1})}.
+$$
+
+@griffith:04 further describes an approach to finding the smallest eigenvalue of ${\mathbf C}$. This is extended to the case of the smallest eigenvalue of ${\mathbf W}$, the row-standardised spatial weights matrix based on ${\mathbf C}$.
+
+
+```{r ev20, size="footnotesize"}
+ecount(g1) <= 3*vcount(g1) - 6
+1/range(eB)
+rB <- lextrB(lwB)
+1/c(rB)
+1/range(eW)
+rW <- lextrW(lwW)
+1/c(rW)
+```
+
+Implementations of these methods, based on original code by Griffith and re-implemented in R and C, are now available in `spatialreg`  as functions `lextrB` and `lextrW`. For large regular grids, the eigenvalues of ${\mathbf C}$ are known analytically for contiguity defined as non-zero shared boundary  length [@ord:75; @griffith+sone:95].
+
+### Alternatives
+
+In the row-standardised cases, $1/\lambda_{\max}$ is $1$ by construction, and as @smirnov+anselin:09 show, $1/\lambda_{\min}$ may be found to be $-1$ by graph analysis. If larger subgraphs, or the graph as a whole, are cyclical in Smirnov and Anselin's terminology - for every location $i$, no pair of its neighbours $j, k$ are connected - the smallest eigenvalue must be $-1$ by definition. Taking $1/\lambda_{\min}=-1$ may be inappropriate for some lattices for which this condition does not hold, especially when more than one spatial coefficient is being estimated
+
+```{r ev21, size="footnotesize"}
+library(RSpectra)
+B <- as(as(B0, "symmetricMatrix"), "unpackedMatrix")
+arB <- eigs(B, 2, which = "BE")
+1/rev(arB$values)
+W <- as(as(similar.listw(lwW), "CsparseMatrix"), "symmetricMatrix")
+arW <- eigs(W, 2, which = "BE")
+1/rev(arW$values)
+```
+
+
+We need eigenvalues (and eigenvectors) in many settings in spatial analysis. Eigenvalues can be used for testing spatial autocorrelation and fitting spatial regression models. Extreme eigenvalues are needed in fitting spatial regression models when $n$ is large, because they give the interval for line search and nonlinear optimisation. Griffith approximations are fast and quite robust for symmetric weights, but when the input graphs diverge from the planarity condition, they may fail.
+
+
+
+
 

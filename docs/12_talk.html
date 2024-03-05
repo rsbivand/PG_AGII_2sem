@@ -20,7 +20,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -65,6 +119,49 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -191,8 +288,26 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#neighbours-as-graphs" id="toc-neighbours-as-graphs" class="nav-link active" data-scroll-target="#neighbours-as-graphs"><span class="header-section-number">12.1</span> Neighbours as graphs</a></li>
+  <li><a href="#eigenproblem" id="toc-eigenproblem" class="nav-link" data-scroll-target="#eigenproblem"><span class="header-section-number">12.2</span> Eigenproblem</a>
+  <ul class="collapse">
+  <li><a href="#computing-the-jacobian" id="toc-computing-the-jacobian" class="nav-link" data-scroll-target="#computing-the-jacobian"><span class="header-section-number">12.2.1</span> Computing the Jacobian</a></li>
+  <li><a href="#eigenvalue-approach" id="toc-eigenvalue-approach" class="nav-link" data-scroll-target="#eigenvalue-approach"><span class="header-section-number">12.2.2</span> Eigenvalue approach</a></li>
+  </ul></li>
+  <li><a href="#aple" id="toc-aple" class="nav-link" data-scroll-target="#aple"><span class="header-section-number">12.3</span> APLE</a></li>
+  <li><a href="#moran-eigenvectors---spatial-filtering" id="toc-moran-eigenvectors---spatial-filtering" class="nav-link" data-scroll-target="#moran-eigenvectors---spatial-filtering"><span class="header-section-number">12.4</span> Moran eigenvectors - spatial filtering</a></li>
+  <li><a href="#extreme-eigenvalues" id="toc-extreme-eigenvalues" class="nav-link" data-scroll-target="#extreme-eigenvalues"><span class="header-section-number">12.5</span> Extreme eigenvalues</a>
+  <ul class="collapse">
+  <li><a href="#rayleigh-quotient-approaches" id="toc-rayleigh-quotient-approaches" class="nav-link" data-scroll-target="#rayleigh-quotient-approaches"><span class="header-section-number">12.5.1</span> Rayleigh quotient approaches</a></li>
+  <li><a href="#alternatives" id="toc-alternatives" class="nav-link" data-scroll-target="#alternatives"><span class="header-section-number">12.5.2</span> Alternatives</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -216,8 +331,403 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spdep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: sf</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lwB <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(unb, <span class="at">style=</span><span class="st">"B"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>lwW <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(unb, <span class="at">style=</span><span class="st">"W"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="neighbours-as-graphs" class="level2" data-number="12.1">
+<h2 data-number="12.1" data-anchor-id="neighbours-as-graphs"><span class="header-section-number">12.1</span> Neighbours as graphs</h2>
+<p>A neighbour object may be represented as a sparse matrix, and as the relationship is symmetric, as an undirected graph. Graphs may be directed or undirected, and edges may be weighted. Graphs are in wide contemporary use in analysing social networks, traffic metadata, and internet advertising. Graph analysis techniques may tell us helpful things about our representation of neighbours.</p>
+<p>Moving from binary spatial weights to a symmetric sparse matrix - an adjacency matrix, we can go on to an undirected graph (see https://r.igraph.org/articles/igraph.html for details) using <code>igraph</code>; note that the <code>region.id</code> attribute of the <code>nb</code> object propagates through the row and column names of the sparse matrix to node names of the graph:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatialreg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: Matrix</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'spatialreg'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:spdep':
+
+    get.ClusterOption, get.coresOption, get.mcOption,
+    get.VerboseOption, get.ZeroPolicyOption, set.ClusterOption,
+    set.coresOption, set.mcOption, set.VerboseOption,
+    set.ZeroPolicyOption</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>B0 <span class="ot">&lt;-</span> <span class="fu">as</span>(lwB, <span class="st">"symmetricMatrix"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'igraph'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    decompose, spectrum</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:base':
+
+    union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">graph_from_adjacency_matrix</span>(B0, <span class="at">mode=</span><span class="st">"undirected"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>c1 <span class="ot">&lt;-</span> <span class="fu">components</span>(g1)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(c1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 3
+ $ membership: Named num [1:324] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "names")= chr [1:324] "ADUR" "ALLERDALE" "ALNWICK" "AMBER VALLEY" ...
+ $ csize     : num 324
+ $ no        : num 1</code></pre>
+</div>
+</div>
+<p>Had <code>unb</code> had subgraphs, the number of components would have been greater than one - this is the same as <code>n.comp.nb</code> in <code>spdep</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">n.comp.nb</span>(unb))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 2
+ $ nc     : int 1
+ $ comp.id: int [1:324] 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+</div>
+</div>
+<p>This is also shown by <code>is_connected</code>, as there are no nodes that are unconnected:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_connected</span>(g1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p><code>diameter</code> is the largest number of steps taken to traverse the graph, and the <span class="math inline">i</span> to <span class="math inline">j</span> step count is highly correlated with the measured metric distance:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">diameter</span>(g1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 23</code></pre>
+</div>
+</div>
+<p><code>distances</code> provides a matrix of all <span class="math inline">i</span> to <span class="math inline">j</span> step counts, showing that the minimum is 0, <span class="math inline">i</span> to <span class="math inline">i</span> steps with no self-loops:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(g1d <span class="ot">&lt;-</span> <span class="fu">distances</span>(g1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> num [1:324, 1:324] 0 18 19 13 1 12 5 6 10 10 ...
+ - attr(*, "dimnames")=List of 2
+  ..$ : chr [1:324] "ADUR" "ALLERDALE" "ALNWICK" "AMBER VALLEY" ...
+  ..$ : chr [1:324] "ADUR" "ALLERDALE" "ALNWICK" "AMBER VALLEY" ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">c</span>(g1d))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   6.000   9.000   9.066  12.000  23.000 </code></pre>
+</div>
+</div>
+<p>We can also look at the <code>degree</code> counts, which are symmetric for edges in an undirected graph, but which could be in-degree or out-degree for directed graphs:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(<span class="fu">degree</span>(g1), <span class="at">decreasing=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>STRATFORD-ON-AVON        HARBOROUGH         HIGH PEAK     RIBBLE VALLEY 
+               11                 9                 9                 9 
+     AMBER VALLEY         BRECKLAND 
+                8                 8 </code></pre>
+</div>
+</div>
+<p>This is the same as examining the cardinality of neighbour sets:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>cunb <span class="ot">&lt;-</span> <span class="fu">card</span>(unb)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cunb) <span class="ot">&lt;-</span> <span class="fu">attr</span>(unb, <span class="st">"region.id"</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(cunb, <span class="at">decreasing=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>STRATFORD-ON-AVON        HARBOROUGH         HIGH PEAK     RIBBLE VALLEY 
+               11                 9                 9                 9 
+     AMBER VALLEY         BRECKLAND 
+                8                 8 </code></pre>
+</div>
+</div>
+<p>Since we are looking at eigenvalues, <code>page_rank</code> - the Google approach to sorting hyperlinks (as a directed graph) - which uses the solution to the eigenvalue decomposition of the graph to rank web pages by incoming links:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(<span class="fu">page_rank</span>(g1)<span class="sc">$</span>vector, <span class="at">decreasing=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>STRATFORD-ON-AVON     RIBBLE VALLEY         HIGH PEAK         MID DEVON 
+      0.005808958       0.005320926       0.005179886       0.005177169 
+    EPPING FOREST    CASTLE MORPETH 
+      0.005025738       0.005022165 </code></pre>
+</div>
+</div>
+<p>or the <code>eigen_centrality</code> of the graph:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(<span class="fu">eigen_centrality</span>(g1)<span class="sc">$</span>vector, <span class="at">decreasing=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>STRATFORD-ON-AVON             RUGBY          WYCHAVON          DAVENTRY 
+        1.0000000         0.7239936         0.6912560         0.6907044 
+       BROMSGROVE        HARBOROUGH 
+        0.6468678         0.6236657 </code></pre>
+</div>
+</div>
+<p>So using eigenvalues in relation to graphs is well-established.</p>
+</section>
+<section id="eigenproblem" class="level2" data-number="12.2">
+<h2 data-number="12.2" data-anchor-id="eigenproblem"><span class="header-section-number">12.2</span> Eigenproblem</h2>
+<p>In general, the number of neighbours for each observation will be small compared to <span class="math inline">n</span>, so that <span class="math inline">{\mathbf W}</span> is usually sparse. <span class="citation" data-cites="ord:75">Ord (<a href="references.html#ref-ord:75" role="doc-biblioref">1975</a>)</span> gives a maximum likelihood method for estimating the spatial error SAR model. Unlike the time series case, the logarithm of the determinant of the <span class="math inline">(N \times N)</span> matrix <span class="math inline">({\mathbf I} - \lambda {\mathbf W})</span> does not tend to zero with increasing sample size. It constrains the parameter values to their feasible range between the inverses of the smallest and largest eigenvalues of <span class="math inline">{\mathbf W}</span>. For positive autocorrelation, <span class="math inline">\ln | {\mathbf I} - \lambda {\mathbf W}| \rightarrow -\infty</span> as <span class="math inline">\lambda \rightarrow 1/\max_i(\zeta_i)</span> - <span class="math inline">\zeta_i</span> are the eigenvalues of <span class="math inline">{\mathbf W}</span>.</p>
+<p>The log-likelihood function for the spatial error model:</p>
+<p><span class="math display">
+\ell(\lambda, \sigma^2) = - \frac{N}{2} \ln 2 \pi - \frac{N}{2} \ln \sigma^2 + \ln |{\mathbf I} - \lambda {\mathbf W}| - \frac{1}{2 \sigma^2} \big[{\mathbf y}'({\mathbf I} - \lambda {\mathbf W})' ({\mathbf I} - {\mathbf Q}_{\lambda}{\mathbf Q}_{\lambda}') ({\mathbf I} - \lambda {\mathbf W}){\mathbf y}\big]
+</span></p>
+<p>where <span class="math inline">{\mathbf Q}_{\lambda}</span> is obtained by decomposing <span class="math inline">({\mathbf X} - \lambda {\mathbf W}{\mathbf X}) = {\mathbf Q}_{\lambda} {\mathbf R}_{\lambda}</span>.</p>
+<p>As we can see, the problem is one of balancing the log determinant term against the sum of squares term. When <span class="math inline">\lambda</span> approaches the ends of its feasible range, the log determinant term may swamp the sum of squares term.</p>
+<section id="computing-the-jacobian" class="level3" data-number="12.2.1">
+<h3 data-number="12.2.1" data-anchor-id="computing-the-jacobian"><span class="header-section-number">12.2.1</span> Computing the Jacobian</h3>
+<p>There are a number of areas in applied statistical data analysis in which the efficient computation of the log determinant of a possibly sparse real symmetric positive definite matrix is necessary. One of these is in finding the values of the log likelihood function for various spatial regression models, where the underlying sparse matrix of spatial weights represents a graph of relationships between observations. For small numbers of observations, there are no difficulties in treating the spatial weights matrix as dense, and computing the log determinant using its eigenvalues. The intention in this class is to discuss in detail developments in the computation of such log determinants.</p>
+</section>
+<section id="eigenvalue-approach" class="level3" data-number="12.2.2">
+<h3 data-number="12.2.2" data-anchor-id="eigenvalue-approach"><span class="header-section-number">12.2.2</span> Eigenvalue approach</h3>
+<p>The first published versions of the eigenvalue method for finding the Jacobian <span class="citation" data-cites="ord:75">(<a href="references.html#ref-ord:75" role="doc-biblioref">Ord 1975</a>)</span> is:</p>
+<p><span class="math display">
+\log(|{\mathbf I} - \lambda {\mathbf W}|) = \sum_{i=1}^{N} \log(1 - \lambda\zeta_i)
+</span></p>
+<p>where <span class="math inline">\zeta_i</span> are the eigenvalues of <span class="math inline">{\mathbf W}</span>. One specific problem addressed by Ord is that of the eigenvalues of the asymmetric row-standardised matrix <span class="math inline">W</span> with underlying symmetric neighbour relations <span class="math inline">c_{ij} = c_{ji}</span>. If we write <span class="math inline">{\mathbf w} = {\mathbf C}{\mathbf 1}</span>, where <span class="math inline">{\mathbf 1}</span> is a vector of ones, we can get: <span class="math inline">{\mathbf W} = {\mathbf C}{\mathbf D}</span>, where <span class="math inline">{\mathbf D} = {\mathrm {diag}}(1/{\mathbf w})</span>; by similarity, the eigenvalues of <span class="math inline">{\mathbf W}</span> are equal to those of: <span class="math inline">{\mathbf D}^{\frac{1}{2}}{\mathbf C}{\mathbf D}^{\frac{1}{2}}</span>.</p>
+<p>Many disciplines using spatial regression methods simply use unstandardised neighbour relations matrices which may or may not be symmetric. We show the lower and upper bounds for <span class="math inline">\rho</span> for the 324 districts under different weights representations. The underlying eigenvalues have been calculated using the R <code>eigen</code> function, with symmetry of the input matrix determined by the internal code. Where symmetry by similarity exists, it is also discovered by the function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>eB <span class="ot">&lt;-</span> <span class="fu">eigenw</span>(lwB)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>eW <span class="ot">&lt;-</span> <span class="fu">eigenw</span>(<span class="fu">similar.listw</span>(lwW))</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Class:"</span>, <span class="fu">class</span>(eB), <span class="st">"min:"</span>, <span class="dv">1</span><span class="sc">/</span><span class="fu">min</span>(eB), <span class="st">"max:"</span>, <span class="dv">1</span><span class="sc">/</span><span class="fu">max</span>(eB), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Class: numeric min: -0.3129207 max: 0.1666602 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>eigW <span class="ot">&lt;-</span> <span class="fu">eigenw</span>(<span class="fu">similar.listw</span>(lwW))</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Class:"</span>, <span class="fu">class</span>(eW), <span class="st">"min:"</span>, <span class="dv">1</span><span class="sc">/</span><span class="fu">min</span>(eW), <span class="st">"max:"</span>, <span class="dv">1</span><span class="sc">/</span><span class="fu">max</span>(eW), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Class: numeric min: -1.224561 max: 1 </code></pre>
+</div>
+</div>
+<p>Jacobian term and extreme eigenvalues</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>oopar <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">mar=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">2</span>))</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>rhoB <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">min</span>(eB), <span class="dv">1</span><span class="sc">/</span><span class="fu">max</span>(eB), <span class="at">length.out=</span><span class="dv">500</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(rhoB, <span class="fu">sapply</span>(rhoB, <span class="cf">function</span>(rho) <span class="fu">sum</span>(<span class="fu">log</span>(<span class="dv">1</span> <span class="sc">-</span> rho<span class="sc">*</span>eB))), <span class="at">type=</span><span class="st">"l"</span>, <span class="at">xlab=</span><span class="fu">expression</span>(rho), <span class="at">ylab=</span><span class="st">""</span>, <span class="at">main=</span><span class="st">"Binary weights"</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">1</span><span class="sc">/</span><span class="fu">range</span>(eB), <span class="at">lty=</span><span class="dv">2</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">col=</span><span class="st">"#EB811B"</span>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">0</span>, <span class="at">v=</span><span class="dv">0</span>, <span class="at">lty=</span><span class="dv">2</span>, <span class="at">col=</span><span class="st">"grey"</span>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>, <span class="at">bty=</span><span class="st">"n"</span>, <span class="at">legend=</span><span class="fu">c</span>(<span class="fu">expression</span>(<span class="fu">plain</span>(ln) <span class="sc">*</span> <span class="fu">group</span>(<span class="st">"|"</span>, <span class="fu">bold</span>(I) <span class="sc">-</span> rho <span class="sc">*</span> <span class="fu">bold</span>(W), <span class="st">"|"</span>)), <span class="st">"extreme eigenvalues"</span>), <span class="at">lty=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">lwd=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"#EB811B"</span>), <span class="at">cex=</span><span class="fl">0.8</span>)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>rhoW <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">min</span>(eW), <span class="dv">1</span><span class="sc">/</span><span class="fu">max</span>(eW), <span class="at">length.out=</span><span class="dv">500</span>)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(rhoW, <span class="fu">sapply</span>(rhoW, <span class="cf">function</span>(rho) <span class="fu">sum</span>(<span class="fu">log</span>(<span class="dv">1</span> <span class="sc">-</span> rho<span class="sc">*</span>eW))), <span class="at">type=</span><span class="st">"l"</span>, <span class="at">xlab=</span><span class="fu">expression</span>(rho), <span class="at">ylab=</span><span class="st">""</span>, <span class="at">main=</span><span class="st">"Row-standardised weights"</span>)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">1</span><span class="sc">/</span><span class="fu">range</span>(eW), <span class="at">lty=</span><span class="dv">2</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">col=</span><span class="st">"#EB811B"</span>)</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">0</span>, <span class="at">v=</span><span class="dv">0</span>, <span class="at">lty=</span><span class="dv">2</span>, <span class="at">col=</span><span class="st">"grey"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="12_talk_files/figure-html/ev12_fig-1.png" width="672" class="figure-img"></p>
+<figcaption>Values of the log determinant term for ranges of values of the spatial parameter</figcaption>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(oopar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In a series of contributions, <span class="citation" data-cites="pace+barry:97a">Pace and Barry (<a href="references.html#ref-pace+barry:97a" role="doc-biblioref">1997</a>)</span> show that sparse matrix methods can be used to find the log determinant directly. The method of choice is the Cholesky decomposition of a sparse, symmetric, positive-definite matrix. It but can be extended to the LU decomposition if requirements on the matrix need to be relaxed. Naturally, for the same sparse, symmetric, positive-definite matrix, one would expect the log determinants based on the Cholesky decomposition and the LU decomposition to be identical within machine precision.</p>
+</section>
+</section>
+<section id="aple" class="level2" data-number="12.3">
+<h2 data-number="12.3" data-anchor-id="aple"><span class="header-section-number">12.3</span> APLE</h2>
+<p>Unlike the Saddlepoint approximation and the exact distribution, APLE does not require the calculation of the eigenvalues but rather the trace of <span class="math inline">\mathbf{W}\mathbf{W}</span>. The trace is used to ``stretch’’ Moran’s <span class="math inline">I</span> with respect to the feasible range of the equivalent simultaneous autoregression coefficient, which APLE approximates. Inference on APLE is based on permutation bootstrap <span class="citation" data-cites="lietal:12">(<a href="references.html#ref-lietal:12" role="doc-biblioref">Li, Calder, and Cressie 2012</a>)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">crossprod</span>(eigW))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 67.45592</code></pre>
+</div>
+</div>
+<p>The cross-product of the eigenvalues is equal to the trace of the second power of the weights:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">as</span>(lwW, <span class="st">"CsparseMatrix"</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">diag</span>(W <span class="sc">%*%</span> W))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 67.45592</code></pre>
+</div>
+</div>
+<p>giving us the APLE:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>var <span class="ot">&lt;-</span> <span class="fu">scale</span>(<span class="fu">log</span>(eng324<span class="sc">$</span>realNetPre), <span class="at">scale=</span><span class="cn">FALSE</span>)[,<span class="dv">1</span>]</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">aple.mc</span>(var, lwW, <span class="at">nsim=</span><span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+DATA PERMUTATION
 
 
+Call:
+boot(data = x, statistic = aple.boot, R = nsim, sim = "permutation", 
+    pre = pre, parallel = parallel, ncpus = ncpus, cl = cl)
+
+
+Bootstrap Statistics :
+     original     bias    std. error
+t1* 0.5534535 -0.5582679  0.08375269</code></pre>
+</div>
+</div>
+</section>
+<section id="moran-eigenvectors---spatial-filtering" class="level2" data-number="12.4">
+<h2 data-number="12.4" data-anchor-id="moran-eigenvectors---spatial-filtering"><span class="header-section-number">12.4</span> Moran eigenvectors - spatial filtering</h2>
+<p>It has been suggested by <span class="citation" data-cites="griffith:03">Daniel A. Griffith (<a href="references.html#ref-griffith:03" role="doc-biblioref">2003</a>)</span> that maps of eigenvectors of the spatial weights matrix may be used to explore the effect of scale, because some eigenvectors will show large scale structures, others will capture regional differences, and others again will represent small scale patterns <span class="citation" data-cites="chun+griffith:13 griffith:10 patuellietal:12">(<a href="references.html#ref-chun+griffith:13" role="doc-biblioref">Chun and Griffith 2013</a>; <a href="references.html#ref-griffith:10" role="doc-biblioref">D. A. Griffith 2010</a>; <a href="references.html#ref-patuellietal:12" role="doc-biblioref">Patuelli et al. 2012</a>)</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">log</span>(eng324<span class="sc">$</span>realNetPre)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(x, lwW)<span class="sc">$</span>estimate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Moran I statistic       Expectation          Variance 
+      0.341331393      -0.003095975       0.001348605 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(eng324)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="fu">diag</span>(n) <span class="sc">-</span> (<span class="fu">tcrossprod</span>(<span class="fu">rep</span>(<span class="dv">1</span>, n)))<span class="sc">/</span>n</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>MCM <span class="ot">&lt;-</span> M <span class="sc">%*%</span> W <span class="sc">%*%</span> M</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>((n<span class="sc">/</span><span class="fu">sum</span>(W)) <span class="sc">*</span> <span class="fu">crossprod</span>(x, MCM <span class="sc">%*%</span> x)<span class="sc">/</span><span class="fu">crossprod</span>(x, M <span class="sc">%*%</span> x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+1 x 1 Matrix of class "dgeMatrix"
+          [,1]
+[1,] 0.3413314</code></pre>
+</div>
+</div>
+<p>Following <span class="citation" data-cites="tiefelsdorf+griffith:07">Tiefelsdorf and Griffith (<a href="references.html#ref-tiefelsdorf+griffith:07" role="doc-biblioref">2007</a>)</span>, we can choose the eigenvectors of the doubly centred matrix that reduce residual autocorrelation most:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>SF_pre_maj <span class="ot">&lt;-</span> <span class="fu">SpatialFiltering</span>(form_pre_maj, <span class="at">data=</span>eng324, <span class="at">nb=</span>unb, <span class="at">style=</span><span class="st">"W"</span>, <span class="at">alpha=</span><span class="fl">0.33</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>SF_pre_maj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Step SelEvec      Eval       MinMi    ZMinMi      Pr(ZI)        R2      gamma
+0    0       0 0.0000000 0.105669000 3.2202539 0.001280771 0.8510363  0.0000000
+1    1       4 0.9898642 0.083006376 2.6964636 0.007008007 0.8547590 -0.6563168
+2    2      14 0.9023341 0.062556323 2.2195372 0.026450202 0.8582958 -0.6397312
+3    3      10 0.9298828 0.047684764 1.8986116 0.057615562 0.8606846 -0.5257440
+4    4      66 0.4246665 0.032731810 1.5196152 0.128607722 0.8659997 -0.7842311
+5    5      17 0.8710660 0.017698183 1.1855141 0.235814258 0.8683604  0.5226422
+6    6      19 0.8585573 0.005741818 0.9346916 0.349947252 0.8702059  0.4621184</code></pre>
+</div>
+</div>
+<p>Then add this spatial term to the regular aspatial OLS model:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>SF_pre_maj_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">update</span>(form_pre_maj, . <span class="sc">~</span> . <span class="sc">+</span> <span class="fu">fitted</span>(SF_pre_maj)), <span class="at">data=</span>eng324)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>spdep<span class="sc">::</span><span class="fu">lm.morantest</span>(SF_pre_maj_lm, lwW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Global Moran I for regression residuals
+
+data:  
+model: lm(formula = update(form_pre_maj, . ~ . + fitted(SF_pre_maj)),
+data = eng324)
+weights: lwW
+
+Moran I statistic standard deviate = 0.93469, p-value = 0.175
+alternative hypothesis: greater
+sample estimates:
+Observed Moran I      Expectation         Variance 
+     0.005741818     -0.027667662      0.001277623 </code></pre>
+</div>
+</div>
+</section>
+<section id="extreme-eigenvalues" class="level2" data-number="12.5">
+<h2 data-number="12.5" data-anchor-id="extreme-eigenvalues"><span class="header-section-number">12.5</span> Extreme eigenvalues</h2>
+<p>The largest and smallest eigenvalues are needed to find the bounds of the domain of the spatial autoregressive coefficient. If <span class="math inline">n</span> is moderate, as it is here, we can solve the eigenproblem by computation, and so have a benchmark. We can also use an approximation given by <span class="citation" data-cites="griffith:04">Daniel A. Griffith (<a href="references.html#ref-griffith:04" role="doc-biblioref">2004</a>)</span> to find the extreme eiegenvalues of binary and row-standardised weights. Alternative methods can also be used, such as <code>RSpectra</code> to return the extreme eigenvalues of large sparse matrices.</p>
+<section id="rayleigh-quotient-approaches" class="level3" data-number="12.5.1">
+<h3 data-number="12.5.1" data-anchor-id="rayleigh-quotient-approaches"><span class="header-section-number">12.5.1</span> Rayleigh quotient approaches</h3>
+<p><span class="citation" data-cites="griffith:04">Daniel A. Griffith (<a href="references.html#ref-griffith:04" role="doc-biblioref">2004</a>)</span> shows how extreme eigenvalues of a binary symmetric contiguity matrix <span class="math inline">{\mathbf C}</span> expressed as an undirected irreducible planar graph may be calculated.</p>
+<p>The largest eigenvalue is found using the Rayleigh quotient approach:</p>
+<p><span class="math display">
+\lambda_1 = \lim_{k\to\infty} \frac{({\mathbf 1}'{\mathbf C}^{k+1}{\mathbf 1})}{({\mathbf 1}'{\mathbf C}^k{\mathbf 1})}.
+</span></p>
+<p><span class="citation" data-cites="griffith:04">Daniel A. Griffith (<a href="references.html#ref-griffith:04" role="doc-biblioref">2004</a>)</span> further describes an approach to finding the smallest eigenvalue of <span class="math inline">{\mathbf C}</span>. This is extended to the case of the smallest eigenvalue of <span class="math inline">{\mathbf W}</span>, the row-standardised spatial weights matrix based on <span class="math inline">{\mathbf C}</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ecount</span>(g1) <span class="sc">&lt;=</span> <span class="dv">3</span><span class="sc">*</span><span class="fu">vcount</span>(g1) <span class="sc">-</span> <span class="dv">6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span><span class="fu">range</span>(eB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.3129207  0.1666602</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>rB <span class="ot">&lt;-</span> <span class="fu">lextrB</span>(lwB)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span><span class="fu">c</span>(rB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  lambda_n   lambda_1 
+-0.3130520  0.1666602 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span><span class="fu">range</span>(eW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1.224561  1.000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>rW <span class="ot">&lt;-</span> <span class="fu">lextrW</span>(lwW)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span><span class="fu">c</span>(rW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> lambda_n  lambda_1 
+-1.224561  1.000001 </code></pre>
+</div>
+</div>
+<p>Implementations of these methods, based on original code by Griffith and re-implemented in R and C, are now available in <code>spatialreg</code> as functions <code>lextrB</code> and <code>lextrW</code>. For large regular grids, the eigenvalues of <span class="math inline">{\mathbf C}</span> are known analytically for contiguity defined as non-zero shared boundary length <span class="citation" data-cites="ord:75 griffith+sone:95">(<a href="references.html#ref-ord:75" role="doc-biblioref">Ord 1975</a>; <a href="references.html#ref-griffith+sone:95" role="doc-biblioref">D. A. Griffith and Sone 1995</a>)</span>.</p>
+</section>
+<section id="alternatives" class="level3" data-number="12.5.2">
+<h3 data-number="12.5.2" data-anchor-id="alternatives"><span class="header-section-number">12.5.2</span> Alternatives</h3>
+<p>In the row-standardised cases, <span class="math inline">1/\lambda_{\max}</span> is <span class="math inline">1</span> by construction, and as <span class="citation" data-cites="smirnov+anselin:09">Smirnov and Anselin (<a href="references.html#ref-smirnov+anselin:09" role="doc-biblioref">2009</a>)</span> show, <span class="math inline">1/\lambda_{\min}</span> may be found to be <span class="math inline">-1</span> by graph analysis. If larger subgraphs, or the graph as a whole, are cyclical in Smirnov and Anselin’s terminology - for every location <span class="math inline">i</span>, no pair of its neighbours <span class="math inline">j, k</span> are connected - the smallest eigenvalue must be <span class="math inline">-1</span> by definition. Taking <span class="math inline">1/\lambda_{\min}=-1</span> may be inappropriate for some lattices for which this condition does not hold, especially when more than one spatial coefficient is being estimated</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RSpectra)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">as</span>(<span class="fu">as</span>(B0, <span class="st">"symmetricMatrix"</span>), <span class="st">"unpackedMatrix"</span>)</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>arB <span class="ot">&lt;-</span> <span class="fu">eigs</span>(B, <span class="dv">2</span>, <span class="at">which =</span> <span class="st">"BE"</span>)</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span><span class="fu">rev</span>(arB<span class="sc">$</span>values)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.3129207  0.1666602</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">as</span>(<span class="fu">as</span>(<span class="fu">similar.listw</span>(lwW), <span class="st">"CsparseMatrix"</span>), <span class="st">"symmetricMatrix"</span>)</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>arW <span class="ot">&lt;-</span> <span class="fu">eigs</span>(W, <span class="dv">2</span>, <span class="at">which =</span> <span class="st">"BE"</span>)</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span><span class="fu">rev</span>(arW<span class="sc">$</span>values)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1.224561  1.000000</code></pre>
+</div>
+</div>
+<p>We need eigenvalues (and eigenvectors) in many settings in spatial analysis. Eigenvalues can be used for testing spatial autocorrelation and fitting spatial regression models. Extreme eigenvalues are needed in fitting spatial regression models when <span class="math inline">n</span> is large, because they give the interval for line search and nonlinear optimisation. Griffith approximations are fast and quite robust for symmetric weights, but when the input graphs diverge from the planarity condition, they may fail.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-chun+griffith:13" class="csl-entry" role="listitem">
+Chun, Yongwan, and Daniel A. Griffith. 2013. <em>Spatial Statistics and Geostatistics: Theory and Applications for Geographic Information Science and Technology</em>. Thousand Oaks, CA: Sage.
+</div>
+<div id="ref-griffith:10" class="csl-entry" role="listitem">
+Griffith, D. A. 2010. <span>“Spatial Filtering.”</span> In <em>Handbook of Applied Spatial Analysis</em>, edited by Manfred Fischer and Arthur Getis, 301–18. Heidelberg: Springer.
+</div>
+<div id="ref-griffith+sone:95" class="csl-entry" role="listitem">
+Griffith, D. A., and A Sone. 1995. <span>“<span class="nocase">Trade-offs associated with normalizing constant computational simplifications for estimating spatial statistical models</span>.”</span> <em><span>Journal of Statistical Computation and Simulation</span></em> <span>51</span> (2–4): 165–83.
+</div>
+<div id="ref-griffith:04" class="csl-entry" role="listitem">
+Griffith, Daniel A. 2004. <span>“Extreme Eigenfunctions of Adjacency Matrices for Planar Graphs Employed in Spatial Analyses.”</span> <em>Linear Algebra and Its Applications</em> 388: 201–19. <a href="https://doi.org/10.1016/S0024-3795(03)00368-9">https://doi.org/10.1016/S0024-3795(03)00368-9</a>.
+</div>
+<div id="ref-griffith:03" class="csl-entry" role="listitem">
+Griffith, Daniel A. 2003. <em>Spatial Autocorrelation and Spatial Filtering</em>. New York: Springer.
+</div>
+<div id="ref-lietal:12" class="csl-entry" role="listitem">
+Li, H., C. A. Calder, and N. Cressie. 2012. <span>“One-Step Estimation of Spatial Dependence Parameters: Properties and Extensions of the <span>APLE</span> Statistic.”</span> <em>Journal of Multivariate Analysis</em> 105 (1): 68–84.
+</div>
+<div id="ref-ord:75" class="csl-entry" role="listitem">
+Ord, J. K. 1975. <span>“Estimation Methods for Models of Spatial Interaction.”</span> <em>Journal of the American Statistical Association</em> 70: 120–26.
+</div>
+<div id="ref-pace+barry:97a" class="csl-entry" role="listitem">
+Pace, RK, and RP Barry. 1997. <span>“<span>Fast CARs</span>.”</span> <em><span>Journal of Statistical Computation and Simulation</span></em> <span>59</span> (<span>2</span>): 123–45.
+</div>
+<div id="ref-patuellietal:12" class="csl-entry" role="listitem">
+Patuelli, Roberto, Norbert Schanne, Daniel A. Griffith, and Peter Nijkamp. 2012. <span>“PERSISTENCE OF REGIONAL UNEMPLOYMENT: APPLICATION OF a SPATIAL FILTERING APPROACH TO LOCAL LABOR MARKETS IN GERMANY.”</span> <em>Journal of Regional Science</em> 52 (2): 300–323. <a href="https://doi.org/10.1111/j.1467-9787.2012.00759.x">https://doi.org/10.1111/j.1467-9787.2012.00759.x</a>.
+</div>
+<div id="ref-smirnov+anselin:09" class="csl-entry" role="listitem">
+Smirnov, O., and L. Anselin. 2009. <span>“An <span>O(N)</span> Parallel Method of Computing the <span>L</span>og-<span>J</span>acobian of the Variable Transformation for Models with Spatial Interaction on a Lattice.”</span> <em>Computational Statistics &amp; Data Analysis</em> 53 (8): 2980–88.
+</div>
+<div id="ref-tiefelsdorf+griffith:07" class="csl-entry" role="listitem">
+Tiefelsdorf, Michael, and Daniel A Griffith. 2007. <span>“Semiparametric Filtering of Spatial Autocorrelation: The Eigenvector Approach.”</span> <em>Environment and Planning A: Economy and Space</em> 39 (5): 1193–1221. <a href="https://doi.org/10.1068/a37378">https://doi.org/10.1068/a37378</a>.
+</div>
+</div>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
