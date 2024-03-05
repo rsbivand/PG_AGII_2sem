@@ -532,7 +532,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>Here, for the independent variables initially included in the model to account for the logarithm of real net expenditure on garbage collection in each district, the logarithm of the number of pick-up points (<code>units</code>), the proportion of dwellings among the pick-up points (<code>house</code>), the logarithm of pick-up point density (<code>dens</code>), a categorical variable <code>Metrop</code> with levels: <code>"district"</code>, <code>"london"</code>, <code>"metrop"</code>, and the logarithm of the real regional wage rate for regions. In this case, the tests point to a SEM model rather than an SLM model or falling back to OLS.</p>
-<p><span class="citation" data-cites="koley+bera:22">B. Koley Malabika (<a href="references.html#ref-koley+bera:22" role="doc-biblioref">2022</a>)</span> propose a similar set of tests to distinguish between either an SLM or an SLX model based on an SDM model, falling back to ordinary least squares if neither alternative is chosen. Because the interpretation of spatially lagged categorical variables is unclear, we drop <code>Metrop</code> from the tests</p>
+<p><span class="citation" data-cites="koley+bera:22">Koley and Bera (<a href="references.html#ref-koley+bera:22" role="doc-biblioref">2022</a>)</span> propose a similar set of tests to distinguish between either an SLM or an SLX model based on an SDM model, falling back to ordinary least squares if neither alternative is chosen. Because the interpretation of spatially lagged categorical variables is unclear, we drop <code>Metrop</code> from the tests</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">SD.RStests</span>(lm_obj_pre, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"SDM"</span>,</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_pre, <span class="sc">~</span> . <span class="sc">-</span> Metrop)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -553,7 +553,7 @@ SDM_Joint      31.4781         5 7.536e-06 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>In this case, an SLX model appears to be indicated rather than SDM, SLM or OLS. However, we also need to look at SDEM as the tests against SAC indicated SEM rather than SLM. <span class="citation" data-cites="koley:24">M. Koley (<a href="references.html#ref-koley:24" role="doc-biblioref">2024</a>)</span> proposes approriate tests:</p>
+<p>In this case, an SLX model appears to be indicated rather than SDM, SLM or OLS. However, we also need to look at SDEM as the tests against SAC indicated SEM rather than SLM. <span class="citation" data-cites="koley:24">Koley (<a href="references.html#ref-koley:24" role="doc-biblioref">2024</a>)</span> proposes approriate tests:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">SD.RStests</span>(lm_obj_pre, <span class="at">listw=</span>lw, <span class="at">test=</span><span class="st">"SDEM"</span>,</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a> <span class="at">Durbin=</span><span class="fu">update</span>(form_pre, <span class="sc">~</span> . <span class="sc">-</span> Metrop)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -572,11 +572,11 @@ SDEM_Joint   28.4237         5 3.007e-05 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>which indicate SEM rather than SDEM. Clearly, the underlying difficulty is that the GNM is poorly identified, and as <span class="citation" data-cites="koley:24">M. Koley (<a href="references.html#ref-koley:24" role="doc-biblioref">2024</a>)</span> finds:</p>
+<p>which indicate SEM rather than SDEM. Clearly, the underlying difficulty is that the GNM is poorly identified, and as <span class="citation" data-cites="koley:24">Koley (<a href="references.html#ref-koley:24" role="doc-biblioref">2024</a>)</span> finds:</p>
 <blockquote class="blockquote">
-<p>… identification conditions have not been established for the GNS model in the spatial literature that also suffers from an identification problem. In fact, to the best of our knowledge, the non-identification of the GNS model has not yet been analytically studied in the literature <span class="citation" data-cites="koley:24">(<a href="references.html#ref-koley:24" role="doc-biblioref">M. Koley 2024, 3</a>)</span>.</p>
+<p>… identification conditions have not been established for the GNS model in the spatial literature that also suffers from an identification problem. In fact, to the best of our knowledge, the non-identification of the GNS model has not yet been analytically studied in the literature <span class="citation" data-cites="koley:24">(<a href="references.html#ref-koley:24" role="doc-biblioref">Koley 2024, 3</a>)</span>.</p>
 </blockquote>
-<p>However, it has been found that the <code>lm.RStests</code> tests can be used on a fitted SLX model using the <code>lmSLX</code> function in <code>spatialreg</code> <span class="citation" data-cites="koley:24">(<a href="references.html#ref-koley:24" role="doc-biblioref">M. Koley 2024, 18</a>)</span>, again omitting <code>Metrop</code> from the <span class="math inline">{\mathbf W}{\mathbf X}</span> term in addition to omitting the intercept:</p>
+<p>However, it has been found that the <code>lm.RStests</code> tests can be used on a fitted SLX model using the <code>lmSLX</code> function in <code>spatialreg</code> <span class="citation" data-cites="koley:24">(<a href="references.html#ref-koley:24" role="doc-biblioref">Koley 2024, 18</a>)</span>, again omitting <code>Metrop</code> from the <span class="math inline">{\mathbf W}{\mathbf X}</span> term in addition to omitting the intercept:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatialreg)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>SLX_obj <span class="ot">&lt;-</span> <span class="fu">lmSLX</span>(form_pre, <span class="at">data=</span>eng324, <span class="at">listw=</span>lw,</span>
@@ -899,11 +899,11 @@ Halleck Vega, Solmaria, and J. Paul Elhorst. 2015. <span>“The <span>SLX</span>
 <div id="ref-kelejian+piras:17" class="csl-entry" role="listitem">
 Kelejian, Harry, and Gianfranco Piras. 2017. <em>Spatial Econometrics</em>. London: Academic Press.
 </div>
-<div id="ref-koley+bera:22" class="csl-entry" role="listitem">
-Koley, Bera, Malabika. 2022. <span>“Testing for Spatial Dependence in a Spatial Autoregressive (SAR) Model in the Presence of Endogenous Regressors.”</span> <em>Journal of Spatial Econometrics</em> 3 (11): 1–46. <a href="https://doi.org/10.1007/s43071-022-00026-7">https://doi.org/10.1007/s43071-022-00026-7</a>.
-</div>
 <div id="ref-koley:24" class="csl-entry" role="listitem">
 Koley, Malabika. 2024. <span>“Specification Testing Under General Nesting Spatial Model.”</span> <a href="https://drive.google.com/file/d/1jDAQEmczE7vlPPX1jKaYajD1VtmL4Zvh/view">https://drive.google.com/file/d/1jDAQEmczE7vlPPX1jKaYajD1VtmL4Zvh/view</a>.
+</div>
+<div id="ref-koley+bera:22" class="csl-entry" role="listitem">
+Koley, Malabika, and Anil K. Bera. 2022. <span>“Testing for Spatial Dependence in a Spatial Autoregressive (SAR) Model in the Presence of Endogenous Regressors.”</span> <em>Journal of Spatial Econometrics</em> 3 (11): 1–46. <a href="https://doi.org/10.1007/s43071-022-00026-7">https://doi.org/10.1007/s43071-022-00026-7</a>.
 </div>
 <div id="ref-lesage:14" class="csl-entry" role="listitem">
 LeSage, James. 2014. <span>“What Regional Scientists Need to Know about Spatial Econometrics.”</span> <em>The Review of Regional Studies</em> 44 (1). <a href="http://journal.srsa.org/ojs/index.php/RRS/article/view/44.1.2">http://journal.srsa.org/ojs/index.php/RRS/article/view/44.1.2</a>.
