@@ -469,7 +469,7 @@ max value   :            3936 </code></pre>
 </div>
 </div>
 <p>The raster has one layer (band), with a square (geodetic) grid with a resolution of about 0.005 degrees, 18.03 arc seconds in both dimensions, 371 rows and 493 columns.</p>
-<p>Let us now access OpenStreetMap data using <code>osmdata</code> <span class="citation" data-cites="padghametal:17">(<a href="references.html#ref-padghametal:17" role="doc-biblioref">Mark Padgham et al. 2017</a>)</span>, first subsetting to the city of Talca, the capital of Región del Maule. To set up a query, we need to build an OpenStreetMap Overpass query using a bounding box of our area of interest. Since it can be difficult to know what kinds of data have been contributed, we add the <code>"names"</code> feature, pulling in everything in the rectangle defined in degrees of longitude and latitude - obviously the top and bottom of the rectangle are actually curves, because the rectangle is on the surface of an ellipsoid. Having created the query <code>talca_q</code>, we can extract the data for all features with names:</p>
+<p>Let us now access OpenStreetMap data using <code>osmdata</code> <span class="citation" data-cites="padghametal:17">(<a href="references.html#ref-padghametal:17" role="doc-biblioref">Padgham et al. 2017</a>)</span>, first subsetting to the city of Talca, the capital of Región del Maule. To set up a query, we need to build an OpenStreetMap Overpass query using a bounding box of our area of interest. Since it can be difficult to know what kinds of data have been contributed, we add the <code>"names"</code> feature, pulling in everything in the rectangle defined in degrees of longitude and latitude - obviously the top and bottom of the rectangle are actually curves, because the rectangle is on the surface of an ellipsoid. Having created the query <code>talca_q</code>, we can extract the data for all features with names:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>maule_sf <span class="sc">|&gt;</span> <span class="fu">subset</span>(<span class="at">subset =</span> codigo_comuna<span class="sc">==</span><span class="st">"07101"</span>) <span class="ot">-&gt;</span> talca_sf</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(osmdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -997,13 +997,13 @@ Dyba, Krzysztof, and Jakub Nowosad. 2021. <span>“Rgugik: Search and Retrieve S
 Lovelace, Robin, Jakub Nowosad, and Jannes Muenchow. 2019. <em>Geocomputation with <span>R</span></em>. CRC Press.<a href=" https://r.geocompx.org/ ">https://r.geocompx.org/ </a>.
 </div>
 <div id="ref-padghametal:17" class="csl-entry" role="listitem">
-Mark Padgham, Bob Rudis, Robin Lovelace, and Maëlle Salmon. 2017. <span>“Osmdata.”</span> <em>Journal of Open Source Software</em> 2 (14): 305. <a href="https://doi.org/10.21105/joss.00305">https://doi.org/10.21105/joss.00305</a>.
+Padgham, Mark, Bob Rudis, Robin Lovelace, and Maëlle Salmon. 2017. <span>“Osmdata.”</span> <em>Journal of Open Source Software</em> 2 (14): 305. <a href="https://doi.org/10.21105/joss.00305">https://doi.org/10.21105/joss.00305</a>.
 </div>
 <div id="ref-pebesma+bivand:23" class="csl-entry" role="listitem">
 Pebesma, Edzer, and Roger Bivand. 2023. <em>Spatial Data Science with Applications in <span>R</span></em>. Boca Raton, FL: CRC Press.
 </div>
 <div id="ref-reyetal:23" class="csl-entry" role="listitem">
-Rey, Sergio, Dani Arribas-Bel, and Levi John Wolf. 2023. <em>Geographic Data Science with <span>Python</span></em>. Boca Raton, FL: CRC Press. <a href="https://geographicdata.science">https://geographicdata.science</a>.
+Rey, Sergio, Dani Arribas-Bel, and Levi J. Wolf. 2023. <em>Geographic Data Science with <span>Python</span></em>. Boca Raton, FL: CRC Press. <a href="https://geographicdata.science">https://geographicdata.science</a>.
 </div>
 </div>
 </section>

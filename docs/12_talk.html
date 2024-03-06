@@ -574,7 +574,7 @@ t1* 0.5534535 -0.5582679  0.08375269</code></pre>
 </section>
 <section id="moran-eigenvectors---spatial-filtering" class="level2" data-number="12.4">
 <h2 data-number="12.4" data-anchor-id="moran-eigenvectors---spatial-filtering"><span class="header-section-number">12.4</span> Moran eigenvectors - spatial filtering</h2>
-<p>It has been suggested by <span class="citation" data-cites="griffith:03">Daniel A. Griffith (<a href="references.html#ref-griffith:03" role="doc-biblioref">2003</a>)</span> that maps of eigenvectors of the spatial weights matrix may be used to explore the effect of scale, because some eigenvectors will show large scale structures, others will capture regional differences, and others again will represent small scale patterns <span class="citation" data-cites="chun+griffith:13 griffith:10 patuellietal:12">(<a href="references.html#ref-chun+griffith:13" role="doc-biblioref">Chun and Griffith 2013</a>; <a href="references.html#ref-griffith:10" role="doc-biblioref">D. A. Griffith 2010</a>; <a href="references.html#ref-patuellietal:12" role="doc-biblioref">Patuelli et al. 2012</a>)</span></p>
+<p>It has been suggested by <span class="citation" data-cites="griffith:03">Griffith (<a href="references.html#ref-griffith:03" role="doc-biblioref">2003</a>)</span> that maps of eigenvectors of the spatial weights matrix may be used to explore the effect of scale, because some eigenvectors will show large scale structures, others will capture regional differences, and others again will represent small scale patterns <span class="citation" data-cites="chun+griffith:13 griffith:10 patuellietal:12">(<a href="references.html#ref-chun+griffith:13" role="doc-biblioref">Chun and Griffith 2013</a>; <a href="references.html#ref-griffith:10" role="doc-biblioref">Griffith 2010</a>; <a href="references.html#ref-patuellietal:12" role="doc-biblioref">Patuelli et al. 2012</a>)</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">log</span>(eng324<span class="sc">$</span>realNetPre)</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(x, lwW)<span class="sc">$</span>estimate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -633,15 +633,15 @@ Observed Moran I      Expectation         Variance
 </section>
 <section id="extreme-eigenvalues" class="level2" data-number="12.5">
 <h2 data-number="12.5" data-anchor-id="extreme-eigenvalues"><span class="header-section-number">12.5</span> Extreme eigenvalues</h2>
-<p>The largest and smallest eigenvalues are needed to find the bounds of the domain of the spatial autoregressive coefficient. If <span class="math inline">n</span> is moderate, as it is here, we can solve the eigenproblem by computation, and so have a benchmark. We can also use an approximation given by <span class="citation" data-cites="griffith:04">Daniel A. Griffith (<a href="references.html#ref-griffith:04" role="doc-biblioref">2004</a>)</span> to find the extreme eiegenvalues of binary and row-standardised weights. Alternative methods can also be used, such as <code>RSpectra</code> to return the extreme eigenvalues of large sparse matrices.</p>
+<p>The largest and smallest eigenvalues are needed to find the bounds of the domain of the spatial autoregressive coefficient. If <span class="math inline">n</span> is moderate, as it is here, we can solve the eigenproblem by computation, and so have a benchmark. We can also use an approximation given by <span class="citation" data-cites="griffith:04">Griffith (<a href="references.html#ref-griffith:04" role="doc-biblioref">2004</a>)</span> to find the extreme eiegenvalues of binary and row-standardised weights. Alternative methods can also be used, such as <code>RSpectra</code> to return the extreme eigenvalues of large sparse matrices.</p>
 <section id="rayleigh-quotient-approaches" class="level3" data-number="12.5.1">
 <h3 data-number="12.5.1" data-anchor-id="rayleigh-quotient-approaches"><span class="header-section-number">12.5.1</span> Rayleigh quotient approaches</h3>
-<p><span class="citation" data-cites="griffith:04">Daniel A. Griffith (<a href="references.html#ref-griffith:04" role="doc-biblioref">2004</a>)</span> shows how extreme eigenvalues of a binary symmetric contiguity matrix <span class="math inline">{\mathbf C}</span> expressed as an undirected irreducible planar graph may be calculated.</p>
+<p><span class="citation" data-cites="griffith:04">Griffith (<a href="references.html#ref-griffith:04" role="doc-biblioref">2004</a>)</span> shows how extreme eigenvalues of a binary symmetric contiguity matrix <span class="math inline">{\mathbf C}</span> expressed as an undirected irreducible planar graph may be calculated.</p>
 <p>The largest eigenvalue is found using the Rayleigh quotient approach:</p>
 <p><span class="math display">
 \lambda_1 = \lim_{k\to\infty} \frac{({\mathbf 1}'{\mathbf C}^{k+1}{\mathbf 1})}{({\mathbf 1}'{\mathbf C}^k{\mathbf 1})}.
 </span></p>
-<p><span class="citation" data-cites="griffith:04">Daniel A. Griffith (<a href="references.html#ref-griffith:04" role="doc-biblioref">2004</a>)</span> further describes an approach to finding the smallest eigenvalue of <span class="math inline">{\mathbf C}</span>. This is extended to the case of the smallest eigenvalue of <span class="math inline">{\mathbf W}</span>, the row-standardised spatial weights matrix based on <span class="math inline">{\mathbf C}</span>.</p>
+<p><span class="citation" data-cites="griffith:04">Griffith (<a href="references.html#ref-griffith:04" role="doc-biblioref">2004</a>)</span> further describes an approach to finding the smallest eigenvalue of <span class="math inline">{\mathbf C}</span>. This is extended to the case of the smallest eigenvalue of <span class="math inline">{\mathbf W}</span>, the row-standardised spatial weights matrix based on <span class="math inline">{\mathbf C}</span>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ecount</span>(g1) <span class="sc">&lt;=</span> <span class="dv">3</span><span class="sc">*</span><span class="fu">vcount</span>(g1) <span class="sc">-</span> <span class="dv">6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -668,7 +668,7 @@ Observed Moran I      Expectation         Variance
 -1.224561  1.000001 </code></pre>
 </div>
 </div>
-<p>Implementations of these methods, based on original code by Griffith and re-implemented in R and C, are now available in <code>spatialreg</code> as functions <code>lextrB</code> and <code>lextrW</code>. For large regular grids, the eigenvalues of <span class="math inline">{\mathbf C}</span> are known analytically for contiguity defined as non-zero shared boundary length <span class="citation" data-cites="ord:75 griffith+sone:95">(<a href="references.html#ref-ord:75" role="doc-biblioref">Ord 1975</a>; <a href="references.html#ref-griffith+sone:95" role="doc-biblioref">D. A. Griffith and Sone 1995</a>)</span>.</p>
+<p>Implementations of these methods, based on original code by Griffith and re-implemented in R and C, are now available in <code>spatialreg</code> as functions <code>lextrB</code> and <code>lextrW</code>. For large regular grids, the eigenvalues of <span class="math inline">{\mathbf C}</span> are known analytically for contiguity defined as non-zero shared boundary length <span class="citation" data-cites="ord:75 griffith+sone:95">(<a href="references.html#ref-ord:75" role="doc-biblioref">Ord 1975</a>; <a href="references.html#ref-griffith+sone:95" role="doc-biblioref">Griffith and Sone 1995</a>)</span>.</p>
 </section>
 <section id="alternatives" class="level3" data-number="12.5.2">
 <h3 data-number="12.5.2" data-anchor-id="alternatives"><span class="header-section-number">12.5.2</span> Alternatives</h3>
@@ -695,35 +695,35 @@ Observed Moran I      Expectation         Variance
 <div id="ref-chun+griffith:13" class="csl-entry" role="listitem">
 Chun, Yongwan, and Daniel A. Griffith. 2013. <em>Spatial Statistics and Geostatistics: Theory and Applications for Geographic Information Science and Technology</em>. Thousand Oaks, CA: Sage.
 </div>
-<div id="ref-griffith:10" class="csl-entry" role="listitem">
-Griffith, D. A. 2010. <span>“Spatial Filtering.”</span> In <em>Handbook of Applied Spatial Analysis</em>, edited by Manfred Fischer and Arthur Getis, 301–18. Heidelberg: Springer.
-</div>
-<div id="ref-griffith+sone:95" class="csl-entry" role="listitem">
-Griffith, D. A., and A Sone. 1995. <span>“<span class="nocase">Trade-offs associated with normalizing constant computational simplifications for estimating spatial statistical models</span>.”</span> <em><span>Journal of Statistical Computation and Simulation</span></em> <span>51</span> (2–4): 165–83.
-</div>
-<div id="ref-griffith:04" class="csl-entry" role="listitem">
-Griffith, Daniel A. 2004. <span>“Extreme Eigenfunctions of Adjacency Matrices for Planar Graphs Employed in Spatial Analyses.”</span> <em>Linear Algebra and Its Applications</em> 388: 201–19. <a href="https://doi.org/10.1016/S0024-3795(03)00368-9">https://doi.org/10.1016/S0024-3795(03)00368-9</a>.
-</div>
 <div id="ref-griffith:03" class="csl-entry" role="listitem">
 Griffith, Daniel A. 2003. <em>Spatial Autocorrelation and Spatial Filtering</em>. New York: Springer.
+</div>
+<div id="ref-griffith:04" class="csl-entry" role="listitem">
+———. 2004. <span>“Extreme Eigenfunctions of Adjacency Matrices for Planar Graphs Employed in Spatial Analyses.”</span> <em>Linear Algebra and Its Applications</em> 388: 201–19. <a href="https://doi.org/10.1016/S0024-3795(03)00368-9">https://doi.org/10.1016/S0024-3795(03)00368-9</a>.
+</div>
+<div id="ref-griffith:10" class="csl-entry" role="listitem">
+———. 2010. <span>“Spatial Filtering.”</span> In <em>Handbook of Applied Spatial Analysis</em>, edited by Manfred Fischer and Arthur Getis, 301–18. Heidelberg: Springer.
+</div>
+<div id="ref-griffith+sone:95" class="csl-entry" role="listitem">
+Griffith, Daniel A., and A Sone. 1995. <span>“<span class="nocase">Trade-offs associated with normalizing constant computational simplifications for estimating spatial statistical models</span>.”</span> <em><span>Journal of Statistical Computation and Simulation</span></em> <span>51</span> (2–4): 165–83.
 </div>
 <div id="ref-lietal:12" class="csl-entry" role="listitem">
 Li, H., C. A. Calder, and N. Cressie. 2012. <span>“One-Step Estimation of Spatial Dependence Parameters: Properties and Extensions of the <span>APLE</span> Statistic.”</span> <em>Journal of Multivariate Analysis</em> 105 (1): 68–84.
 </div>
 <div id="ref-ord:75" class="csl-entry" role="listitem">
-Ord, J. K. 1975. <span>“Estimation Methods for Models of Spatial Interaction.”</span> <em>Journal of the American Statistical Association</em> 70: 120–26.
+Ord, J. Keith. 1975. <span>“Estimation Methods for Models of Spatial Interaction.”</span> <em>Journal of the American Statistical Association</em> 70: 120–26.
 </div>
 <div id="ref-pace+barry:97a" class="csl-entry" role="listitem">
-Pace, RK, and RP Barry. 1997. <span>“<span>Fast CARs</span>.”</span> <em><span>Journal of Statistical Computation and Simulation</span></em> <span>59</span> (<span>2</span>): 123–45.
+Pace, R. Kelley, and R. P. Barry. 1997. <span>“<span>Fast CARs</span>.”</span> <em><span>Journal of Statistical Computation and Simulation</span></em> <span>59</span> (<span>2</span>): 123–45.
 </div>
 <div id="ref-patuellietal:12" class="csl-entry" role="listitem">
 Patuelli, Roberto, Norbert Schanne, Daniel A. Griffith, and Peter Nijkamp. 2012. <span>“PERSISTENCE OF REGIONAL UNEMPLOYMENT: APPLICATION OF a SPATIAL FILTERING APPROACH TO LOCAL LABOR MARKETS IN GERMANY.”</span> <em>Journal of Regional Science</em> 52 (2): 300–323. <a href="https://doi.org/10.1111/j.1467-9787.2012.00759.x">https://doi.org/10.1111/j.1467-9787.2012.00759.x</a>.
 </div>
 <div id="ref-smirnov+anselin:09" class="csl-entry" role="listitem">
-Smirnov, O., and L. Anselin. 2009. <span>“An <span>O(N)</span> Parallel Method of Computing the <span>L</span>og-<span>J</span>acobian of the Variable Transformation for Models with Spatial Interaction on a Lattice.”</span> <em>Computational Statistics &amp; Data Analysis</em> 53 (8): 2980–88.
+Smirnov, O., and Luc Anselin. 2009. <span>“An <span>O(N)</span> Parallel Method of Computing the <span>L</span>og-<span>J</span>acobian of the Variable Transformation for Models with Spatial Interaction on a Lattice.”</span> <em>Computational Statistics &amp; Data Analysis</em> 53 (8): 2980–88.
 </div>
 <div id="ref-tiefelsdorf+griffith:07" class="csl-entry" role="listitem">
-Tiefelsdorf, Michael, and Daniel A Griffith. 2007. <span>“Semiparametric Filtering of Spatial Autocorrelation: The Eigenvector Approach.”</span> <em>Environment and Planning A: Economy and Space</em> 39 (5): 1193–1221. <a href="https://doi.org/10.1068/a37378">https://doi.org/10.1068/a37378</a>.
+Tiefelsdorf, Michael, and Daniel A. Griffith. 2007. <span>“Semiparametric Filtering of Spatial Autocorrelation: The Eigenvector Approach.”</span> <em>Environment and Planning A: Economy and Space</em> 39 (5): 1193–1221. <a href="https://doi.org/10.1068/a37378">https://doi.org/10.1068/a37378</a>.
 </div>
 </div>
 </section>
