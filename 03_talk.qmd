@@ -62,6 +62,8 @@ pom |> merge(pom0, by = "TERYT") -> pom1
 pom1
 ```
 
+### Using files from Poland's Local Data Bank (BDL)
+
 Having methodically made a first merge, we can move forward with three files at the municipality level from Statistics Poland's [local data bank](https://bdl.stat.gov.pl/bdl/start). These were exported as comma (or semicolon) separated value (CSV) files on February 15, 2024 - dates matter, as online data banks update their contents as inaccuracies are detected. Currently, no package provides direct access to this data bank, and for moderate data volumes, registration is required. The first file is semicolon separated, and contains population data by age group and sex (category K3, group G7, subgroup P2577) for the end of the second half-year 2022:
 
 ```{r pl_m4, size="footnotesize", eval=FALSE}
@@ -154,6 +156,40 @@ names(agrs) <- names(st_drop_geometry(pom4))
 pom4 |> st_set_agr(agrs) -> pom5
 ```
 
+### Using API from Poland's Local Data Bank (BDL)
+
+The `bdl` package offers a limited Application Programming Interface (API) to Poland's Local Data Bank (BDL), limited chiefly by the very tight limits on queries per time interval. Details can be found in the [BDL API manual](https://api.stat.gov.pl/Home/BdlApi?lang=en). This means that the user should think through carefully the queries required, and should be familiar with the [categories](https://bdl.stat.gov.pl/bdl/metadane/kategorie) and observational units (local government units and time in years) used. These give very fine-grained access to the underlying data, very similar in structure to that of other providers of official statistics. It is also recommended that a [private API key](https://statisticspoland.github.io/R_Package_to_API_BDL/articles/bdl.html) be acquired and used:
+
+```{r bdl1, size="footnotesize"}
+library(bdl)
+BDL_key <- Sys.getenv("BDL_key_RSB")
+options(bdl.api_private_key=BDL_key)
+```
+
+In order to proceed, we need first to determine the level code for voivodeship units, querying BDL for defined levels, and storing level values for voivodeships and municipalities:
+
+```{r bdl2, size="footnotesize"}
+(levs <- get_levels(lang="en"))
+levs |> as.data.frame() |> subset(name=="Poziom Województw", select=id, drop=TRUE) -> wlev 
+levs |> as.data.frame() |> subset(name=="Poziom Gmin", select=id, drop=TRUE) -> glev 
+```
+
+Given the voivodeship level, we can find the 12-character identifier for the Pomeranian voivodeship; BDL uses 12 characters rather tha 7 used in TERYT above, simply interjecting identifiers for other level units:
+
+```{r bdl3, size="footnotesize"}
+(units_lev <- get_units(level=wlev, lang="en"))
+units_lev |> as.data.frame() |> subset(name=="POMORSKIE", select=id, drop=TRUE) -> pom_id
+```
+```{r bdl4, size="footnotesize"}
+```
+```{r bdl5, size="footnotesize"}
+```
+```{r bdl6, size="footnotesize"}
+```
+```{r bdl7, size="footnotesize"}
+```
+```{r bdl8, size="footnotesize"}
+```
 
 ## Visualising spatial data {#sec-sd-vis}
 
