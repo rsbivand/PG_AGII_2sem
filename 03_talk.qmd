@@ -158,7 +158,7 @@ pom4 |> st_set_agr(agrs) -> pom5
 
 ### Using API from Poland's Local Data Bank (BDL)
 
-The `bdl` package offers a limited Application Programming Interface (API) to Poland's Local Data Bank (BDL), limited chiefly by the very tight limits on queries per time interval. Details can be found in the [BDL API manual](https://api.stat.gov.pl/Home/BdlApi?lang=en). This means that the user should think through carefully the queries required, and should be familiar with the [categories](https://bdl.stat.gov.pl/bdl/metadane/kategorie) and observational units (local government units and time in years) used. These give very fine-grained access to the underlying data, very similar in structure to that of other providers of official statistics. It is also recommended that a [private API key](https://statisticspoland.github.io/R_Package_to_API_BDL/articles/bdl.html) be acquired and used:
+The `bdl` package offers a limited Application Programming Interface (API) to Poland's Local Data Bank (BDL), limited chiefly by the very tight limits on queries per time interval. Details can be found in the [BDL API manual](https://api.stat.gov.pl/Home/BdlApi?lang=en). This means that the user should think through carefully the queries required, and should be familiar with the [categories](https://bdl.stat.gov.pl/bdl/metadane/kategorie) and observational units (local government units and time in years) used. These give very fine-grained access to the underlying data, very similar in structure to that of other providers of official statistics. It is also recommended that a [private API key](https://statisticspoland.github.io/R_Package_to_API_BDL/articles/bdl.html) be acquired and used (here kept in a local environment variable to prevent its display online breaking the privacy requirement of the data provider):
 
 ```{r bdl1, size="footnotesize"}
 library(bdl)
@@ -170,26 +170,226 @@ In order to proceed, we need first to determine the level code for voivodeship u
 
 ```{r bdl2, size="footnotesize"}
 (levs <- get_levels(lang="en"))
-levs |> as.data.frame() |> subset(name=="Poziom Województw", select=id, drop=TRUE) -> wlev 
-levs |> as.data.frame() |> subset(name=="Poziom Gmin", select=id, drop=TRUE) -> glev 
+levs |> as.data.frame() |>
+ subset(name=="Poziom Województw", select=id, drop=TRUE) -> wlev 
+levs |> as.data.frame() |>
+ subset(name=="Poziom Gmin", select=id, drop=TRUE) -> glev 
 ```
 
-Given the voivodeship level, we can find the 12-character identifier for the Pomeranian voivodeship; BDL uses 12 characters rather tha 7 used in TERYT above, simply interjecting identifiers for other level units:
+Given the voivodeship level, we can find the 12-character identifier for the Pomeranian voivodeship; BDL uses 12 characters rather tha 7 used in TERYT above, simply interjecting identifiers for other level units (TERYT is characters 3:4 and 8:12):
 
 ```{r bdl3, size="footnotesize"}
 (units_lev <- get_units(level=wlev, lang="en"))
-units_lev |> as.data.frame() |> subset(name=="POMORSKIE", select=id, drop=TRUE) -> pom_id
+units_lev |> as.data.frame() |>
+ subset(name=="POMORSKIE", select=id, drop=TRUE) -> pom_id
 ```
+
+Let us see which municipalities belonged to Pomerania in 2020:
+
 ```{r bdl4, size="footnotesize"}
+pom_gminy <- get_units(parentId=pom_id, level=glev, year=2020)
+nrow(pom_gminy)
 ```
+
+It turns out that some municipalities had seen changes, including changes in categorisation into urban, rural and urban-rural, and some reported here are parts classed as 4 or 5, rather than 1, 2 or 3. If we see a warning indicating that something may not be as we assume, we need more detailed information, returning objects for each municipality ID. The returned object is a list showing the years for which the ID is valid, and the category that it belonged to in those years. We create logical variables expressing whether the municipality ID is valid for our period of interest (2020-2022), and whether the category is 1, 2 or 3:
+
 ```{r bdl5, size="footnotesize"}
+gminy_details <- sapply(pom_gminy$id, unit_info)
+now <- sapply(gminy_details, function(x)
+ all(2020:2022 %in% x$years))
+kind123 <- sapply(gminy_details, function(x)
+ as.integer(x$kind) < 4L)
+nk <- now & kind123
+pom_gminy0 <- gminy_details[nk]
+pom_gminy <- do.call("rbind", lapply(pom_gminy0, 
+ function(x) data.frame(x[c(1, 2, 5)])))
+nrow(pom_gminy)
 ```
+
+Finally we use the logical variables to subset the specification of the municipalities, retaining ID, name and its category as urban, rural or urban-rural.
+
+The capital letters `K`, `G` and `P` are hierarchical, expressing the high-level categories of data topics, medium-level groups of data topics within each category, and sub-groups of data topics within each group. We can list the categories in BDL:
+
 ```{r bdl6, size="footnotesize"}
+get_subjects(lang="en")
 ```
+
+Since we are interested in `K3` population, among other things, we can list its contents:
+
 ```{r bdl7, size="footnotesize"}
+get_subjects("K3", lang="en")
 ```
+
+and go deeper to `G7` to see that to access population counts in pre-working, working, and post-working age groups are given in `P2577`:
+
 ```{r bdl8, size="footnotesize"}
+get_subjects("G7", lang="en")
 ```
+
+From sub-group, we next extract the table of variables, then saving the variable IDs to use for the query; we keep the descriptive table because it gives us the name of each variable in the table:
+
+```{r bdl9, size="footnotesize"}
+(pop_persons <- get_variables("P2577", lang="en"))
+pop_pre_post_ids <- as.character(pop_persons$id)
+```
+
+Iterating over the vector of variable IDs, we extract the single variables for multiple units for the required year - omitting the year reports all years. The `get_data_by_variable` call is one query, so using it rather than `get_data_by_unit` iterating over units is advantageous since the query count per unit time is policed vigourously, but instead of reporting only for `r nrow(pom_gminy)` units, the call includes superfluous units:
+
+```{r bdl10, size="footnotesize"}
+res_pop <- vector(mode="list", length=length(pop_pre_post_ids))
+names(res_pop) <- pop_pre_post_ids
+for (i in seq(along=pop_pre_post_ids)) res_pop[[i]] <- try(
+    get_data_by_variable(unitParentId=pom_id, level=glev,
+     varId = pop_pre_post_ids[i], year=2021)
+    )
+res_pop <- lapply(res_pop, function(x) x[match(pom_gminy$id, x$id),])
+```
+
+The `attrId` values can indicate the need to replace the value reported with `NA`, as some 0 values are set as such because of confidentiality constraints; the attributes have these interpretations:
+
+```{r bdl11, size="footnotesize"}
+get_attributes(lang="en")
+```
+
+In the case of the population data, all the values are valid as read. `res_pop` is a list of objects, one object per queried variable, so we extract the `attrId` vectors from each object and combine them with `unlist`, all taking the value `1`, counts measured in persons. The zero value if present would be a measured zero count:
+
+```{r bdl12, size="footnotesize"}
+table(unlist(lapply(res_pop, "[", "attrId")))
+```
+
+Next we need to disambiguate the object variable names `val` using the variable IDs, select only the unit ID and value columns, merge the multiple objects in the list, and drop repeated copies of the unit IDs to yield a data frame with a unit ID column and population count columns:
+
+```{r bdl13, size="footnotesize"}
+res_pop1 <- lapply(1:length(res_pop), function(i) {
+    names(res_pop[[i]])[4] <- paste0("v_", pop_pre_post_ids[i], sep="")
+    as.data.frame(res_pop[[i]][, c(1, 4)])})
+res_pop2 <- do.call("data.frame", res_pop1)
+res_pop3 <- res_pop2[, -(grep("id\\.", names(res_pop2)))]
+```
+
+Moving on to the sources of income for farm households from the 2020 Agricultural Census, we can drop the `year` argument, as observation time is given by the data source. First the top-level category contains these variable groups:
+
+```{r bdl14, size="footnotesize"}
+get_subjects("K34", lang="en")
+```
+
+and group `G637` contains these sub-groups:
+
+```{r bdl15, size="footnotesize"}
+get_subjects("G637", lang="en")
+```
+
+pointing to `P4139`:
+
+```{r bdl16, size="footnotesize"}
+(agrinc <- get_variables("P4139", lang="en"))
+agrinc_ids <- as.character(agrinc$id)
+```
+
+Repeating the step from annual population counts, we can retrieve the recorded values by variable ID, and drop the observation unit IDs not included in our valid set:
+
+```{r bdl17, size="footnotesize"}
+res_agr <- vector(mode="list", length=length(agrinc_ids))
+names(res_agr) <- agrinc_ids
+for (i in seq(along=agrinc_ids)) res_agr[[i]] <- try(
+    get_data_by_variable(unitParentId=pom_id, level=glev,
+     varId = agrinc_ids[i]))
+res_agr <- lapply(res_agr, function(x) x[match(pom_gminy$id, x$id),])
+```
+
+In this case, however, we see that the `attrId` `91` is present, probably indicating that the household count was too small to be revealed without the risk of confidentiality being breached:
+
+```{r bdl18, size="footnotesize"}
+table(unlist(lapply(res_agr, "[", "attrId")))
+```
+
+The `val` columns contain zero for these cases, which need to be updated to reflect the fact that the data are missing:
+
+```{r bdl19, size="footnotesize"}
+sapply(res_agr, function(x) x$val[x$attrId > 1])
+```
+
+This can be done using `is.na` for the logical condition that `attrId > 1`, or another choice if other `attrId` values are present that can be accepted, for example preliminary data:
+
+```{r bdl20, size="footnotesize"}
+res_agr0 <- lapply(res_agr, function(x)
+ {is.na(x$val) <- x$attrId > 1; x})
+sapply(res_agr0, function(x) x$val[x$attrId > 1])
+```
+
+From here we proceed as before to generate an output object with obervation unit rows, and observation unit ID and variable ID columns:
+
+```{r bdl21, size="footnotesize"}
+res_agr1 <- lapply(1:length(res_agr0), function(i) {
+    names(res_agr0[[i]])[4] <- paste0("v_", agrinc_ids[i], sep="")
+    as.data.frame(res_agr0[[i]][, c(1, 4)])})
+res_agr2 <- do.call("data.frame", res_agr1)
+res_agr3 <- res_agr2[, -(grep("id\\.", names(res_agr2)))]
+str(res_agr3)
+```
+
+Finally, the variable from the 2021 Population Census giving the number of dwellings per observation unit is needed to give a basis for the agricultural incomes by household data set; first we look at category `K31`:
+
+```{r bdl22, size="footnotesize"}
+get_subjects("K31", lang="en")[16:21,]
+```
+
+From this, we see group `G645`:
+
+```{r bdl23, size="footnotesize"}
+get_subjects("G645", lang="en")
+```
+
+and choose sub-group `P4383`:
+
+```{r bdl24, size="footnotesize"}
+(dwell_hh <- get_variables("P4383", lang="en"))
+dwell_hh_ids <- as.character(dwell_hh$id)
+```
+
+downloading as before and dropping the observation unit IDs identified as invalid for our purposes (wrong year, not urban, rural or urban-rural municipalities):
+
+```{r bdl25, size="footnotesize"}
+res_hh <- vector(mode="list", length=length(dwell_hh_ids))
+names(res_hh) <- dwell_hh_ids
+for (i in seq(along=dwell_hh_ids)) res_hh[[i]] <- try(
+    get_data_by_variable(unitParentId=pom_id, level=glev,
+     varId = dwell_hh_ids[i]))
+res_hh <- lapply(res_hh, function(x) x[match(pom_gminy$id, x$id),])
+```
+
+There are no missing data observations:
+
+```{r bdl26, size="footnotesize"}
+table(unlist(lapply(res_hh, "[", "attrId")))
+```
+
+so we go on as before without the need to insert missing values:
+
+```{r bdl27, size="footnotesize"}
+res_hh1 <- lapply(1:length(res_hh), function(i) {
+    names(res_hh[[i]])[4] <- paste0("v_", dwell_hh_ids[i], sep="");
+    as.data.frame(res_hh[[i]][, c(1, 4)])})
+res_hh2 <- do.call("data.frame", res_hh1)
+res_hh3 <- res_hh2[, -(grep("id\\.", names(res_hh2)))]
+```
+
+Having downloaded the data we have chosen, we merge the sub-group queries into a single object, adding a a `TERYT` column:
+
+```{r bdl28, size="footnotesize"}
+data_df <- merge(res_pop3, res_agr3, by="id")
+data_df <- merge(data_df, res_hh3, by="id")
+data_df$TERYT <- paste(substr(data_df$id, 3, 4), substr(data_df$id, 8, 12), sep="")
+str(data_df)
+```
+
+We complete by merging the municipality boundaries with the imported data using `TERYT` as the ID key:
+
+```{r bdl29, size="footnotesize"}
+pom1 |> merge(data_df, by="TERYT") -> pom4_bdl
+pom4_bdl
+```
+
 
 ## Visualising spatial data {#sec-sd-vis}
 
