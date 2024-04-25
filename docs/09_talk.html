@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-99.9.9">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Spatial Econometrics – 9&nbsp; Estimation of spatial autoregressive models: methods (ML, Bayesian, GMM)</title>
+<title>Spatial Econometrics - 9&nbsp; Estimation of spatial autoregressive models: methods (ML, Bayesian, GMM)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -446,16 +446,16 @@ Sample size per chain = 18000
    plus standard error of the mean:
 
           Mean       SD  Naive SE Time-series SE
-rho    0.10663 0.062091 4.628e-04      1.639e-03
-lambda 0.13046 0.114612 8.543e-04      2.934e-03
-sige   0.05209 0.004221 3.146e-05      3.425e-05
+rho    0.10688 0.060203 4.487e-04      1.467e-03
+lambda 0.13112 0.112294 8.370e-04      2.736e-03
+sige   0.05207 0.004194 3.126e-05      3.349e-05
 
 2. Quantiles for each variable:
 
            2.5%     25%     50%     75%   97.5%
-rho    -0.01906 0.06517 0.10733 0.14747 0.22475
-lambda -0.09906 0.05552 0.13124 0.20869 0.34742
-sige    0.04446 0.04919 0.05186 0.05476 0.06093</code></pre>
+rho    -0.01319 0.06692 0.10843 0.14796 0.22263
+lambda -0.09325 0.05657 0.13373 0.20688 0.34262
+sige    0.04434 0.04918 0.05181 0.05472 0.06087</code></pre>
 </div>
 </div>
 <p>The MCMC estimation methods in <code>spatialreg</code> report in <code>mcmc</code> objects defined in <code>coda</code>, and tests for convergence provided in that package can also be used. The figure shows that sampling for the spatial coefficients is somewhat uneven, which is perhaps unsurprising since they carry little information:</p>
@@ -596,6 +596,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
 });
 </script>
 <nav class="page-navigation">

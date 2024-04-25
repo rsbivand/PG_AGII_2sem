@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-99.9.9">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Spatial Econometrics – 10&nbsp; No orthogonality between regression and autoregression coefficients</title>
+<title>Spatial Econometrics - 10&nbsp; No orthogonality between regression and autoregression coefficients</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -328,7 +328,7 @@ window.Quarto = {
 <blockquote class="blockquote">
 <p>if we change x, what do we expect to happen to y.</p>
 </blockquote>
-<p>It has emerged over time, however, that the spatial dependence in the parameter <span class="math inline">\rho_{\mathrm{Lag}}</span> feeds back. This feedback comes from the fact that the reduced form model is <span class="math inline">{\mathbf y} = ({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1}{\mathbf X}{\mathbf \beta} + ({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1}{\mathbf \varepsilon}</span>. is the <span class="math inline">n \times n</span> identity matrix, and <span class="math inline">({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1}</span> is known to be dense. Expressed in terms of changes in <span class="math inline">x</span> impacting <span class="math inline">y</span>, the feedback runs through the global spillover <span class="math inline">({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1}</span>. These difficulties are discussed as emanating effects <span class="citation" data-cites="kelejianetal:06">(<a href="references.html#ref-kelejianetal:06" role="doc-biblioref">Kelejian, Tavlas, and Hondroyiannis 2006</a>)</span>, also known as impacts <span class="citation" data-cites="lesage+fischer:08 lesage+pace:09">(<a href="references.html#ref-lesage+fischer:08" role="doc-biblioref">LeSage and Fischer 2008</a>; <a href="references.html#ref-lesage+pace:09" role="doc-biblioref">LeSage and Pace 2009</a>)</span>, simultaneous spatial reaction function/reduced form <span class="citation" data-cites="anselin+lozano-gracia:08">(<a href="references.html#ref-anselin+lozano-gracia:08" role="doc-biblioref">Anselin and Lozano-Gracia 2008</a>)</span> and equilibrium effects <span class="citation" data-cites="ward+gleditsch:08">(<a href="references.html#ref-ward+gleditsch:08" role="doc-biblioref">Ward and Gleditsch 2008</a>)</span>.</p>
+<p>It has emerged over time, however, that the spatial dependence in the parameter <span class="math inline">\rho_{\mathrm{Lag}}</span> feeds back. This feedback comes from the fact that the reduced form model is <span class="math inline">{\mathbf y} = ({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1}{\mathbf X}{\mathbf \beta} + ({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1}{\mathbf \varepsilon}</span>. is the <span class="math inline">n \times n</span> identity matrix, and <span class="math inline">({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1}</span> is known to be dense. Expressed in terms of changes in <span class="math inline">x</span> impacting <span class="math inline">y</span>, the feedback runs through the global spillover <span class="math inline">({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1}</span>. These difficulties are discussed as emanating effects <span class="citation" data-cites="kelejianetal:06">(<a href="references.html#ref-kelejianetal:06" role="doc-biblioref">Kelejian, Tavlas, and Hondroyiannis 2006</a>)</span>, also known as impacts <span class="citation" data-cites="lesage+fischer:08 lesage+pace:09">Golgher and Voss (<a href="references.html#ref-golgher+voss:16" role="doc-biblioref">2016</a>)</span>, simultaneous spatial reaction function/reduced form <span class="citation" data-cites="anselin+lozano-gracia:08">(<a href="references.html#ref-anselin+lozano-gracia:08" role="doc-biblioref">Anselin and Lozano-Gracia 2008</a>)</span> and equilibrium effects <span class="citation" data-cites="ward+gleditsch:08">(<a href="references.html#ref-ward+gleditsch:08" role="doc-biblioref">Ward and Gleditsch 2008</a>)</span>.</p>
 <p>This feedback comes from the fact that, while the elements of the Hessian matrix for the ML spatial error model linking <span class="math inline">\rho_{\mathrm{Err}}</span> and <span class="math inline">\beta</span> are zero (<span class="math inline">\partial^2 \ell / (\partial \beta \partial \rho_{\mathrm{Err}}) = {\mathbf 0}</span>), in the spatial lag model (and by extension in the spatial Durbin model): <span class="math inline">\partial^2 \ell / (\partial \beta \partial \rho_{\mathrm{Lag}}) \neq {\mathbf 0}</span>. In the spatial error model, for exogenous variable <span class="math inline">r</span>, <span class="math inline">\partial y_i / \partial x_{ir} = \beta_r</span> and <span class="math inline">\partial y_i / \partial x_{jr} = 0</span> for <span class="math inline">i \neq j</span>. In the spatial lag model, <span class="math inline">\partial y_i / \partial x_{jr} = (({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1} {\mathbf I} \beta_r)_{ij}</span>, where <span class="math inline">{\mathbf I}</span> is the <span class="math inline">n \times n</span> identity matrix. The awkward <span class="math inline">S_r({\mathbf W}) = (({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1} {\mathbf I} \beta_r)</span> matrix term needed to calculate impact measures for the lag model, and <span class="math inline">S_r({\mathbf W}) = (({\mathbf I} - \rho_{\mathrm{Lag}} {\mathbf W})^{-1} ({\mathbf I} \beta_r - {\mathbf W} \gamma_r))</span> for the spatial Durbin model, may be approximated using traces of powers of the spatial weights matrix as well as analytically.</p>
 <p>The average direct impacts are represented by the sum of the diagonal elements of the matrix divided by <span class="math inline">n</span> for each exogenous variable. The average total impacts are the sum of all matrix elements divided by <span class="math inline">n</span> for each exogenous variable. The average indirect impacts are the differences between the direct and total impact vectors.</p>
 <p>The development in LeSage and Pace (2009, pp.&nbsp;114–115) for the SLM model and <span class="math inline">q</span> traces is as follows:</p>
@@ -391,14 +391,14 @@ MajorityLAB     0.19524091  0.033425587  0.22866650</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (lag, trace):
                     Direct     Indirect       Total
-log(units)      0.93758286  0.133550315  1.07113318
-house          -1.37901113 -0.196427833 -1.57543896
+log(units)      0.93758286  0.133550323  1.07113319
+house          -1.37901113 -0.196427845 -1.57543897
 log(dens)      -0.04950261 -0.007051205 -0.05655381
-Metroplondon    0.03621621  0.005158675  0.04137488
-Metropmetrop   -0.02805200 -0.003995757 -0.03204776
-log(realWgPst)  0.67442536  0.096065876  0.77049124
+Metroplondon    0.03621620  0.005158675  0.04137488
+Metropmetrop   -0.02805200 -0.003995758 -0.03204776
+log(realWgPst)  0.67442535  0.096065881  0.77049124
 MajorityCONS   -0.01960548 -0.002792626 -0.02239811
-MajorityLAB     0.17957971  0.025579528  0.20515924</code></pre>
+MajorityLAB     0.17957971  0.025579529  0.20515924</code></pre>
 </div>
 </div>
 <p>As a graphical display may be easier to begin with, we’ll use <code>tinyplot</code> and assemble the samples of <span class="math inline">\rho_{\mathrm{Lag}}</span>, and the total impact samples for the variables: logarithm of pick-up point counts, proportion of dwellings among pick-up points, logarithm of density of pick-up points per unit area, logarithm of real wages, and the categorical variable Labour majority control (compared with base value of no overall control).</p>
@@ -463,7 +463,7 @@ MajorityLAB     0.17957971  0.025579528  0.20515924</code></pre>
 </div>
 </div>
 <p>We can also use <code>tinytable</code> to show the estimates of <span class="math inline">\rho_{\mathrm{Lag}}</span> and total imacts for the selected variables with their standard errors (for the impacts, standard errors estimated from the samples):</p>
-<div class="cell" data-tab-cap="Spatial coefficient value and chosen variable total impacts and trace-based standard errors, pre-CCT and post-CCT, ML SLM models, 324 English districts">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>sum_imp_SLM_pre_maj_tr <span class="ot">&lt;-</span> <span class="fu">summary</span>(imp_SLM_pre_maj_tr, <span class="at">short=</span><span class="cn">TRUE</span>, <span class="at">zstats=</span><span class="cn">TRUE</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>sum_imp_SLM_post_maj_tr <span class="ot">&lt;-</span> <span class="fu">summary</span>(imp_SLM_post_maj_tr, <span class="at">short=</span><span class="cn">TRUE</span>, <span class="at">zstats=</span><span class="cn">TRUE</span>)</span>
@@ -480,9 +480,9 @@ MajorityLAB     0.17957971  0.025579528  0.20515924</code></pre>
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_rryekhal608ihygx5k8r</title>
+    <title>tinytable_x7thj6a1p3jqq0ljqkme</title>
     <style>
-.table td.tinytable_css_x7thj6a1p3jqq0ljqkme, .table th.tinytable_css_x7thj6a1p3jqq0ljqkme {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_q8xwwa3tp9lg6fzewsdz, .table th.tinytable_css_q8xwwa3tp9lg6fzewsdz {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -500,7 +500,7 @@ MajorityLAB     0.17957971  0.025579528  0.20515924</code></pre>
 
   
     <div class="container">
-      <table class="table table-borderless" id="tinytable_rryekhal608ihygx5k8r" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_x7thj6a1p3jqq0ljqkme" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -514,21 +514,21 @@ MajorityLAB     0.17957971  0.025579528  0.20515924</code></pre>
         
         <tbody>
                 <tr>
-                  <td>log(units)</td>
+                  <td>log(units) </td>
                   <td> 1.13632</td>
                   <td>0.07465</td>
                   <td> 1.07113</td>
                   <td>0.06949</td>
                 </tr>
                 <tr>
-                  <td>house</td>
+                  <td>house      </td>
                   <td>-2.05136</td>
                   <td>0.36659</td>
                   <td>-1.57544</td>
                   <td>0.33305</td>
                 </tr>
                 <tr>
-                  <td>log(dens)</td>
+                  <td>log(dens)  </td>
                   <td>-0.02365</td>
                   <td>0.01477</td>
                   <td>-0.05655</td>
@@ -549,8 +549,8 @@ MajorityLAB     0.17957971  0.025579528  0.20515924</code></pre>
                   <td>0.04111</td>
                 </tr>
                 <tr>
-                  <td>rho</td>
-                  <td> 0.15040</td>
+                  <td>rho        </td>
+                  <td> 0.1504 </td>
                   <td>0.04404</td>
                   <td> 0.12778</td>
                   <td>0.04532</td>
@@ -561,11 +561,11 @@ MajorityLAB     0.17957971  0.025579528  0.20515924</code></pre>
 
     <script>
       function styleCell_tinytable_8jjt2ivg0yv7uix1ejez(i, j, css_id) {
-        var table = document.getElementById("tinytable_rryekhal608ihygx5k8r");
+        var table = document.getElementById("tinytable_x7thj6a1p3jqq0ljqkme");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_rryekhal608ihygx5k8r');
+        var table = document.getElementById('tinytable_x7thj6a1p3jqq0ljqkme');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -574,7 +574,7 @@ MajorityLAB     0.17957971  0.025579528  0.20515924</code></pre>
         newCell.innerHTML = content;
       }
       function spanCell_tinytable_8jjt2ivg0yv7uix1ejez(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_rryekhal608ihygx5k8r");
+        var table = document.getElementById("tinytable_x7thj6a1p3jqq0ljqkme");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -601,11 +601,11 @@ MajorityLAB     0.17957971  0.025579528  0.20515924</code></pre>
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7uix1ejez(0, 0, 'tinytable_css_x7thj6a1p3jqq0ljqkme') })
-window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7uix1ejez(0, 1, 'tinytable_css_x7thj6a1p3jqq0ljqkme') })
-window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7uix1ejez(0, 2, 'tinytable_css_x7thj6a1p3jqq0ljqkme') })
-window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7uix1ejez(0, 3, 'tinytable_css_x7thj6a1p3jqq0ljqkme') })
-window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7uix1ejez(0, 4, 'tinytable_css_x7thj6a1p3jqq0ljqkme') })
+window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7uix1ejez(0, 0, 'tinytable_css_q8xwwa3tp9lg6fzewsdz') })
+window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7uix1ejez(0, 1, 'tinytable_css_q8xwwa3tp9lg6fzewsdz') })
+window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7uix1ejez(0, 2, 'tinytable_css_q8xwwa3tp9lg6fzewsdz') })
+window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7uix1ejez(0, 3, 'tinytable_css_q8xwwa3tp9lg6fzewsdz') })
+window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7uix1ejez(0, 4, 'tinytable_css_q8xwwa3tp9lg6fzewsdz') })
     </script>
 
   
@@ -693,7 +693,7 @@ window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7ui
 <h2 data-number="10.4" data-anchor-id="gmm-marginal-effects"><span class="header-section-number">10.4</span> GMM marginal effects</h2>
 <p><span class="citation" data-cites="piras+postiglione:22">Piras and Postiglione (<a href="references.html#ref-piras+postiglione:22" role="doc-biblioref">2022</a>)</span> propose the use of eigenvalues of the spatial weights matrix to calculate the direct, indirect and total impacts, rather than the use of traces, which are necessarily approximate as the power series is truncated. However, an argument for GMM was that it avoided the computation of eigenvalues of the spatial weights matrix, which cease to be numerically stable at large <span class="math inline">n</span> using standard or extended precision (<span class="math inline">n</span> up to 10,000 is fine). For larger <span class="math inline">n</span>, the trace method remains viable.</p>
 <p>The eigenvalue method can of course also be used to calculate impacts from samples for inferential purposes, but so far only the impacts themselves are available for models fitted by maximum likelihood:</p>
-<div class="cell" data-tab-cap="Spatial coefficient value and variable total impacts, pre-CCT and post-CCT, ML SLM models, 324 English districts">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tfe0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">variable=</span><span class="fu">c</span>(<span class="fu">names</span>(<span class="fu">coef</span>(SLM_pre_maj))[<span class="dv">3</span><span class="sc">:</span><span class="dv">10</span>], <span class="st">"rho"</span>), <span class="at">pre=</span><span class="fu">c</span>(<span class="fu">impacts</span>(SLM_pre_maj, <span class="at">evalues=</span>e)<span class="sc">$</span>total, SLM_pre_maj<span class="sc">$</span>rho), <span class="at">post=</span><span class="fu">c</span>(<span class="fu">impacts</span>(SLM_post_maj, <span class="at">evalues=</span>e)<span class="sc">$</span>total, SLM_post_maj<span class="sc">$</span>rho))</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>tfe0<span class="sc">$</span>variable[<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="st">"log(realWg)"</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(tfe0, <span class="at">digits=</span><span class="dv">4</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -703,9 +703,9 @@ window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7ui
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_1mn9nzkvcbszcy8st8ii</title>
+    <title>tinytable_20gd4tltl5zhiqtg9fvk</title>
     <style>
-.table td.tinytable_css_v0etdmwshy8ns1mw80qg, .table th.tinytable_css_v0etdmwshy8ns1mw80qg {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_pyqp85ruwovxfw0rx4fk, .table th.tinytable_css_pyqp85ruwovxfw0rx4fk {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -723,7 +723,7 @@ window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7ui
 
   
     <div class="container">
-      <table class="table table-borderless" id="tinytable_1mn9nzkvcbszcy8st8ii" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_20gd4tltl5zhiqtg9fvk" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -735,17 +735,17 @@ window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7ui
         
         <tbody>
                 <tr>
-                  <td>log(units)</td>
+                  <td>log(units)  </td>
                   <td> 1.13632</td>
                   <td> 1.07113</td>
                 </tr>
                 <tr>
-                  <td>house</td>
+                  <td>house       </td>
                   <td>-2.05136</td>
                   <td>-1.57544</td>
                 </tr>
                 <tr>
-                  <td>log(dens)</td>
+                  <td>log(dens)   </td>
                   <td>-0.02365</td>
                   <td>-0.05655</td>
                 </tr>
@@ -756,27 +756,27 @@ window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7ui
                 </tr>
                 <tr>
                   <td>Metropmetrop</td>
-                  <td>-0.05950</td>
+                  <td>-0.0595 </td>
                   <td>-0.03205</td>
                 </tr>
                 <tr>
-                  <td>log(realWg)</td>
+                  <td>log(realWg) </td>
                   <td> 0.40716</td>
                   <td> 0.77049</td>
                 </tr>
                 <tr>
                   <td>MajorityCONS</td>
                   <td> 0.04446</td>
-                  <td>-0.02240</td>
+                  <td>-0.0224 </td>
                 </tr>
                 <tr>
-                  <td>MajorityLAB</td>
+                  <td>MajorityLAB </td>
                   <td> 0.22867</td>
                   <td> 0.20516</td>
                 </tr>
                 <tr>
-                  <td>rho</td>
-                  <td> 0.15040</td>
+                  <td>rho         </td>
+                  <td> 0.1504 </td>
                   <td> 0.12778</td>
                 </tr>
         </tbody>
@@ -784,12 +784,12 @@ window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7ui
     </div>
 
     <script>
-      function styleCell_tinytable_q8xwwa3tp9lg6fzewsdz(i, j, css_id) {
-        var table = document.getElementById("tinytable_1mn9nzkvcbszcy8st8ii");
+      function styleCell_tinytable_7zzjgpu4voyl0ksgkj9r(i, j, css_id) {
+        var table = document.getElementById("tinytable_20gd4tltl5zhiqtg9fvk");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_1mn9nzkvcbszcy8st8ii');
+        var table = document.getElementById('tinytable_20gd4tltl5zhiqtg9fvk');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -797,8 +797,8 @@ window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7ui
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_q8xwwa3tp9lg6fzewsdz(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_1mn9nzkvcbszcy8st8ii");
+      function spanCell_tinytable_7zzjgpu4voyl0ksgkj9r(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_20gd4tltl5zhiqtg9fvk");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -825,9 +825,9 @@ window.addEventListener('load', function () { styleCell_tinytable_8jjt2ivg0yv7ui
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_q8xwwa3tp9lg6fzewsdz(0, 0, 'tinytable_css_v0etdmwshy8ns1mw80qg') })
-window.addEventListener('load', function () { styleCell_tinytable_q8xwwa3tp9lg6fzewsdz(0, 1, 'tinytable_css_v0etdmwshy8ns1mw80qg') })
-window.addEventListener('load', function () { styleCell_tinytable_q8xwwa3tp9lg6fzewsdz(0, 2, 'tinytable_css_v0etdmwshy8ns1mw80qg') })
+window.addEventListener('load', function () { styleCell_tinytable_7zzjgpu4voyl0ksgkj9r(0, 0, 'tinytable_css_pyqp85ruwovxfw0rx4fk') })
+window.addEventListener('load', function () { styleCell_tinytable_7zzjgpu4voyl0ksgkj9r(0, 1, 'tinytable_css_pyqp85ruwovxfw0rx4fk') })
+window.addEventListener('load', function () { styleCell_tinytable_7zzjgpu4voyl0ksgkj9r(0, 2, 'tinytable_css_pyqp85ruwovxfw0rx4fk') })
     </script>
 
   
@@ -855,7 +855,7 @@ Attaching package: 'sphet'</code></pre>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>imp_spreg_pre_maj <span class="ot">&lt;-</span> <span class="fu">impacts</span>(spreg_pre_maj, <span class="at">evalues=</span>e, <span class="at">KPformula=</span><span class="cn">TRUE</span>, <span class="at">prt=</span><span class="cn">FALSE</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>imp_spreg_post_maj <span class="ot">&lt;-</span> <span class="fu">impacts</span>(spreg_post_maj, <span class="at">evalues=</span>e, <span class="at">KPformula=</span><span class="cn">TRUE</span>, <span class="at">prt=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-tab-cap="Spatial coefficient value and chosen variable total impacts and eigenvalue-based standard errors, pre-CCT and post-CCT, GMM SLM models, 324 English districts">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>etf <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">variable=</span><span class="fu">c</span>(<span class="fu">rownames</span>(imp_spreg_pre_maj[[<span class="dv">1</span>]])[<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">8</span>)], <span class="st">"rho"</span>),</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a> <span class="at">pre=</span><span class="fu">c</span>(imp_spreg_pre_maj[[<span class="dv">1</span>]][<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">8</span>), <span class="dv">3</span>], <span class="fu">c</span>(<span class="fu">coef</span>(spreg_pre_maj)[<span class="dv">10</span>])),</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a> <span class="at">pre_se=</span><span class="fu">c</span>(imp_spreg_pre_maj[[<span class="dv">2</span>]][<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">8</span>), <span class="dv">3</span>], <span class="fu">sqrt</span>(<span class="fu">diag</span>(spreg_pre_maj<span class="sc">$</span>var))[<span class="dv">10</span>]),</span>
@@ -869,9 +869,9 @@ Attaching package: 'sphet'</code></pre>
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_b5vti1lt9e34dqr1roc2</title>
+    <title>tinytable_9ycn73uys0882ngj5dl5</title>
     <style>
-.table td.tinytable_css_20gd4tltl5zhiqtg9fvk, .table th.tinytable_css_20gd4tltl5zhiqtg9fvk {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_dz6i3hf81w7f5cil5u7s, .table th.tinytable_css_dz6i3hf81w7f5cil5u7s {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -889,7 +889,7 @@ Attaching package: 'sphet'</code></pre>
 
   
     <div class="container">
-      <table class="table table-borderless" id="tinytable_b5vti1lt9e34dqr1roc2" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_9ycn73uys0882ngj5dl5" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -903,25 +903,25 @@ Attaching package: 'sphet'</code></pre>
         
         <tbody>
                 <tr>
-                  <td>log(units)</td>
+                  <td>log(units) </td>
                   <td> 1.19098</td>
                   <td>0.09537</td>
-                  <td> 1.07550</td>
+                  <td> 1.0755 </td>
                   <td>0.08659</td>
                 </tr>
                 <tr>
-                  <td>house</td>
+                  <td>house      </td>
                   <td>-2.15052</td>
                   <td>0.41584</td>
                   <td>-1.58078</td>
                   <td>0.35657</td>
                 </tr>
                 <tr>
-                  <td>log(dens)</td>
+                  <td>log(dens)  </td>
                   <td>-0.02608</td>
                   <td>0.01599</td>
                   <td>-0.05683</td>
-                  <td>0.01460</td>
+                  <td>0.0146 </td>
                 </tr>
                 <tr>
                   <td>log(realWg)</td>
@@ -934,11 +934,11 @@ Attaching package: 'sphet'</code></pre>
                   <td>MajorityLAB</td>
                   <td> 0.23452</td>
                   <td>0.04707</td>
-                  <td> 0.20560</td>
+                  <td> 0.2056 </td>
                   <td>0.04185</td>
                 </tr>
                 <tr>
-                  <td>rho</td>
+                  <td>rho        </td>
                   <td> 0.18698</td>
                   <td>0.05349</td>
                   <td> 0.13111</td>
@@ -949,12 +949,12 @@ Attaching package: 'sphet'</code></pre>
     </div>
 
     <script>
-      function styleCell_tinytable_7zzjgpu4voyl0ksgkj9r(i, j, css_id) {
-        var table = document.getElementById("tinytable_b5vti1lt9e34dqr1roc2");
+      function styleCell_tinytable_kuve651pmg5nbgza5laz(i, j, css_id) {
+        var table = document.getElementById("tinytable_9ycn73uys0882ngj5dl5");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_b5vti1lt9e34dqr1roc2');
+        var table = document.getElementById('tinytable_9ycn73uys0882ngj5dl5');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -962,8 +962,8 @@ Attaching package: 'sphet'</code></pre>
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_7zzjgpu4voyl0ksgkj9r(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_b5vti1lt9e34dqr1roc2");
+      function spanCell_tinytable_kuve651pmg5nbgza5laz(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_9ycn73uys0882ngj5dl5");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -990,11 +990,11 @@ Attaching package: 'sphet'</code></pre>
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_7zzjgpu4voyl0ksgkj9r(0, 0, 'tinytable_css_20gd4tltl5zhiqtg9fvk') })
-window.addEventListener('load', function () { styleCell_tinytable_7zzjgpu4voyl0ksgkj9r(0, 1, 'tinytable_css_20gd4tltl5zhiqtg9fvk') })
-window.addEventListener('load', function () { styleCell_tinytable_7zzjgpu4voyl0ksgkj9r(0, 2, 'tinytable_css_20gd4tltl5zhiqtg9fvk') })
-window.addEventListener('load', function () { styleCell_tinytable_7zzjgpu4voyl0ksgkj9r(0, 3, 'tinytable_css_20gd4tltl5zhiqtg9fvk') })
-window.addEventListener('load', function () { styleCell_tinytable_7zzjgpu4voyl0ksgkj9r(0, 4, 'tinytable_css_20gd4tltl5zhiqtg9fvk') })
+window.addEventListener('load', function () { styleCell_tinytable_kuve651pmg5nbgza5laz(0, 0, 'tinytable_css_dz6i3hf81w7f5cil5u7s') })
+window.addEventListener('load', function () { styleCell_tinytable_kuve651pmg5nbgza5laz(0, 1, 'tinytable_css_dz6i3hf81w7f5cil5u7s') })
+window.addEventListener('load', function () { styleCell_tinytable_kuve651pmg5nbgza5laz(0, 2, 'tinytable_css_dz6i3hf81w7f5cil5u7s') })
+window.addEventListener('load', function () { styleCell_tinytable_kuve651pmg5nbgza5laz(0, 3, 'tinytable_css_dz6i3hf81w7f5cil5u7s') })
+window.addEventListener('load', function () { styleCell_tinytable_kuve651pmg5nbgza5laz(0, 4, 'tinytable_css_dz6i3hf81w7f5cil5u7s') })
     </script>
 
   
@@ -1036,6 +1036,9 @@ Anselin, Luc, and N. Lozano-Gracia. 2008. <span>“Errors in Variables and Spati
 </div>
 <div id="ref-bivand+szymanski:00" class="csl-entry" role="listitem">
 Bivand, Roger, and Stefan Szymanski. 2000. <span>“Modelling the Spatial Impact of the Introduction of Compulsory Competitive Tendering.”</span> <em>Regional Science and Urban Economics</em> 30: 203–19.
+</div>
+<div id="ref-golgher+voss:16" class="csl-entry" role="listitem">
+Golgher, André Braz, and Paul R. Voss. 2016. <span>“How to Interpret the Coefficients of Spatial Models: Spillovers, Direct and Indirect Effects.”</span> <em>Spatial Demography</em> 4: 175–205. <a href="https://doi.org/10.1007/s40980-015-0016-y">https://doi.org/10.1007/s40980-015-0016-y</a>.
 </div>
 <div id="ref-kelejianetal:06" class="csl-entry" role="listitem">
 Kelejian, Harry H., G. Tavlas, and G. Hondroyiannis. 2006. <span>“A Spatial Modelling Approach to Contagion Among Emerging Economies.”</span> <em>Open Economies Review</em> 17: 423–41.
@@ -1128,6 +1131,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
 });
 </script>
 <nav class="page-navigation">

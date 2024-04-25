@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-99.9.9">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Spatial Econometrics – 2&nbsp; Spatial data</title>
+<title>Spatial Econometrics - 2&nbsp; Spatial data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -463,9 +463,9 @@ resolution  : 0.005009617, 0.005009617  (x, y)
 extent      : -72.78435, -70.3146, -36.54143, -34.68287  (xmin, xmax, ymin, ymax)
 coord. ref. : +proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs 
 source(s)   : memory
-name        : filee6328d7c555 
-min value   :               0 
-max value   :            3936 </code></pre>
+name        : file110083d2fade6 
+min value   :                 0 
+max value   :              3936 </code></pre>
 </div>
 </div>
 <p>The raster has one layer (band), with a square (geodetic) grid with a resolution of about 0.005 degrees, 18.03 arc seconds in both dimensions, 371 rows and 493 columns.</p>
@@ -571,9 +571,9 @@ resolution  : 89.09542, 89.09542  (x, y)
 extent      : 462973.9, 496741.1, 712362.5, 731607.1  (xmin, xmax, ymin, ymax)
 coord. ref. : +proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
 source(s)   : memory
-name        : filee63abcb0de 
-min value   :              0 
-max value   :            177 </code></pre>
+name        : file110082adba552 
+min value   :                 0 
+max value   :               177 </code></pre>
 </div>
 </div>
 <p>As we just observed, <code>gd_sf</code> has a projected coordinate reference system, so needs to be transformed to a geodetic coordinate reference system before the creation of an Openpass query, here for <code>"amenity"</code> features:</p>
@@ -1081,6 +1081,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
 });
 </script>
 <nav class="page-navigation">
