@@ -579,7 +579,12 @@ tm_shape(pom6) + tm_fill("young_res", style="quantile",
  n=11, midpoint=0, palette="RdBu") + tm_borders()
 ```
 
-
+```{r pl_vis3, size="footnotesize"}
+#| label: pl_vis3
+#| fig-cap: Interactive map of take-away outlets in Gdańsk
+library(mapview)
+mapview(gd_takeaways)
+```
 
 ## Reading and writing spatial data {#sec-sd-io}
 
