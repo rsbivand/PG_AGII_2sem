@@ -1,0 +1,103 @@
+# And what about machine learning ?
+
+## The Ames housing data set
+
+```{r ames1, size="footnotesize"}
+library(sf)
+data("ames", package = "modeldata")
+ames_sf <- st_as_sf(ames, coords = c("Longitude", "Latitude"), crs = "OGC:CRS84")
+```
+```{r ames1a, size="footnotesize", eval=FALSE}
+library(mapview)
+mapview(ames_sf)
+```
+```{r ames1b, size="footnotesize", echo=FALSE}
+knitr::include_graphics("Screenshot 2024-05-10 at 10-15-22 Screenshot.png")
+```
+
+```{r ames2, size="footnotesize"}
+f <- log(Sale_Price) ~ Total_Bsmt_SF + Gr_Liv_Area + Year_Built
+lm_mod <- lm(f, data=ames_sf)
+summary(lm_mod)
+```
+
+```{r ames2a, size="footnotesize"}
+library(spdep)
+knn10 <- knn2nb(knearneigh(ames_sf, k=10), sym=FALSE)
+knn10
+```
+```{r ames7, size="footnotesize"}
+n_comp <- n.comp.nb(knn10)
+str(n_comp)
+```
+
+```{r ames7a, size="footnotesize"}
+table(n_comp$comp.id)
+```
+
+```{r ames2z, size="footnotesize"}
+plot(st_geometry(ames_sf), type="n")
+plot(subset(knn10, n_comp$comp.id == 1), st_geometry(ames_sf)[n_comp$comp.id == 1], col="orange", pch=".", add=TRUE)
+plot(subset(knn10, n_comp$comp.id == 2), st_geometry(ames_sf)[n_comp$comp.id == 2], col="brown", pch=".", add=TRUE)
+plot(subset(knn10, n_comp$comp.id == 3), st_geometry(ames_sf)[n_comp$comp.id == 3], col="yellow", pch=".", add=TRUE)
+plot(subset(knn10, n_comp$comp.id == 4), st_geometry(ames_sf)[n_comp$comp.id == 4], col="red", pch=".", add=TRUE)
+```
+```{r ames2y, size="footnotesize", eval=FALSE}
+ames_knn10 <- nb2lines(knn10, coords=st_geometry(ames_sf))
+mapview(ames_sf) + mapview(ames_knn10)
+```
+```{r ames2x, size="footnotesize", echo=FALSE}
+knitr::include_graphics("Screenshot 2024-05-10 at 10-16-34 Screenshot.png")
+```
+
+```{r ames2b, size="footnotesize"}
+lw <- nb2listw(knn10)
+lm.morantest(lm_mod, lw)
+```
+```{r ames2c, size="footnotesize"}
+summary(lm.RStests(lm_mod, lw, test="all"))
+```
+
+
+```{r ames3, size="footnotesize"}
+library(spatialreg)
+library(lagsarlmtree)
+```
+
+
+```{r ames3a, size="footnotesize", eval=FALSE}
+slm_tree <- lagsarlmtree(f, data=ames_sf, listw=nb2listw(knn10, style="W"), method="LU")
+```
+
+```{r ames4, size="footnotesize", echo=FALSE}
+slm_tree <- readRDS("slm_tree.rds")
+```
+
+
+```{r ames5, size="footnotesize"}
+plot(slm_tree)
+```
+
+```{r ames6, size="footnotesize"}
+sem <- errorsarlm(f, data=ames_sf, listw=lw, method="LU")
+summary(sem, Hausman=TRUE)
+```
+
+
+```{r ames8, size="footnotesize"}
+sem_1 <- errorsarlm(f, data=ames_sf[n_comp$comp.id == 1,], listw=nb2listw(subset(knn10, n_comp$comp.id == 1), style="W"), method="LU")
+summary(sem_1, Hausman=TRUE)
+```
+
+
+```{r ames8a, size="footnotesize"}
+preds <- predict(sem_1, newdata=ames_sf, listw=lw)
+```
+
+
+```{r ames8b, size="footnotesize"}
+sqrt(mean((log(ames_sf$Sale_Price[n_comp$comp.id == 1]) - preds[n_comp$comp.id == 1])^2))
+```
+```{r ames8c, size="footnotesize"}
+sqrt(mean((log(ames_sf$Sale_Price[n_comp$comp.id != 1]) - preds[n_comp$comp.id != 1])^2))
+```

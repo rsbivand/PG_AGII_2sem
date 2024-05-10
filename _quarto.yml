@@ -29,6 +29,7 @@ book:
     - 10_talk.qmd
     - 11_talk.qmd
     - 12_talk.qmd
+    - 13_talk.qmd
     - references.qmd
 
 bibliography: [bib/references.bib, packages.bib, bib/book.bib]
